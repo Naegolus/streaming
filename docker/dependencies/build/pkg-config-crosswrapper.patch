@@ -1,0 +1,11 @@
+--- /usr/share/pkg-config-crosswrapper	2019-01-27 04:56:33.000000000 +0000
++++ /usr/share/pkg-config-crosswrapper_fixed	2021-03-13 00:53:15.122695990 +0000
+@@ -11,7 +11,7 @@
+   triplet="${basename%-pkg-config}"
+   # Normalized multiarch path if any, e.g. i386-linux-gnu for i386
+   multiarch="$(dpkg-architecture -t"${triplet}" -qDEB_HOST_MULTIARCH 2>/dev/null)"
+-  if [ "$?" != 0 ]; then
++  if [ "$?" = 127 ]; then
+       echo "Please install dpkg-dev to use pkg-config when cross-building" >&2
+       exit 1
+   fi
