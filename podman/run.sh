@@ -18,7 +18,7 @@ eval $(ssh-agent -s)
 mappings="
 -v $dirPodman/..:$HOME/$dirProj
 -v $HOME/.${shellNameDefault}rc:$HOME/.${shellNameDefault}rc
--v $HOME/.${shellNameDefault}_history:$HOME/.${shellNameDefault}_history
+-v $HOME/.ssh/:$HOME/.ssh/
 -v $HOME/.gitconfig:$HOME/.gitconfig
 "
 
@@ -31,7 +31,8 @@ fi
 
 echo "Running image $img"
 
-podman run --rm $mappings --user $(id -u):$(id -g) --dns=8.8.8.8 -it $img entry.sh \
+podman run --rm $mappings --dns=8.8.8.8 -it $img entry.sh \
 	"cd $HOME/$dirProj" \
+	"ssh-add $HOME/.ssh/id_rsa" \
 	"$SHELL"
 

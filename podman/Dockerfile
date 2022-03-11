@@ -39,7 +39,8 @@ ENV toolDir="/opt/tools" \
 ENV PATH="$toolDir:$PATH"
 
 # directories
-RUN mkdir ${buildDir}; \
+RUN mkdir /home/$user/build; \
+	mkdir ${buildDir}; \
 	mkdir ${buildDir}/zlib; \
 	mkdir ${buildDir}/zlib/build; \
 	mkdir ${buildDir}/zlib/build/native; \
@@ -431,5 +432,3 @@ RUN \
 WORKDIR ..
 
 WORKDIR ../..
-
-RUN apt -y install apt-utils podman
