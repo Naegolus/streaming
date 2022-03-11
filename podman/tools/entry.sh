@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Docker shell"
+echo "Podman shell"
 
 while test $# -gt 0
 do

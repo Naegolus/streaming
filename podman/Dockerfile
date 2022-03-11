@@ -431,3 +431,5 @@ RUN \
 WORKDIR ..
 
 WORKDIR ../..
+
+RUN apt -y install apt-utils podman

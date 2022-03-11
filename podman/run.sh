@@ -1,9 +1,9 @@
 #!/bin/bash
 
-proj="dspc-bdpt"
+proj="twitch"
 
 cd $(dirname $0)
-dirDocker="$(pwd)"
+dirPodman="$(pwd)"
 
 img="$proj"
 if [ ! -z "$1" ]; then
@@ -11,15 +11,14 @@ if [ ! -z "$1" ]; then
 fi
 
 shellNameDefault="$(basename $SHELL)"
-dirProj="$(basename $(echo $dirDocker | rev | cut -d "/" -f 2 | rev))"
+dirProj="$(basename $(echo $dirPodman | rev | cut -d "/" -f 2 | rev))"
 
 eval $(ssh-agent -s)
 
 mappings="
--v $dirDocker/..:$HOME/$dirProj
+-v $dirPodman/..:$HOME/$dirProj
 -v $HOME/.${shellNameDefault}rc:$HOME/.${shellNameDefault}rc
 -v $HOME/.${shellNameDefault}_history:$HOME/.${shellNameDefault}_history
--v $HOME/.ssh/:$HOME/.ssh/
 -v $HOME/.gitconfig:$HOME/.gitconfig
 "
 
@@ -32,5 +31,7 @@ fi
 
 echo "Running image $img"
 
-docker run --rm $mappings --user $(id -u):$(id -g) --dns=8.8.8.8 -it $img entry.sh \
-	"cd $HOME/$dirProj" "ssh-add $HOME/.ssh/id_rsa" "$SHELL"
+podman run --rm $mappings --user $(id -u):$(id -g) --dns=8.8.8.8 -it $img entry.sh \
+	"cd $HOME/$dirProj" \
+	"$SHELL"
+
