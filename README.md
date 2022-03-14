@@ -1,4 +1,4 @@
 
-# twitch
+# Streaming
 
-Twitch brainstorming repository
+Brainstorming repository
