@@ -1,0 +1,147 @@
+{
+	"ctrls" :
+	[
+		{
+			"name" : "brightness",
+			"type" : "int",
+			"min" : "0",
+			"max" : "255",
+			"step" : "1",
+			"default" : "128",
+			"value" : "128"
+		},
+		{
+			"name" : "contrast",
+			"type" : "int",
+			"min" : "0",
+			"max" : "255",
+			"step" : "1",
+			"default" : "128",
+			"value" : "129"
+		},
+		{
+			"name" : "saturation",
+			"type" : "int",
+			"min" : "0",
+			"max" : "255",
+			"step" : "1",
+			"default" : "128",
+			"value" : "128"
+		},
+		{
+			"name" : "white_balance_automatic",
+			"type" : "bool",
+			"default" : "1",
+			"value" : "0"
+		},
+		{
+			"name" : "gain",
+			"type" : "int",
+			"min" : "0",
+			"max" : "255",
+			"step" : "1",
+			"default" : "0",
+			"value" : "78"
+		},
+		{
+			"name" : "power_line_frequency",
+			"type" : "menu",
+			"min" : "0",
+			"max" : "2",
+			"default" : "2",
+			"value" : "2"
+		},
+		{
+			"name" : "white_balance_temperature",
+			"type" : "int",
+			"min" : "2000",
+			"max" : "7500",
+			"step" : "1",
+			"default" : "4000",
+			"value" : "3515"
+		},
+		{
+			"name" : "sharpness",
+			"type" : "int",
+			"min" : "0",
+			"max" : "255",
+			"step" : "1",
+			"default" : "128",
+			"value" : "150"
+		},
+		{
+			"name" : "backlight_compensation",
+			"type" : "int",
+			"min" : "0",
+			"max" : "1",
+			"step" : "1",
+			"default" : "0",
+			"value" : "0"
+		},
+		{
+			"name" : "auto_exposure",
+			"type" : "menu",
+			"min" : "0",
+			"max" : "3",
+			"default" : "3",
+			"value" : "1"
+		},
+		{
+			"name" : "exposure_time_absolute",
+			"type" : "int",
+			"min" : "3",
+			"max" : "2047",
+			"step" : "1",
+			"default" : "250",
+			"value" : "312"
+		},
+		{
+			"name" : "exposure_dynamic_framerate",
+			"type" : "bool",
+			"default" : "0",
+			"value" : "0"
+		},
+		{
+			"name" : "pan_absolute",
+			"type" : "int",
+			"min" : "-36000",
+			"max" : "36000",
+			"step" : "3600",
+			"default" : "0",
+			"value" : "0"
+		},
+		{
+			"name" : "tilt_absolute",
+			"type" : "int",
+			"min" : "-36000",
+			"max" : "36000",
+			"step" : "3600",
+			"default" : "0",
+			"value" : "0"
+		},
+		{
+			"name" : "focus_absolute",
+			"type" : "int",
+			"min" : "0",
+			"max" : "255",
+			"step" : "5",
+			"default" : "0",
+			"value" : "35"
+		},
+		{
+			"name" : "focus_automatic_continuous",
+			"type" : "bool",
+			"default" : "1",
+			"value" : "0"
+		},
+		{
+			"name" : "zoom_absolute",
+			"type" : "int",
+			"min" : "100",
+			"max" : "400",
+			"step" : "1",
+			"default" : "100",
+			"value" : "100"
+		}
+	]
+}
