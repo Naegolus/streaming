@@ -2,7 +2,6 @@
 
 import json
 import argparse
-import v4l2
 import subprocess
 
 parser = argparse.ArgumentParser(description = 'Set video device settings')
