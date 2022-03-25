@@ -6,12 +6,16 @@ import v4l2
 import subprocess
 
 parser = argparse.ArgumentParser(description = 'Set video device settings')
-parser.add_argument('--dev', help = 'device human readable name', type = str, required = True)
+parser.add_argument('--dev', help = 'device human readable name', type = str)
 parser.add_argument('--file', help = 'json file', type = str)
 args = parser.parse_args()
 
 with open('./vDevSetting.json') as pFile:
     devNames = json.load(pFile)
+
+if not args.dev:
+    parser.print_help()
+    exit(0)
 
 res = subprocess.run(['./vDevFind.sh', devNames[args.dev]], stdout = subprocess.PIPE)
 devFile = res.stdout.decode('utf-8').strip()
