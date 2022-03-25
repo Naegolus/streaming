@@ -8,10 +8,16 @@ import subprocess
 parser = argparse.ArgumentParser(description = 'Set video device settings')
 parser.add_argument('--dev', help = 'device human readable name', type = str)
 parser.add_argument('--file', help = 'json file', type = str)
+parser.add_argument('--list', help = 'list available video devices', action = 'store_true')
 args = parser.parse_args()
 
 with open('./vDevSetting.json') as pFile:
     devNames = json.load(pFile)
+
+if args.list:
+    for d in devNames.keys():
+        print(d)
+    exit(0)
 
 if not args.dev:
     parser.print_help()
