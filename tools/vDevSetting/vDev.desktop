@@ -1,7 +1,0 @@
-
-[Desktop Entry]
-Name=videoDevs
-Type=Application
-Exec=/home/joe/__git/streaming/tools/vDevSetting/vDevAutostart.sh
-Terminal=false
-
