@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# v4l2-ctl -D -d /dev/video0 --all > ./info/video0_v4l2-ctl.txt
+
 fileConvert()
 {
 
@@ -29,6 +31,12 @@ fileConvert()
 		fi
 
 		if [ -z "$l" ]; then
+			continue
+		fi
+
+		eCheck=$(echo "$l" | grep "=")
+
+		if [ -z "$eCheck" ]; then
 			continue
 		fi
 

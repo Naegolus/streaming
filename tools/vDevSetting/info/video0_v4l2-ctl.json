@@ -17,7 +17,7 @@
 			"max" : "255",
 			"step" : "1",
 			"default" : "128",
-			"value" : "128"
+			"value" : "129"
 		},
 		"saturation" :
 		{
@@ -41,7 +41,7 @@
 			"max" : "255",
 			"step" : "1",
 			"default" : "0",
-			"value" : "255"
+			"value" : "109"
 		},
 		"power_line_frequency" :
 		{
@@ -93,7 +93,7 @@
 			"max" : "2047",
 			"step" : "1",
 			"default" : "250",
-			"value" : "312"
+			"value" : "156"
 		},
 		"exposure_dynamic_framerate" :
 		{
@@ -126,7 +126,7 @@
 			"max" : "255",
 			"step" : "5",
 			"default" : "0",
-			"value" : "0"
+			"value" : "40"
 		},
 		"focus_automatic_continuous" :
 		{
