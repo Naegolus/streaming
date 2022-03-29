@@ -35,22 +35,22 @@ if not args.file:
 #print('Device file %s' % devFile)
 #print('Settings file %s' % args.file)
 
-with open(args.file) as pSet:
+pSet = open(args.file)
+settings = json.load(pSet)
+pSet.close()
 
-    settings = json.load(pSet)
+for c in settings['ctrls'].keys():
 
-    for c in settings['ctrls'].keys():
+    #print('Setting %s = %s' % (s['name'], s['value']))
 
-        #print('Setting %s = %s' % (s['name'], s['value']))
+    if args.default:
+        v = settings['ctrls'][c]['default']
+    else:
+        v = settings['ctrls'][c]['value']
 
-        if args.default:
-            v = settings['ctrls'][c]['default']
-        else:
-            v = settings['ctrls'][c]['value']
-
-        res = subprocess.run([dirExec + './vCtrlSet.sh', devFile, c, v],
-                    stdout = subprocess.PIPE,
-                ).stdout.decode('utf-8').strip()
-                    #stderr = subprocess.DEVNULL,
-        #print('Result %s' % res)
+    res = subprocess.run([dirExec + './vCtrlSet.sh', devFile, c, v],
+                stdout = subprocess.PIPE,
+            ).stdout.decode('utf-8').strip()
+                #stderr = subprocess.DEVNULL,
+    #print('Result %s' % res)
 
