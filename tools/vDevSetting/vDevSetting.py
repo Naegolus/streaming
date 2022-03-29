@@ -49,6 +49,8 @@ with open(args.file) as pSet:
             v = settings['ctrls'][c]['value']
 
         res = subprocess.run([dirExec + './vCtrlSet.sh', devFile, c, v],
-                    stdout = subprocess.PIPE).stdout.decode('utf-8').strip()
+                    stdout = subprocess.PIPE,
+                ).stdout.decode('utf-8').strip()
+                    #stderr = subprocess.DEVNULL,
         #print('Result %s' % res)
 
