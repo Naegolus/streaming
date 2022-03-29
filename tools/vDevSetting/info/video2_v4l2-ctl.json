@@ -1,8 +1,8 @@
 {
 	"ctrls" :
-	[
+	{
+		"brightness" :
 		{
-			"name" : "brightness",
 			"type" : "int",
 			"min" : "-128",
 			"max" : "127",
@@ -10,8 +10,8 @@
 			"default" : "-11",
 			"value" : "-15"
 		},
+		"contrast" :
 		{
-			"name" : "contrast",
 			"type" : "int",
 			"min" : "0",
 			"max" : "255",
@@ -19,8 +19,8 @@
 			"default" : "148",
 			"value" : "148"
 		},
+		"saturation" :
 		{
-			"name" : "saturation",
 			"type" : "int",
 			"min" : "0",
 			"max" : "255",
@@ -28,8 +28,8 @@
 			"default" : "180",
 			"value" : "180"
 		},
+		"hue" :
 		{
-			"name" : "hue",
 			"type" : "int",
 			"min" : "-128",
 			"max" : "127",
@@ -37,5 +37,5 @@
 			"default" : "0",
 			"value" : "0"
 		}
-	]
+	}
 }

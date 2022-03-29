@@ -10,7 +10,7 @@ fileConvert()
 
 	printf "{\n" > "$jf"
 	printf "\t\"ctrls\" :\n" >> "$jf"
-	printf "\t[\n" >> "$jf"
+	printf "\t{\n" >> "$jf"
 
 	ctlArea=""
 	firstCtrl="true"
@@ -48,8 +48,8 @@ fileConvert()
 			printf ",\n" >> "$jf"
 		fi
 
+		printf "\t\t\"$name\" :\n" >> "$jf"
 		printf "\t\t{\n" >> "$jf"
-		printf "\t\t\t\"name\" : \"$name\",\n" >> "$jf"
 		printf "\t\t\t\"type\" : \"$dtype\",\n" >> "$jf"
 
 		firstPar="true"
@@ -87,7 +87,7 @@ fileConvert()
 	done < "$1"
 
 	printf "\n" >> "$jf"
-	printf "\t]\n" >> "$jf"
+	printf "\t}\n" >> "$jf"
 	printf "}\n" >> "$jf"
 
 }

@@ -1,8 +1,8 @@
 {
 	"ctrls" :
-	[
+	{
+		"brightness" :
 		{
-			"name" : "brightness",
 			"type" : "int",
 			"min" : "0",
 			"max" : "255",
@@ -10,8 +10,8 @@
 			"default" : "128",
 			"value" : "128"
 		},
+		"contrast" :
 		{
-			"name" : "contrast",
 			"type" : "int",
 			"min" : "0",
 			"max" : "255",
@@ -19,8 +19,8 @@
 			"default" : "128",
 			"value" : "128"
 		},
+		"saturation" :
 		{
-			"name" : "saturation",
 			"type" : "int",
 			"min" : "0",
 			"max" : "255",
@@ -28,14 +28,14 @@
 			"default" : "128",
 			"value" : "128"
 		},
+		"white_balance_automatic" :
 		{
-			"name" : "white_balance_automatic",
 			"type" : "bool",
 			"default" : "1",
 			"value" : "0"
 		},
+		"gain" :
 		{
-			"name" : "gain",
 			"type" : "int",
 			"min" : "0",
 			"max" : "255",
@@ -43,16 +43,16 @@
 			"default" : "0",
 			"value" : "255"
 		},
+		"power_line_frequency" :
 		{
-			"name" : "power_line_frequency",
 			"type" : "menu",
 			"min" : "0",
 			"max" : "2",
 			"default" : "2",
 			"value" : "2"
 		},
+		"white_balance_temperature" :
 		{
-			"name" : "white_balance_temperature",
 			"type" : "int",
 			"min" : "2000",
 			"max" : "7500",
@@ -60,8 +60,8 @@
 			"default" : "4000",
 			"value" : "3280"
 		},
+		"sharpness" :
 		{
-			"name" : "sharpness",
 			"type" : "int",
 			"min" : "0",
 			"max" : "255",
@@ -69,8 +69,8 @@
 			"default" : "128",
 			"value" : "128"
 		},
+		"backlight_compensation" :
 		{
-			"name" : "backlight_compensation",
 			"type" : "int",
 			"min" : "0",
 			"max" : "1",
@@ -78,16 +78,16 @@
 			"default" : "0",
 			"value" : "0"
 		},
+		"auto_exposure" :
 		{
-			"name" : "auto_exposure",
 			"type" : "menu",
 			"min" : "0",
 			"max" : "3",
 			"default" : "3",
 			"value" : "1"
 		},
+		"exposure_time_absolute" :
 		{
-			"name" : "exposure_time_absolute",
 			"type" : "int",
 			"min" : "3",
 			"max" : "2047",
@@ -95,14 +95,14 @@
 			"default" : "250",
 			"value" : "312"
 		},
+		"exposure_dynamic_framerate" :
 		{
-			"name" : "exposure_dynamic_framerate",
 			"type" : "bool",
 			"default" : "0",
 			"value" : "0"
 		},
+		"pan_absolute" :
 		{
-			"name" : "pan_absolute",
 			"type" : "int",
 			"min" : "-36000",
 			"max" : "36000",
@@ -110,8 +110,8 @@
 			"default" : "0",
 			"value" : "0"
 		},
+		"tilt_absolute" :
 		{
-			"name" : "tilt_absolute",
 			"type" : "int",
 			"min" : "-36000",
 			"max" : "36000",
@@ -119,8 +119,8 @@
 			"default" : "0",
 			"value" : "0"
 		},
+		"focus_absolute" :
 		{
-			"name" : "focus_absolute",
 			"type" : "int",
 			"min" : "0",
 			"max" : "255",
@@ -128,14 +128,14 @@
 			"default" : "0",
 			"value" : "0"
 		},
+		"focus_automatic_continuous" :
 		{
-			"name" : "focus_automatic_continuous",
 			"type" : "bool",
 			"default" : "1",
 			"value" : "0"
 		},
+		"zoom_absolute" :
 		{
-			"name" : "zoom_absolute",
 			"type" : "int",
 			"min" : "100",
 			"max" : "400",
@@ -143,5 +143,5 @@
 			"default" : "100",
 			"value" : "100"
 		}
-	]
+	}
 }

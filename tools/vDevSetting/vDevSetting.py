@@ -35,11 +35,11 @@ with open(args.file) as pSet:
 
     settings = json.load(pSet)
 
-    for s in settings['ctrls']:
+    for c in settings['ctrls'].keys():
 
         #print('Setting %s = %s' % (s['name'], s['value']))
 
-        res = subprocess.run(['./vCtrlSet.sh', devFile, s['name'], s['value']],
+        res = subprocess.run(['./vCtrlSet.sh', devFile, c, settings['ctrls'][c]['value']],
                     stdout = subprocess.PIPE).stdout.decode('utf-8').strip()
         #print('Result %s' % res)
 
