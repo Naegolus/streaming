@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser(description = 'Set video device settings')
 parser.add_argument('--dev', help = 'device human readable name', type = str)
 parser.add_argument('--file', help = 'json file', type = str)
 parser.add_argument('--list', help = 'list available video devices', action = 'store_true')
+parser.add_argument('--default', help = 'set controls to default values', action = 'store_true')
 args = parser.parse_args()
 
 with open(dirExec + './vDevSetting.json') as pFile:
@@ -42,7 +43,12 @@ with open(args.file) as pSet:
 
         #print('Setting %s = %s' % (s['name'], s['value']))
 
-        res = subprocess.run([dirExec + './vCtrlSet.sh', devFile, c, settings['ctrls'][c]['value']],
+        if args.default:
+            v = settings['ctrls'][c]['default']
+        else:
+            v = settings['ctrls'][c]['value']
+
+        res = subprocess.run([dirExec + './vCtrlSet.sh', devFile, c, v],
                     stdout = subprocess.PIPE).stdout.decode('utf-8').strip()
         #print('Result %s' % res)
 
