@@ -4,3 +4,7 @@
 *-bak
 *.bck
 
+# 3D print
+*.obj
+*.stl
+*.gcode
