@@ -8,7 +8,7 @@
 			"max" : "127",
 			"step" : "1",
 			"default" : "-11",
-			"value" : "-15"
+			"value" : "-11"
 		},
 		"contrast" :
 		{

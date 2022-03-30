@@ -31,10 +31,33 @@ Entity Info:
 	Flags            : default
 	Pad 0x01000007   : 0: Sink
 	  Link 0x0200000d: from remote pad 0x100000a of entity 'Processing 2' (Video Pixel Formatter): Data, Enabled, Immutable
+Priority: 2
+Video input : 0 (Camera 1: ok)
+Format Video Capture:
+	Width/Height      : 1280/720
+	Pixel Format      : 'MJPG' (Motion-JPEG)
+	Field             : None
+	Bytes per Line    : 0
+	Size Image        : 1843200
+	Colorspace        : sRGB
+	Transfer Function : Rec. 709
+	YCbCr/HSV Encoding: ITU-R 601
+	Quantization      : Default (maps to Full Range)
+	Flags             : 
+Crop Capability Video Capture:
+	Bounds      : Left 0, Top 0, Width 1280, Height 720
+	Default     : Left 0, Top 0, Width 1280, Height 720
+	Pixel Aspect: 1/1
+Selection Video Capture: crop_default, Left 0, Top 0, Width 1280, Height 720, Flags: 
+Selection Video Capture: crop_bounds, Left 0, Top 0, Width 1280, Height 720, Flags: 
+Streaming Parameters Video Capture:
+	Capabilities     : timeperframe
+	Frames per second: 60.000 (60/1)
+	Read buffers     : 0
 
 User Controls
 
-                     brightness 0x00980900 (int)    : min=-128 max=127 step=1 default=-11 value=-15
+                     brightness 0x00980900 (int)    : min=-128 max=127 step=1 default=-11 value=-11
                        contrast 0x00980901 (int)    : min=0 max=255 step=1 default=148 value=148
                      saturation 0x00980902 (int)    : min=0 max=255 step=1 default=180 value=180
                             hue 0x00980903 (int)    : min=-128 max=127 step=1 default=0 value=0

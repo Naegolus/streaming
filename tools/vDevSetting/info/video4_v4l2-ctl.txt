@@ -31,6 +31,29 @@ Entity Info:
 	Flags            : default
 	Pad 0x01000007   : 0: Sink
 	  Link 0x02000022: from remote pad 0x100000a of entity 'Processing 3' (Video Pixel Formatter): Data, Enabled, Immutable
+Priority: 2
+Video input : 0 (Camera 1: ok)
+Format Video Capture:
+	Width/Height      : 640/480
+	Pixel Format      : 'MJPG' (Motion-JPEG)
+	Field             : None
+	Bytes per Line    : 0
+	Size Image        : 614400
+	Colorspace        : sRGB
+	Transfer Function : Rec. 709
+	YCbCr/HSV Encoding: ITU-R 601
+	Quantization      : Default (maps to Full Range)
+	Flags             : 
+Crop Capability Video Capture:
+	Bounds      : Left 0, Top 0, Width 640, Height 480
+	Default     : Left 0, Top 0, Width 640, Height 480
+	Pixel Aspect: 1/1
+Selection Video Capture: crop_default, Left 0, Top 0, Width 640, Height 480, Flags: 
+Selection Video Capture: crop_bounds, Left 0, Top 0, Width 640, Height 480, Flags: 
+Streaming Parameters Video Capture:
+	Capabilities     : timeperframe
+	Frames per second: 30.000 (30/1)
+	Read buffers     : 0
 
 User Controls
 
@@ -40,6 +63,9 @@ User Controls
         white_balance_automatic 0x0098090c (bool)   : default=1 value=0
                            gain 0x00980913 (int)    : min=0 max=255 step=1 default=0 value=78
            power_line_frequency 0x00980918 (menu)   : min=0 max=2 default=2 value=2 (60 Hz)
+				0: Disabled
+				1: 50 Hz
+				2: 60 Hz
       white_balance_temperature 0x0098091a (int)    : min=2000 max=7500 step=1 default=4000 value=3515
                       sharpness 0x0098091b (int)    : min=0 max=255 step=1 default=128 value=150
          backlight_compensation 0x0098091c (int)    : min=0 max=1 step=1 default=0 value=0
@@ -47,6 +73,8 @@ User Controls
 Camera Controls
 
                   auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=1 (Manual Mode)
+				1: Manual Mode
+				3: Aperture Priority Mode
          exposure_time_absolute 0x009a0902 (int)    : min=3 max=2047 step=1 default=250 value=312
      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
                    pan_absolute 0x009a0908 (int)    : min=-36000 max=36000 step=3600 default=0 value=0

@@ -17,7 +17,7 @@
 			"max" : "255",
 			"step" : "1",
 			"default" : "128",
-			"value" : "129"
+			"value" : "128"
 		},
 		"saturation" :
 		{
@@ -41,7 +41,7 @@
 			"max" : "255",
 			"step" : "1",
 			"default" : "0",
-			"value" : "109"
+			"value" : "255"
 		},
 		"power_line_frequency" :
 		{
@@ -126,7 +126,7 @@
 			"max" : "255",
 			"step" : "5",
 			"default" : "0",
-			"value" : "40"
+			"value" : "50"
 		},
 		"focus_automatic_continuous" :
 		{

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# v4l2-ctl -D -d /dev/video0 --all > ./info/video0_v4l2-ctl.txt
-
 fileConvert()
 {
 
@@ -105,15 +103,24 @@ if [ -n "$1" ]; then
 	exit 0
 fi
 
-for f in ./*.txt; do
+devs=$(v4l2-ctl --list-devices | grep video)
 
-	vf=$(echo "$f" | grep video | grep ctl)
+for d in $devs ; do
 
-	if [ -z "$vf" ]; then
+	meta=$(v4l2-ctl -D -d "$d" --all | grep "Format Meta")
+	#echo "$meta"
+
+	if [ -n "$meta" ]; then
 		continue
 	fi
 
-	#echo "$f"
+	#echo "$d"
+
+	dName=$(echo "$d" | rev | cut -d "/" -f 1 | rev)
+	#echo "$dName"
+
+	f="./${dName}_v4l2-ctl.txt"
+	v4l2-ctl -D -d "$d" --all > "$f"
 
 	fileConvert "$f"
 
