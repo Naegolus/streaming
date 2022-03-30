@@ -21,11 +21,11 @@ $fs = 0.4;
 	}
 
 	// plate
-	translate([40, 8, 0.0])
+	translate([40, 6, 0.0])
 	{
 		difference()
 		{
-			cube([30, 5, 40]);
+			cube([30, 7, 40]);
 			translate([15, 10, 28])
 				rotate([90, 0, 0])
 					cylinder(h = 15.0, d = 7);
