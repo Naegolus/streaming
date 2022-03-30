@@ -1,0 +1,4 @@
+
+# Bus 003 Device 020: ID 2c99:0002 Prusa Original Prusa i3 MK3
+SUBSYSTEMS=="usb", ACTION=="add", ATTRS{idVendor}=="2c99", ATTRS{idProduct}=="0002", GROUP="joe", MODE="0660"
+
