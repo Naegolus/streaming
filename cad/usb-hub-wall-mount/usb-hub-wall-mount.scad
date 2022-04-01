@@ -66,7 +66,7 @@ difference()
 		2 * mountLen
 	]);
 
-	translate([-flapWidth, sideHeight, topLen])
+	translate([-flapWidth, sideHeight, wallThickness + topLen])
 	color([0.2, 0.5, 0.0, 0.6])
 	cube
 	([
