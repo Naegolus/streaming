@@ -39,9 +39,16 @@ difference()
 		translate([30, 0, 0])
 			cylinder(h = 40, d = 32);
 
+		difference()
+		{
 		// bridge
 		translate([0, -5.5, 0])
-			cube([20, 11, 30]);
+			cube([20, 11, 35]);
+
+		translate([11.25, 10, 35])
+			rotate([90, 0, 0])
+				cylinder(h = 20.0, d = 5.5);
+		}
 	}
 
 	translate([30, 0, -10])
