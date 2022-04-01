@@ -14,7 +14,7 @@ mountWidth = hubWidth() + 2 * wallThickness;
 mountHeight = hubHeight() + 1 * wallThickness;
 mountLen = 20;
 
-topLen = 5;
+topLen = 3;
 sideHeight = 20;
 
 holeDiameter = 4.5;
