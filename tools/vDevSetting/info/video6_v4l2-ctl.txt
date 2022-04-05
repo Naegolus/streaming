@@ -1,0 +1,63 @@
+Driver Info:
+	Driver name      : uvcvideo
+	Card type        : USB3. 0 capture: USB3. 0 captur
+	Bus info         : usb-0000:0a:00.3-2.1.1
+	Driver version   : 5.16.7
+	Capabilities     : 0x84a00001
+		Video Capture
+		Metadata Capture
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04200001
+		Video Capture
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : uvcvideo
+	Model            : USB3. 0 capture: USB3. 0 captur
+	Serial           : 
+	Bus info         : usb-0000:0a:00.3-2.1.1
+	Media version    : 5.16.7
+	Hardware revision: 0x00002100 (8448)
+	Driver version   : 5.16.7
+Interface Info:
+	ID               : 0x03000002
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000001 (1)
+	Name             : USB3. 0 capture: USB3. 0 captur
+	Function         : V4L2 I/O
+	Flags            : default
+	Pad 0x01000007   : 0: Sink
+	  Link 0x0200000d: from remote pad 0x100000a of entity 'Processing 2' (Video Pixel Formatter): Data, Enabled, Immutable
+Priority: 2
+Video input : 0 (Camera 1: ok)
+Format Video Capture:
+	Width/Height      : 1280/720
+	Pixel Format      : 'MJPG' (Motion-JPEG)
+	Field             : None
+	Bytes per Line    : 0
+	Size Image        : 1843200
+	Colorspace        : sRGB
+	Transfer Function : Rec. 709
+	YCbCr/HSV Encoding: ITU-R 601
+	Quantization      : Default (maps to Full Range)
+	Flags             : 
+Crop Capability Video Capture:
+	Bounds      : Left 0, Top 0, Width 1280, Height 720
+	Default     : Left 0, Top 0, Width 1280, Height 720
+	Pixel Aspect: 1/1
+Selection Video Capture: crop_default, Left 0, Top 0, Width 1280, Height 720, Flags: 
+Selection Video Capture: crop_bounds, Left 0, Top 0, Width 1280, Height 720, Flags: 
+Streaming Parameters Video Capture:
+	Capabilities     : timeperframe
+	Frames per second: 60.000 (60/1)
+	Read buffers     : 0
+
+User Controls
+
+                     brightness 0x00980900 (int)    : min=-128 max=127 step=1 default=-11 value=-11
+                       contrast 0x00980901 (int)    : min=0 max=255 step=1 default=148 value=148
+                     saturation 0x00980902 (int)    : min=0 max=255 step=1 default=180 value=180
+                            hue 0x00980903 (int)    : min=-128 max=127 step=1 default=0 value=0

@@ -1,0 +1,41 @@
+{
+	"ctrls" :
+	{
+		"brightness" :
+		{
+			"type" : "int",
+			"min" : "-128",
+			"max" : "127",
+			"step" : "1",
+			"default" : "-11",
+			"value" : "-11"
+		},
+		"contrast" :
+		{
+			"type" : "int",
+			"min" : "0",
+			"max" : "255",
+			"step" : "1",
+			"default" : "148",
+			"value" : "148"
+		},
+		"saturation" :
+		{
+			"type" : "int",
+			"min" : "0",
+			"max" : "255",
+			"step" : "1",
+			"default" : "180",
+			"value" : "180"
+		},
+		"hue" :
+		{
+			"type" : "int",
+			"min" : "-128",
+			"max" : "127",
+			"step" : "1",
+			"default" : "0",
+			"value" : "0"
+		}
+	}
+}
