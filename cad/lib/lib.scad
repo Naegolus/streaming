@@ -68,7 +68,7 @@ module rcube3d
 	translate([0, 0, height / 2])
 	cmirror([0, 0, 1])
 	cmirror()
-	translate([d2 / 2, 0, h2 / 2])
+	translate([w2 / 2, 0, h2 / 2])
 	translate([0, d2 / 2, 0])
 	rotate([90, 0, 0])
 	cylinder(h = d2, d = r);
@@ -85,8 +85,8 @@ module rcube3d
 
 	if (singleSided)
 	{
-		//translate([0, 0, height / 2])
-		//rotate([90, 0, 0])
+		translate([0, -depth / 2, height / 2])
+		rotate([-90, 0, 0])
 		rcube2d([width, height, r], r);
 	}
 }
