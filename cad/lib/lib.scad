@@ -106,6 +106,8 @@ module rcube
 	depth = s[1];
 	height = s[2];
 
+	rn = r > height ? height : r;
+
 	translate
 	([
 		(1 - aX) * width / 2,
@@ -113,8 +115,8 @@ module rcube
 		-aZ * height / 2
 	])
 	if (flat)
-		rcube2d(s, r, singleSided);
+		rcube2d(s, rn, singleSided);
 	else
-		rcube3d(s, r, singleSided);
+		rcube3d(s, rn, singleSided);
 }
 
