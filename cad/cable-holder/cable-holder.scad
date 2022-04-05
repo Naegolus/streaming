@@ -6,7 +6,8 @@ use <../lib/lib.scad>
 
 rcube
 (
-	r = 6,
+	[15, 20, 5],
+	r = 2,
 	flat = false,
 	singleSided = true,
 	aX = 0,
