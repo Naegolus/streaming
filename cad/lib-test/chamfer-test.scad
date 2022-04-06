@@ -7,7 +7,6 @@ use <../lib/lib.scad>
 chamfer
 (
 	[10, 20, 6],
-	[10, 10, 10],
 	round = false,
 	rotation = 1,
 	aX = 1,

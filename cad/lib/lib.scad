@@ -126,7 +126,6 @@ module rcube
 module chamfer
 (
 	s = [10, 20, 6],
-	p = [0, 0, 0],
 	round = true,
 	aX = 0,
 	aY = 0,
@@ -140,7 +139,6 @@ module chamfer
 
 	r = width < height ? width : height;
 
-	translate(p)
 	rotate([0, rotation * 90, 0])
 	translate
 	([
