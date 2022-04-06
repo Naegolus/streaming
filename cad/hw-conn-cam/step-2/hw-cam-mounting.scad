@@ -2,8 +2,7 @@
 $fa = 1.0;
 $fs = 0.4;
 
-// cylinder(h = 60.0, d = 23.5);
-// cylinder(h = 5.0, d = 40);
+use <../../lib/lib.scad>
 
 // cylinder(h = 60.2, d = 17);
 // cube([70, 26, 5]);
@@ -15,43 +14,45 @@ $fs = 0.4;
 // union()
 
 difference()
+//union()
 {
 	union()
 	{
-		translate([0, -5.5, 0])
-			cube([8.5, 11, 90]);
+		rotate([0, 0, 90])
+		rotate([90, 0, 0])
+		rcube
+		(
+			[20, 100, 8.5],
+			r = 8,
+			singleSided = true,
+			aX = 1
+		);
 
-		translate([0, 0, 90])
-			rotate([0, 90, 0])
-				cylinder(h = 8.5, d = 11);
+		translate([-5, 0, 0])
+		rotate([90, 0, 0])
+		rcube
+		(
+			[20, 65, 12],
+			r = 8,
+			flat = false,
+			singleSided = true,
+			aX = 1,
+			aZ = 1
+		);
 
+		translate([32, 0, 0])
+			cylinder(h = 40, d = 32);
+
+		// bridge
+		translate([0, -10, 0])
+			cube([40, 20, 35]);
 	}
 
 	translate([-10, 0, 90])
 		rotate([0, 90, 0])
 			cylinder(h = 20, d = 4.2);
-}
 
-difference()
-{
-	union()
-	{
-		translate([30, 0, 0])
-			cylinder(h = 40, d = 32);
-
-		difference()
-		{
-		// bridge
-		translate([0, -5.5, 0])
-			cube([20, 11, 35]);
-
-		translate([11.25, 10, 35])
-			rotate([90, 0, 0])
-				cylinder(h = 20.0, d = 5.5);
-		}
-	}
-
-	translate([30, 0, -10])
+	translate([32, 0, -10])
 		cylinder(h = 60.0, d = 23.6);
 }
 
