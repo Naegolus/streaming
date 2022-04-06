@@ -123,3 +123,68 @@ module rcube
 	}
 }
 
+module chamfer
+(
+	s = [10, 20, 6],
+	p = [0, 0, 0],
+	round = true,
+	aX = 0,
+	aY = 0,
+	aZ = 0,
+	rotation = 0,
+)
+{
+	width = s[0];
+	depth = s[1];
+	height = s[2];
+
+	r = width < height ? width : height;
+
+	translate(p)
+	rotate([0, rotation * 90, 0])
+	translate
+	([
+		-aX * r / 2,
+		-aY * depth / 2,
+		-aZ * r / 2
+	])
+	if (round)
+	{
+		difference()
+		{
+			cube(s);
+
+			translate([r, -depth / 2, 0])
+			union()
+			{
+				translate([0, 0, r])
+				rotate([-90, 0, 0])
+				cylinder(d = 2 * r, h = 2 * depth);
+
+				translate([0, 0, -r / 2])
+				cube([2 * width, 2 * depth, 2 * r]);
+
+				translate([-1.5 * r, 0, r])
+				cube([2 * r, 2 * depth, 2 * height]);
+			}
+		}
+	}
+	else
+	{
+		difference()
+		{
+			cube(s);
+
+			translate([0, 1.5 * depth, 0])
+			rotate([90, 0, 0])
+			linear_extrude(2 * depth)
+			polygon
+			([
+				[ 2 * width, -1 * height],
+				[ 2 * width,  2 * height],
+				[-1 * width,  2 * height],
+			]);
+		}
+	}
+}
+
