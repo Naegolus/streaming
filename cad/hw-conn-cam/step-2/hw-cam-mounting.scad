@@ -46,6 +46,14 @@ difference()
 		// bridge
 		translate([0, -10, 0])
 			cube([40, 20, 35]);
+
+		// chamfer
+		translate([8.5, 0, 35])
+		chamfer
+		(
+			[5, 20, 5],
+			aY = 1
+		);
 	}
 
 	translate([-10, 0, 90])
