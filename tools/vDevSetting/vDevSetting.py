@@ -26,11 +26,21 @@ if not args.dev:
     parser.print_help()
     exit(0)
 
-res = subprocess.run([dirExec + './vDevFind.sh', devNames[args.dev]], stdout = subprocess.PIPE)
-devFile = res.stdout.decode('utf-8').strip()
+res = subprocess.run([dirExec + './vDevList.py'], stdout = subprocess.PIPE)
+devList = res.stdout.decode('utf-8').split('\n')
+
+for d in devList:
+    if not args.dev in d:
+        continue
+
+    devFile = d.split(' ')[0]
+
+if not devFile:
+    print('Device file not found')
+    exit(1)
 
 if not args.file:
-    args.file = dirExec + './info/' + devFile.split('/')[-1] + '_v4l2-ctl.json'
+    args.file = dirExec + './info/' + args.dev + '_v4l2-ctl.json'
 
 #print('Device file %s' % devFile)
 #print('Settings file %s' % args.file)
