@@ -119,7 +119,19 @@ for d in $devs ; do
 	dName=$(echo "$d" | rev | cut -d "/" -f 1 | rev)
 	#echo "$dName"
 
-	f="./${dName}_v4l2-ctl.txt"
+	busInfo=$(v4l2-ctl -D -d "$d" --all | grep "Bus info" | cut -d ":" -f 2- | uniq | xargs)
+	#echo "$busInfo"
+
+	hName=$(jq -r ". | to_entries[] | select(.value == \"$busInfo\")".key ../vDevSetting.json)
+	#echo "$hName"
+
+	if [ -z "$hName" ]; then
+		hName="${dName}_unknown"
+	fi
+
+	udevadm info --name="$d" --attribute-walk > "./${hName}_udev.txt"
+
+	f="./${hName}_v4l2-ctl.txt"
 	v4l2-ctl -D -d "$d" --all > "$f"
 
 	fileConvert "$f"

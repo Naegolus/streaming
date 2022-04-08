@@ -1,7 +1,7 @@
 Driver Info:
 	Driver name      : uvcvideo
 	Card type        : Logitech Webcam C930e
-	Bus info         : usb-0000:01:00.0-1
+	Bus info         : usb-0000:0a:00.3-1.1.4
 	Driver version   : 5.16.7
 	Capabilities     : 0x84a00001
 		Video Capture
@@ -16,10 +16,10 @@ Driver Info:
 Media Driver Info:
 	Driver name      : uvcvideo
 	Model            : Logitech Webcam C930e
-	Serial           : E2A83F8E
-	Bus info         : usb-0000:01:00.0-1
+	Serial           : 665A8DAE
+	Bus info         : usb-0000:0a:00.3-1.1.4
 	Media version    : 5.16.7
-	Hardware revision: 0x00000021 (33)
+	Hardware revision: 0x00000013 (19)
 	Driver version   : 5.16.7
 Interface Info:
 	ID               : 0x03000002
@@ -35,14 +35,14 @@ Priority: 2
 Video input : 0 (Camera 1: ok)
 Format Video Capture:
 	Width/Height      : 848/480
-	Pixel Format      : 'YUYV' (YUYV 4:2:2)
+	Pixel Format      : 'MJPG' (Motion-JPEG)
 	Field             : None
-	Bytes per Line    : 1696
+	Bytes per Line    : 0
 	Size Image        : 814080
 	Colorspace        : sRGB
 	Transfer Function : Rec. 709
 	YCbCr/HSV Encoding: ITU-R 601
-	Quantization      : Default (maps to Limited Range)
+	Quantization      : Default (maps to Full Range)
 	Flags             : 
 Crop Capability Video Capture:
 	Bounds      : Left 0, Top 0, Width 848, Height 480
@@ -61,13 +61,13 @@ User Controls
                        contrast 0x00980901 (int)    : min=0 max=255 step=1 default=128 value=128
                      saturation 0x00980902 (int)    : min=0 max=255 step=1 default=128 value=128
         white_balance_automatic 0x0098090c (bool)   : default=1 value=0
-                           gain 0x00980913 (int)    : min=0 max=255 step=1 default=0 value=60
+                           gain 0x00980913 (int)    : min=0 max=255 step=1 default=0 value=49
            power_line_frequency 0x00980918 (menu)   : min=0 max=2 default=2 value=1 (50 Hz)
 				0: Disabled
 				1: 50 Hz
 				2: 60 Hz
-      white_balance_temperature 0x0098091a (int)    : min=2000 max=7500 step=1 default=4000 value=3280
-                      sharpness 0x0098091b (int)    : min=0 max=255 step=1 default=128 value=128
+      white_balance_temperature 0x0098091a (int)    : min=2000 max=7500 step=1 default=4000 value=3515
+                      sharpness 0x0098091b (int)    : min=0 max=255 step=1 default=128 value=150
          backlight_compensation 0x0098091c (int)    : min=0 max=1 step=1 default=0 value=0
 
 Camera Controls
@@ -79,6 +79,6 @@ Camera Controls
      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
                    pan_absolute 0x009a0908 (int)    : min=-36000 max=36000 step=3600 default=0 value=0
                   tilt_absolute 0x009a0909 (int)    : min=-36000 max=36000 step=3600 default=0 value=0
-                 focus_absolute 0x009a090a (int)    : min=0 max=255 step=5 default=0 value=40
+                 focus_absolute 0x009a090a (int)    : min=0 max=255 step=5 default=0 value=35
      focus_automatic_continuous 0x009a090c (bool)   : default=1 value=0
                   zoom_absolute 0x009a090d (int)    : min=100 max=400 step=1 default=100 value=100

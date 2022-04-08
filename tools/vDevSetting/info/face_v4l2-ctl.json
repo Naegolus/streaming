@@ -41,7 +41,7 @@
 			"max" : "255",
 			"step" : "1",
 			"default" : "0",
-			"value" : "60"
+			"value" : "49"
 		},
 		"power_line_frequency" :
 		{
@@ -58,7 +58,7 @@
 			"max" : "7500",
 			"step" : "1",
 			"default" : "4000",
-			"value" : "3280"
+			"value" : "3515"
 		},
 		"sharpness" :
 		{
@@ -67,7 +67,7 @@
 			"max" : "255",
 			"step" : "1",
 			"default" : "128",
-			"value" : "128"
+			"value" : "150"
 		},
 		"backlight_compensation" :
 		{
@@ -126,7 +126,7 @@
 			"max" : "255",
 			"step" : "5",
 			"default" : "0",
-			"value" : "40"
+			"value" : "35"
 		},
 		"focus_automatic_continuous" :
 		{

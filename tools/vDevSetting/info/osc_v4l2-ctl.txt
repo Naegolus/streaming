@@ -1,7 +1,7 @@
 Driver Info:
 	Driver name      : uvcvideo
 	Card type        : USB3. 0 capture: USB3. 0 captur
-	Bus info         : usb-0000:0a:00.3-2.1.1
+	Bus info         : usb-0000:0a:00.3-1.4.1
 	Driver version   : 5.16.7
 	Capabilities     : 0x84a00001
 		Video Capture
@@ -17,7 +17,7 @@ Media Driver Info:
 	Driver name      : uvcvideo
 	Model            : USB3. 0 capture: USB3. 0 captur
 	Serial           : 
-	Bus info         : usb-0000:0a:00.3-2.1.1
+	Bus info         : usb-0000:0a:00.3-1.4.1
 	Media version    : 5.16.7
 	Hardware revision: 0x00002100 (8448)
 	Driver version   : 5.16.7
@@ -57,7 +57,7 @@ Streaming Parameters Video Capture:
 
 User Controls
 
-                     brightness 0x00980900 (int)    : min=-128 max=127 step=1 default=-11 value=-11
-                       contrast 0x00980901 (int)    : min=0 max=255 step=1 default=148 value=148
+                     brightness 0x00980900 (int)    : min=-128 max=127 step=1 default=-11 value=127
+                       contrast 0x00980901 (int)    : min=0 max=255 step=1 default=148 value=129
                      saturation 0x00980902 (int)    : min=0 max=255 step=1 default=180 value=180
                             hue 0x00980903 (int)    : min=-128 max=127 step=1 default=0 value=0
