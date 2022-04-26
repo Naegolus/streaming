@@ -61,7 +61,7 @@ User Controls
                        contrast 0x00980901 (int)    : min=0 max=255 step=1 default=128 value=128
                      saturation 0x00980902 (int)    : min=0 max=255 step=1 default=128 value=128
         white_balance_automatic 0x0098090c (bool)   : default=1 value=0
-                           gain 0x00980913 (int)    : min=0 max=255 step=1 default=0 value=42
+                           gain 0x00980913 (int)    : min=0 max=255 step=1 default=0 value=73
            power_line_frequency 0x00980918 (menu)   : min=0 max=2 default=2 value=1 (50 Hz)
 				0: Disabled
 				1: 50 Hz

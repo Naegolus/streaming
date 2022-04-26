@@ -32,7 +32,7 @@
 		{
 			"type" : "bool",
 			"default" : "1",
-			"value" : "1"
+			"value" : "0"
 		},
 		"gain" :
 		{
@@ -41,7 +41,7 @@
 			"max" : "255",
 			"step" : "1",
 			"default" : "0",
-			"value" : "255"
+			"value" : "60"
 		},
 		"power_line_frequency" :
 		{
@@ -58,8 +58,7 @@
 			"max" : "7500",
 			"step" : "1",
 			"default" : "4000",
-			"value" : "3786",
-			"flags" : "inactive"
+			"value" : "3280"
 		},
 		"sharpness" :
 		{
@@ -85,7 +84,7 @@
 			"min" : "0",
 			"max" : "3",
 			"default" : "3",
-			"value" : "3"
+			"value" : "1"
 		},
 		"exposure_time_absolute" :
 		{
@@ -94,14 +93,13 @@
 			"max" : "2047",
 			"step" : "1",
 			"default" : "250",
-			"value" : "299",
-			"flags" : "inactive"
+			"value" : "156"
 		},
 		"exposure_dynamic_framerate" :
 		{
 			"type" : "bool",
 			"default" : "0",
-			"value" : "1"
+			"value" : "0"
 		},
 		"pan_absolute" :
 		{
@@ -128,14 +126,13 @@
 			"max" : "255",
 			"step" : "5",
 			"default" : "0",
-			"value" : "0",
-			"flags" : "inactive"
+			"value" : "40"
 		},
 		"focus_automatic_continuous" :
 		{
 			"type" : "bool",
 			"default" : "1",
-			"value" : "1"
+			"value" : "0"
 		},
 		"zoom_absolute" :
 		{
