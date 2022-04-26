@@ -8,9 +8,14 @@ use <./test-adapter-box.scad>
 use <./st-link-v2-clone.scad>
 use <./usb-to-uart.scad>
 
-extShow = true;
+extShow = false;
 
+intersection()
+{
+translate([0, -5, 0])
+cube([34, 60, 40]);
 testAdapterBox();
+}
 
 if (extShow)
 {
@@ -19,21 +24,21 @@ if (extShow)
 	([
 		programmerOffsetX(),
 		0.5 * taBoxDepth() - stLinkCloneHeight(),
-		taBoxGroundHeight() + 0.5 * stLinkCloneDepth()
+		taBoxGroundHeight() + 0.5 * stLinkCloneWidth()
 	])
-	rotate([-90, 0, 0])
+	rotate([-90, 90, 0])
 	stLinkClone();
 
 	translate
 	([
 		uartOffsetX(),
 		0.5 * taBoxDepth() + usbHeight(),
-		taBoxGroundHeight() + 0.5 * stLinkCloneDepth()
+		taBoxGroundHeight() + 0.5 * stLinkCloneWidth()
 	])
-	rotate([90, 0, 0])
+	rotate([90, -90, 0])
 	usbToUart();
 
-	if (true)
+	if (false)
 	{
 	color([0, 0.4, 0, 0.4])
 	translate([0, 0, taBoxPlateHeight() + 0.01])

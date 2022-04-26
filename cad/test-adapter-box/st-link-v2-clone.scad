@@ -11,6 +11,9 @@ function stLinkCloneHeight() = 42;
 function stLinkCloneWidthM() = 17;
 function stLinkCloneDepthM() = 7;
 
+function stLinkConnWidth() = 17.5;
+function stLinkConnDepth() = 8;
+
 module stLinkClone()
 {
 	translate
@@ -23,6 +26,15 @@ module stLinkClone()
 	{
 		color([0, 0, 0, 1])
 		cube([stLinkCloneWidth(), stLinkCloneDepth(), 9]);
+
+		translate
+		([
+			0.5 * (stLinkCloneWidth() - stLinkConnWidth()),
+			(stLinkCloneDepth() - stLinkConnDepth()),
+			-10 + eps()
+		])
+		color([0, 0, 0, 1])
+		cube([stLinkConnWidth(), stLinkConnDepth(), 10]);
 
 		translate
 		([

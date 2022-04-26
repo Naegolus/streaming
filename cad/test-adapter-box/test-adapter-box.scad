@@ -10,14 +10,16 @@ use <./usb-to-uart.scad>
 function taBoxGroundHeight() = 6;
 taBoxWallTh = 3;
 
-function taBoxWidth() = taPlateWidth() + 2 * taBoxWallTh;
-function taBoxDepth() = taPlateDepth() + 2 * taBoxWallTh;
+function taBoxWidth() = taPlateWidth();
+function taBoxDepth() = taPlateDepth();
 function taBoxHeight() = 30;
 
-function taBoxPlateHeight() = taBoxHeight() - taPlateHeight();
+function taBoxPlateHeight() = taBoxHeight();
 
-function programmerOffsetX() = 12;
-function uartOffsetX() = -12;
+function programmerOffsetX() = 20;
+function uartOffsetX() = 10;
+
+intBoxHeight = stLinkCloneWidthM() + 0.5 * (stLinkCloneWidth() - stLinkCloneWidthM()) - 2;
 
 module testAdapterBoxBase()
 {
@@ -44,8 +46,8 @@ module testAdapterBoxBase()
 		])
 		cube
 		([
-			taPlateWidth(),
-			taPlateDepth(),
+			taBoxWidth() - 2 * taBoxWallTh,
+			taBoxDepth() - 2 * taBoxWallTh,
 			taBoxHeight()
 		], center = true);
 	}
@@ -54,8 +56,8 @@ module testAdapterBoxBase()
 	cmirror()
 	translate
 	([
-		0.5 * taBoxWidth() - 10 - taBoxWallTh,
-		0.5 * taBoxDepth() - 10 - taBoxWallTh,
+		0.5 * taBoxWidth() - 10,
+		0.5 * taBoxDepth() - 10,
 		0
 	])
 	difference()
@@ -67,45 +69,104 @@ module testAdapterBoxBase()
 	}
 }
 
+module devicesCut()
+{
+//	linear_extrude
+//	(
+//		stLinkCloneWidthM() +
+//		0.5 * (stLinkCloneWidth() - stLinkCloneWidthM())
+//		+ 0.1
+//	)
+//	projection(cut = false)
+	translate
+	([
+		programmerOffsetX(),
+		0.5 * taBoxDepth() - stLinkCloneHeight(),
+		taBoxGroundHeight() + 0.5 * stLinkCloneWidth()
+	])
+	rotate([-90, 90, 0])
+	stLinkClone();
+
+	translate
+	([
+		uartOffsetX(),
+		0.5 * taBoxDepth() + usbHeight(),
+		taBoxGroundHeight() + 0.5 * stLinkCloneWidth()
+	])
+	rotate([90, -90, 0])
+	usbToUart();
+
+}
+
 module testAdapterBox()
 {
 	difference()
 	//union()
 	{
+		color([0.4, 0.4, 0.4, 1.0])
 		union()
 		{
-			color([0.4, 0.4, 0.4, 1.0])
 			testAdapterBoxBase();
+
+			translate
+			([
+				0.5 * (uartOffsetX() + programmerOffsetX())
+				- 16,
+				0,
+				taBoxGroundHeight()
+			])
+			cube
+			([
+				32,
+				36,
+				intBoxHeight
+			]);
 		}
+
+		devicesCut();
+
+		translate
+		([
+			5,
+			25,
+			intBoxHeight - 10
+		])
+		cylinder(h = 20, d = 2);
+
+		translate
+		([
+			27,
+			25,
+			intBoxHeight - 10
+		])
+		cylinder(h = 20, d = 2);
 
 		color([1, 0, 0, 1])
 		translate
 		([
-			programmerOffsetX() - 0.5 * stLinkCloneWidthM(),
+			programmerOffsetX() - 0.5 * stLinkCloneDepthM(),
 			0.5 * taBoxDepth() - 2 * taBoxWallTh,
-			0.5 * (stLinkCloneDepth() - stLinkCloneDepthM())
-			+ taBoxGroundHeight()
+			taBoxGroundHeight()
 		])
 		cube
 		([
-			stLinkCloneWidthM(),
+			stLinkCloneDepthM(),
 			3 * taBoxWallTh,
-			stLinkCloneDepthM()
+			taBoxHeight() - taBoxGroundHeight() + 0.1
 		]);
 
 		color([1, 0, 0, 1])
 		translate
 		([
-			uartOffsetX() - 0.5 * usbWidth(),
+			uartOffsetX() - 0.5 * usbDepth(),
 			0.5 * taBoxDepth() - 2 * taBoxWallTh,
-			0.5 * (stLinkCloneDepth() - usbDepth())
-			+ taBoxGroundHeight()
+			taBoxGroundHeight() + 0.1
 		])
 		cube
 		([
-			usbWidth(),
+			usbDepth(),
 			3 * taBoxWallTh,
-			usbDepth()
+			taBoxHeight() - taBoxGroundHeight() + 0.1
 		]);
 	}
 }
