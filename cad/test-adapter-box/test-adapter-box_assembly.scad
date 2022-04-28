@@ -7,18 +7,23 @@ use <./test-adapter-plate.scad>
 use <./test-adapter-box.scad>
 use <./st-link-v2-clone.scad>
 use <./usb-to-uart.scad>
+use <./bridge.scad>
 
 extShow = false;
 
-intersection()
-{
-translate([0, -5, 0])
-cube([34, 60, 40]);
+//intersection()
+//{
+//translate([0, -5, 0])
+//cube([34, 60, 40]);
 testAdapterBox();
-}
+//}
 
 if (extShow)
 {
+
+	translate([1.5, 29, taBoxGroundHeight() + intBoxHeight() + 5])
+	rotate([180, 0, 0])
+	bridge();
 
 	translate
 	([

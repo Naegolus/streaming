@@ -9,7 +9,7 @@ function stLinkCloneDepth() = 9;
 function stLinkCloneHeight() = 42;
 
 function stLinkCloneWidthM() = 17;
-function stLinkCloneDepthM() = 7;
+function stLinkCloneDepthM() = 7.2;
 
 function stLinkConnWidth() = 17.5;
 function stLinkConnDepth() = 8;

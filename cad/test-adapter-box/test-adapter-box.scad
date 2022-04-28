@@ -12,14 +12,14 @@ taBoxWallTh = 3;
 
 function taBoxWidth() = taPlateWidth();
 function taBoxDepth() = taPlateDepth();
-function taBoxHeight() = 30;
+function taBoxHeight() = 35;
 
 function taBoxPlateHeight() = taBoxHeight();
 
 function programmerOffsetX() = 20;
 function uartOffsetX() = 10;
 
-intBoxHeight = stLinkCloneWidthM() + 0.5 * (stLinkCloneWidth() - stLinkCloneWidthM()) - 2;
+function intBoxHeight() = stLinkCloneWidthM() + 0.5 * (stLinkCloneWidth() - stLinkCloneWidthM()) - 2;
 
 module testAdapterBoxBase()
 {
@@ -119,7 +119,7 @@ module testAdapterBox()
 			([
 				32,
 				36,
-				intBoxHeight
+				intBoxHeight()
 			]);
 		}
 
@@ -129,7 +129,7 @@ module testAdapterBox()
 		([
 			5,
 			25,
-			intBoxHeight - 10
+			intBoxHeight() - 10
 		])
 		cylinder(h = 20, d = 2);
 
@@ -137,7 +137,7 @@ module testAdapterBox()
 		([
 			27,
 			25,
-			intBoxHeight - 10
+			intBoxHeight() - 10
 		])
 		cylinder(h = 20, d = 2);
 

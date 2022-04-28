@@ -68,13 +68,13 @@ module usbToUart()
 		translate
 		([
 			0,
-			4 - 0.5 * 2.5,
-			43 + 0.5 * 16
+			6,
+			41 + 0.5 * 16
 		])
 		cube
 		([
 			usbToUartWidth() - eps(),
-			2.5,
+			13.5,
 			16
 		], center = true);
 	}
