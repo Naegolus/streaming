@@ -41,7 +41,7 @@
 			"max" : "255",
 			"step" : "1",
 			"default" : "0",
-			"value" : "60"
+			"value" : "201"
 		},
 		"power_line_frequency" :
 		{
@@ -93,7 +93,7 @@
 			"max" : "2047",
 			"step" : "1",
 			"default" : "250",
-			"value" : "156"
+			"value" : "312"
 		},
 		"exposure_dynamic_framerate" :
 		{
@@ -126,7 +126,7 @@
 			"max" : "255",
 			"step" : "5",
 			"default" : "0",
-			"value" : "40"
+			"value" : "30"
 		},
 		"focus_automatic_continuous" :
 		{
