@@ -5,7 +5,7 @@
 
 /* [Basic] */
 //Diametre du bouton
-Knob_Diameter=13; //[10:30]
+Knob_Diameter=18; //[10:30]
 //Hauteur du bouton
 Knob_Height=15;//[10:20]
 //Longueur de l'axe
@@ -39,11 +39,13 @@ difference() {
 }
 }
 
+diaK = 1.2;
+
 for(u = [0 : 2])
 {
 	for(v = [0 : 2])
 	{
-		translate([15 * u, 15 * v, 0])
+		translate([diaK * Knob_Diameter * u, diaK * Knob_Diameter * v, 0])
 		knob();
 	}
 }
