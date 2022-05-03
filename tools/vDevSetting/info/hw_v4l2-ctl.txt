@@ -1,7 +1,7 @@
 Driver Info:
 	Driver name      : uvcvideo
 	Card type        : Logitech Webcam C930e
-	Bus info         : usb-0000:0a:00.3-2.1.4
+	Bus info         : usb-0000:09:00.0-1
 	Driver version   : 5.17.3
 	Capabilities     : 0x84a00001
 		Video Capture
@@ -17,7 +17,7 @@ Media Driver Info:
 	Driver name      : uvcvideo
 	Model            : Logitech Webcam C930e
 	Serial           : E2A83F8E
-	Bus info         : usb-0000:0a:00.3-2.1.4
+	Bus info         : usb-0000:09:00.0-1
 	Media version    : 5.17.3
 	Hardware revision: 0x00000021 (33)
 	Driver version   : 5.17.3
@@ -61,7 +61,7 @@ User Controls
                        contrast 0x00980901 (int)    : min=0 max=255 step=1 default=128 value=128
                      saturation 0x00980902 (int)    : min=0 max=255 step=1 default=128 value=128
         white_balance_automatic 0x0098090c (bool)   : default=1 value=0
-                           gain 0x00980913 (int)    : min=0 max=255 step=1 default=0 value=201
+                           gain 0x00980913 (int)    : min=0 max=255 step=1 default=0 value=52
            power_line_frequency 0x00980918 (menu)   : min=0 max=2 default=2 value=1 (50 Hz)
 				0: Disabled
 				1: 50 Hz
@@ -79,6 +79,6 @@ Camera Controls
      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
                    pan_absolute 0x009a0908 (int)    : min=-36000 max=36000 step=3600 default=0 value=0
                   tilt_absolute 0x009a0909 (int)    : min=-36000 max=36000 step=3600 default=0 value=0
-                 focus_absolute 0x009a090a (int)    : min=0 max=255 step=5 default=0 value=30
+                 focus_absolute 0x009a090a (int)    : min=0 max=255 step=5 default=0 value=40
      focus_automatic_continuous 0x009a090c (bool)   : default=1 value=0
                   zoom_absolute 0x009a090d (int)    : min=100 max=400 step=1 default=100 value=100

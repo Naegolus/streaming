@@ -41,7 +41,7 @@
 			"max" : "255",
 			"step" : "1",
 			"default" : "0",
-			"value" : "47"
+			"value" : "46"
 		},
 		"power_line_frequency" :
 		{

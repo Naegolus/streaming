@@ -1,8 +1,8 @@
 Driver Info:
 	Driver name      : uvcvideo
 	Card type        : USB3. 0 capture: USB3. 0 captur
-	Bus info         : usb-0000:01:00.0-4
-	Driver version   : 5.16.18
+	Bus info         : usb-0000:07:00.0-1
+	Driver version   : 5.17.3
 	Capabilities     : 0x84a00001
 		Video Capture
 		Metadata Capture
@@ -17,10 +17,10 @@ Media Driver Info:
 	Driver name      : uvcvideo
 	Model            : USB3. 0 capture: USB3. 0 captur
 	Serial           : 
-	Bus info         : usb-0000:01:00.0-4
-	Media version    : 5.16.18
+	Bus info         : usb-0000:07:00.0-1
+	Media version    : 5.17.3
 	Hardware revision: 0x00002100 (8448)
-	Driver version   : 5.16.18
+	Driver version   : 5.17.3
 Interface Info:
 	ID               : 0x03000002
 	Type             : V4L Video

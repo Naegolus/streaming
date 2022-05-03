@@ -41,7 +41,7 @@
 			"max" : "255",
 			"step" : "1",
 			"default" : "0",
-			"value" : "201"
+			"value" : "52"
 		},
 		"power_line_frequency" :
 		{
@@ -126,7 +126,7 @@
 			"max" : "255",
 			"step" : "5",
 			"default" : "0",
-			"value" : "30"
+			"value" : "40"
 		},
 		"focus_automatic_continuous" :
 		{
