@@ -10,13 +10,25 @@
 *.gcode
 
 # Praesentation
-**/Praesentation/images/*.eps
-**/Praesentation/images/*.ps
-**/Praesentation/images/*-eps-converted-to*
+**/images/*.eps
+**/images/*.ps
+**/images/*-eps-converted-to*
 do-not-upload/
+
+# BSc
 
 # LaTeX
 *.aux
+*.tcp
+*.run.xml
+*.pdfsync
+*.dict
+*.sty
+*.blg
+*.bbl
+*.bib.bak
+*-blx.bib
+*.cls
 *.log
 *.nav
 *.out
