@@ -26,7 +26,7 @@ do-not-upload/
 *.sty
 *.blg
 *.bbl
-*.bib.bak
+*.bak
 *-blx.bib
 *.cls
 *.log
