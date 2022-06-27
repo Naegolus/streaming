@@ -1,0 +1,160 @@
+\documentclass[bachelor,german]{hgbthesis}
+%\documentclass[diplom,german]{report}
+% Zulässige Class Options: 
+%   Typ der Arbeit: diplom (default), master, bachelor, praktikum 
+%   Hauptsprache: german (default), english
+
+%%------------------------------------------------------------
+
+\graphicspath{{images/}}    % wo liegen die Bilder?
+\bibliography{literatur}
+
+\hypersetup
+{
+    bookmarksnumbered = true,
+    pdfauthor = Johannes Natter,
+    pdftitle = DCD,
+    pdfsubject = ,
+    pdfkeywords = ,
+    pdfcreator = ,
+    pdfproducer = ,
+    colorlinks = true,
+    linkcolor = black,
+    citecolor = black,
+    filecolor = black,
+    urlcolor = black
+}
+
+\usepackage{pdfsync}
+
+%%%----------------------------------------------------------
+\begin{document}
+%%%----------------------------------------------------------
+
+%% Kommandos
+\newlength{\pw}
+\setlength{\pw}{0.97 \textwidth}
+\setlength{\pw}{1.0 \columnwidth}
+
+\newcommand{\todo}[1]{\textbf{\textcolor{red}{TODO: #1}}}
+
+\newcommand{\abb}[1]{\hyperref[#1]{Abbildung \ref*{#1}}} %Abbildungskommando
+%1. Label
+%2. Caption
+%3. Filename
+\newcommand{\pic}[4][\empty]
+{
+    \begin{figure}[!ht]
+        \centering
+        \ifthenelse{\equal{#1}{\empty}}
+        {\includegraphics[width=\pw]{./#4}}
+        {\includegraphics[width=#1]{./#4}}
+        \caption{#3}
+        \label{#2}
+    \end{figure}
+}
+
+\newcommand{\tab}[1]{\hyperref[#1]{Tabelle \ref*{#1}}}   %Tabellenkommando
+%1. Label
+%2. Caption
+%3. Filename
+\newcommand{\exttab}[3]
+{
+    \begin{table}[h!]
+        \centering
+        \includegraphics[width=\textwidth]{./#3}
+        \caption{#2}
+        \label{#1}
+    \end{table}
+}
+
+\newcommand{\sca}{\emph{SCARTS} }
+\newcommand{\scap}{\emph{SCARTS}-Prozessor}
+\newcommand{\dcd}{\emph{DCD} }
+\newcommand{\app}{\emph{Applikation} }
+\newcommand{\bsl}{\emph{BSL} }
+\newcommand{\entspricht}{\mathrel{\widehat{=}}}
+
+%% End Kommandos
+
+%% Diplomarbeit, Bachelorarbeit, oder Praktikumsbericht?
+%% Achtung: auch im FH-MASTER-Studium ist eine "Diplomarbeit" vorgesehen!
+
+%% Entsprechende Blöcke auskommentieren:
+
+% Felder für ALLE Arbeiten: --------------------------------
+\title{Distributed Computing Device}
+\author{Johannes Natter}
+\studiengang{Hardware Software Design}
+\studienort{Hagenberg}
+\abgabemonat{September}
+\abgabejahr{2012}
+
+%\strictlicense  % erzeugt restriktive Lizenzformel
+
+
+%%% zusätzlich für eine Bachelorarbeit: ---------------------
+\nummer{0910306027-A}   % XX...X = Stud-ID, z.B. 0310238045-A  
+                        % (A = 1. Bachelorarbeit)
+\semester{Sommersemester 2012} 
+\gegenstand{Seminar zur Bachelorarbeit} 
+\betreuer{FH-Prof.\ DI Dr.\ Markus Pfaff} % oder \betreuerin{..}
+
+%%% zusätzlich für einen Praktikumsbericht: -----------------
+% \nummer{0910306027-B}   % XX...X = Stud-ID, z.B. 0310238045-B  
+%                         % (B = 2. Bachelorarbeit)
+% \betreuer{Andreas Mayrhofer\\Firmware Entwickler}  %\betreuerin{..}
+% \firma{
+%    Bernecker + Rainer Industrie Elektronik Ges.m.b.H.\\
+%    5142 Eggelsberg, BuR-Straße 1
+% }
+% \firmenTel{+43/7748/6586-0}
+% \firmenUrl{www.br-automation.com}
+
+%%%----------------------------------------------------------
+\frontmatter
+\maketitle
+\tableofcontents
+%%%----------------------------------------------------------
+
+\include{kurzfassung}
+\include{abstract}
+
+%%%----------------------------------------------------------
+\mainmatter           %Hauptteil (ab hier arab. Seitenzahlen)
+%%%----------------------------------------------------------
+
+\include{einleitung}
+\include{konzept}
+\include{hardware}
+\include{software}
+\include{schluss}
+%\include{diplomschrift}
+%\include{latex}
+%\include{abbildungen}
+%\include{mathematik}
+%\include{literatur}
+%\include{drucken}
+%\include{schluss}
+
+%%%----------------------------------------------------------
+%%%Anhang
+\appendix
+\include{appendix_a}
+\include{appendix_b}
+%\include{anhang_a}	% Technische Ergänzungen
+%\include{anhang_b}	% Inhalt der CD-ROM/DVD
+%\include{anhang_c}	% Chronologische Liste der Änderungen
+%\include{anhang_d}	% Quelltext dieses Dokuments
+
+%%%----------------------------------------------------------
+
+%Quellenverzeichnis
+\MakeBibliography[nosplit]{Literaturverzeichnis}
+
+%%%----------------------------------------------------------
+
+%%%Messbox zur Druckkontrolle
+%\include{messbox}
+
+\end{document}

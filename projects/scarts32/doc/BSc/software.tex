@@ -1,0 +1,275 @@
+\chapter{Software}
+\label{cha:Software}
+
+Dieses Kapitel behandelt die Kommunikation zwischen Benutzerprogramm und
+\emph{BSL}, die Nutzung der zur Verfügung stehenden Speicher, das Bootkonzept
+des \emph{DCD}, sowie das Verpackungsprogramm, welches die, in der \app
+benötigten, Dateien zu einer Applikationsdatei zusammenfügt und beim
+Senden an das \dcd entpackt.
+
+\section{Benutzerprogramm und \bsl}
+
+Für die Übertragung der \app zum \dcd wird seitens des Benutzers das
+Benutzerprogramm und seitens \dcd der \bsl benötigt. Das Benutzerprogramm ist
+ein Konsolenprogramm und sendet Dateien am PC mittels proprietären Protokolls,
+in dieser Arbeit BSL-Protokoll genannt, an das \emph{DCD}. Der \bsl ist ein
+Protokollinterpreter und wird am \dcd ausgeführt. Der \scap \ führt
+entweder die \app oder den \bsl aus. Das BSL-Protokoll beinhaltet ein Kommando,
+welches den Wechsel zwischen \app und \bsl ermöglicht.
+Der Wechsel zwischen diesen beiden Programmen wird in
+Punkt~\ref{sec:bootkonzept} beschrieben.
+
+\subsection{BSL-Protokoll}
+
+Das Protokoll ermöglicht das Lesen und Beschreiben von Daten eines Speichers am
+\emph{DCD}. Die verfügbaren Speicherbausteine sind der Flash und der
+Konfigurationsspeicher. Zusätzlich stellt das Protokoll einen Befehl zum
+Auslesen der Version des laufenden Programmes am \dcd und einen Befehl für den
+Wechsel zwischen \app und \bsl bereit.
+
+Die Protokolldaten können im Datenbereich eines Ethernet-, oder UDP-Paketes
+enthalten sein. Für den Transport über das Internet wird UDP/IP benötigt.
+\abb{tabbslproto} zeigt den Aufbau eines BSL-Protokollpaketes.
+
+\exttab{tabbslproto}{BSL Protokoll Paket}{tabbslproto}
+
+Das Feld \emph{BSL-Protokollkennung} ist 12 Bytes lang und beinhaltet die
+Zeichenfolge "`BSL\_Protocol"'. Die \emph{Speicher-ID} selektiert einen
+Speicherbaustein am \emph{DCD}. \tab{tabbslmemids} zeigt die verfügbaren
+\emph{Speicher ID}'s. \emph{Speicher-IDX} wird in dieser Arbeit nicht verwendet.
+
+\begin{table}[h!]
+    \centering
+    \begin{small}
+        \begin{tabular}[t]{l|l}
+            ID & Speicherbaustein \\
+            \hline
+            \ & \ \\
+            0 & Flash \\
+            1 & Konfigurationsspeicher
+        \end{tabular}
+    \end{small}
+    \caption{Zuweisung der Speicher-ID's}
+    \label{tabbslmemids}
+\end{table}
+
+Das Feld \emph{Datenlänge} ist ein 32-Bit-Wert und gibt die Länge des optionalen
+Datenfeldes, oder der angeforderten Daten in Bytes an. Die \emph{Ziel-/
+Startadresse} ist eine Offsetadresse in Bytes, welche den Standort der zu
+lesenden/schreibenden Daten im Speicher bestimmt.
+Die \emph{Kommando ID} ist ein vom Benutzerprogramm generierter 16-Bit-Wert. Bei
+einer Antwort vom \bsl ist das Einerkomplement des generierten Wertes in diesem Feld
+gespeichert. Das \emph{Kommando} bestimmt die auszuführende Aktion. Die
+verfügbaren Kommandos sind in \tab{tabbslcmds} aufgelistet. Die \emph{Prüfsumme}
+ist ein 8-Bit-Wert zur Sicherung der Kopfdaten des Protokolls. Berechnet wird dieses Feld durch Addition aller Bytes von Adresse
+00h bis 1Ah im Paket. Von dem LSB der Summe wird das Einerkomplement gebildet
+und dieses als \emph{Prüfsumme} des Paketes verwendet.
+
+\begin{table}[h!]
+    \centering
+    \begin{small}
+        \begin{tabular}[t]{r|l|p{7.6cm}}
+            Kommando & Bezeichnung & Beschreibung \\
+            \hline
+            \ & \ & \ \\
+            0 & bsl\_rd\_vers & Lese Version des laufenden Programmes \\
+            1 & bsl\_start & Starten eines Programmes bzw. Programmwechsel \\
+            2 & bsl\_rd\_mem & Speicher lesen \\
+            3 & bsl\_wr\_mem & Speicher schreiben
+        \end{tabular}
+    \end{small}
+    \caption{Verfügbare Kommandos im BSL-Protokoll}
+    \label{tabbslcmds}
+\end{table}
+
+Das Benutzerprogramm initiiert alle Übertragungen und erwartet bei
+\emph{bsl\_rd\_vers}, \emph{bsl\_rd\_mem} und \emph{bsl\_wr\_mem} eine Antwort
+vom \emph{BSL}.
+Beim Übertragen einer Datei werden mittels Kommando \emph{bsl\_wr\_mem} die
+Daten in einen beliebigen Speicher geschrieben. Das Benutzerprogramm liest
+anschließend mittels \emph{bsl\_rd\_mem} die geschriebenen Daten aus und
+vergleicht diese mit der Datei am PC. Wird ein Unterschied zwischen gelesenen
+Daten und der Datei am PC festgestellt, so wird die Übertragung mit einer
+Fehlermeldung abgebrochen. 
+
+Die Kommandos \emph{bsl\_rd\_vers} und \emph{bsl\_start} müssen vom \bsl und
+der \app unterstützt werden. Nachfolgende Grafiken zeigen Beispielpakete für
+alle Kommandos. Das Feld \emph{BSL-Protokollkennung} wird nicht dargestellt.
+
+\subsubsection{bsl\_rd\_vers}
+
+Lesen der Version des laufenden Programmes. Die Version eines Programmes ist ein
+16-Bit-Wert und ist im \bsl zwischen 100h und FFFh bzw. in der \app zwischen
+1000h und FFFFh zu wählen.
+
+\pic[0.9 \pw]{tabbslrdvers}{Kommando \emph{bsl\_rd\_vers}}{tabbslrdvers}
+
+\subsubsection{bsl\_start}
+
+Starten der \emph{Applikation}.
+
+\pic[0.9 \pw]{tabbslstart}{Kommando \emph{bsl\_start}}{tabbslstart}
+
+\subsubsection{bsl\_rd\_mem}
+
+Lesen von 8 Datenbytes ab Adresse 10000h des Konfigurationsspeichers.
+
+\pic[0.9 \pw]{tabbslrdmem}{Kommando \emph{bsl\_rd\_mem}}{tabbslrdmem}
+
+\subsubsection{bsl\_wr\_mem}
+
+Schreiben von 4 Datenbytes auf Adresse 00000000h des Flashspeichers.
+
+\pic[0.9 \pw]{tabbslwrmem}{Kommando \emph{bsl\_wr\_mem}}{tabbslwrmem}
+
+\section{Speicheraufteilung}
+
+\pic[0.8 \pw]{mem_flash_config}{Memory Mapping des Flash- und
+Konfigurationsspeichers}{mem_flash_config}
+
+\abb{mem_flash_config} stellt die Verwendung der permanenten Speicher am \dcd
+dar.
+Im Flash sind die Instruktionen und die Daten der vorinitialisierten Variablen
+des \bsl und der \app gespeichert.
+Die Instruktionen werden beim Start des \dcd vom Boot-Programm des \scap s in
+den SDRAM kopiert.
+Die Datenbereiche der Programme im Flash sind Speicherabbilder des
+Datenspeichers im FPGA. Vor Ausführung eines Programmes muss dessen Datenbereich
+in den Datenspeicher des \scap s kopiert werden. Dies ist die Aufgabe
+der C-Runtime (CRT), auch als Startup Code bezeichnet, welche im \bsl und in der
+\app enthalten ist.
+
+Der Konfigurationsspeicher enthält zwei FPGA-Designs. Beginnend ab Adresse 0
+das \emph{Factory-Default-Design}, welches im \emph{Remote Configuration Mode}
+\cite{AltREM12} von Altera benötigt wird. Die Aufgabe dieses Designs ist, den
+Auslöser für die Konfiguration des FPGA's zu ermitteln. Dieser ist im
+Statusregister der \emph{ALTREMOTE\_UPDATE Megafunction} \cite{AltREM12}
+gespeichert.
+Die \emph{ALTREMOTE\_UPDATE Megafunction} ist im \emph{Factory-Default-Design}
+und im \emph{User-Design} instantiiert. Ist der Auslöser ein PowerOn des FPGA's,
+oder eine Rekonfigurationsanforderung des \emph{User-Designs}, so wird das
+\emph{User-Design} in das FPGA geladen. Tritt ein Fehler bei der Konfiguration
+des \emph{User-Designs} auf, aktiviert die \emph{ALTREMOTE\_UPDATE
+Megafunction} erneut das \emph{Factory-Default-Design}, welches den Fehler aus
+dem Statusregister der \emph{ALTREMOTE\_UPDATE Megafunction} liest und in einen
+definierten Fehlerzustand übergeht.
+
+Das \emph{User-Design} ist im Konfigurationsspeicher ab Adresse 80000h
+gespeichert. Dieses enthält den \scap \ und dessen Erweiterungsmodule.
+Bei einem Wechsel der \app wird dieses Design überschrieben. 
+
+\section{Bootkonzept}
+\label{sec:bootkonzept}
+
+Die Inbetriebnahme des \dcd erfolgt in drei Phasen. In
+der ersten Phase muss der \bsl in den Flash-Speicher des \dcd abgelegt werden.
+Phase 2 behandelt den Start des \bsl und das Speichern der \emph{Applikation}.
+Die Aufgabe von Phase 3 ist es, die \app zu starten und der Wechsel in den
+\emph{BSL}. Für das Bootkonzept verwendet das \dcd die, in \abb{boot_overview}
+dargestellten, permanenten und flüchtigen Speicher.
+
+\pic{boot_overview}{Übersicht aller Speicher}{boot_overview}
+
+\pagebreak
+
+\subsubsection{Phase 1}
+
+\begin{enumerate}
+  \item Per USB \cite[Kap. 3.1]{TeraDE0User11} wird ein, speziell für die
+  Inbetriebnahme des \dcd angepasstes, Design in das FPGA des DE0-Nano-Board's
+  übertragen.
+  Dieses Design enthält den \scap \ mit ALTREMOTE-, GPIO- und SPI-Modulen. Im
+  \emph{boot memory} ist der \bsl exklusive Inter\-net-Stack gespeichert.
+  Das Design kann somit per Ethernet und BSL-Protokoll Daten empfangen und in
+  den Flash bzw. Konfigurationsspeicher ablegen. Der SDRAM-Controller ist in
+  diesem Design nicht vorhanden.
+  \item Das \emph{Factory-Default-Design} wird per BSL-Protokoll empfangen und
+  ab Adresse 0 im Konfigurationsspeicher abgelegt.
+  \item Das \emph{User-Design} mit \scap, GPIO-, SPI-, ALTREMOTE-,
+  Zähler-Modul und SDRAM-Controller wird im Konfigurationsspeicher ab Adresse
+  80000h abgelegt. Das \emph{boot memory} dieses Designs enthält das Boot-Programm,
+  welches den \bsl beim Start vom Flash in den SDRAM kopiert und anschließend
+  ausführt.
+  \item Die Instruktionen und der Datenbereich des \bsl werden empfangen und in
+  den Flash-Speicher geschrieben.
+  \item Der Ethernet-\bsl empfängt das Kommando \emph{bsl\_start} und
+  leitet mittels ALTREMOTE-Modul eine Rekonfiguration des FPGA's ein.
+  Das \emph{User-Design} wird dadurch in das FPGA übertragen.
+\end{enumerate}
+
+\subsubsection{Phase 2}
+
+\begin{enumerate}[resume]
+  \item Das Boot-Programm des \emph{User-Designs} kopiert den Inhalt des Flash-
+  Speichers von Adresse 20000h bis AFFFFh, welcher den \bsl beinhaltet, in den
+  SDRAM ab Adresse 0 und startet die Ausführung des \emph{BSL}.
+  \item Der Startup-Code des \bsl kopiert dessen Datenbereich vom Flash in den
+  Datenspeicher des \scap s. Der \bsl kann nun Daten per Internet
+  empfangen.
+  \item Das \emph{User-Design} der \app wird im Konfigurationsspeicher ab
+  Adresse 80000h abgelegt. Dieses Design enthält den \scap \ mit SDRAM-
+  Controller, GPIO-, SPI-, ALTREMOTE-, Zähler- und falls erforderlich Spezial-
+  und/oder Co-Prozessor-Modul.
+  \item Die Instruktionen und der Datenbereich der \app werden empfangen und in
+  den Flash-Speicher geschrieben.
+  \item Der \bsl empfängt das Kommando \emph{bsl\_start} und
+  leitet mittels ALT\-REMOTE-Modul eine Rekonfiguration des FPGA's ein.
+  Das \emph{User-Design} der \app wird dadurch in das FPGA übertragen.
+\end{enumerate}
+
+\subsubsection{Phase 3}
+
+\begin{enumerate}[resume]
+  \item Das Boot-Programm des \emph{User-Designs} kopiert den Inhalt des Flash-
+  Speichers von Adresse 20000h bis AFFFFh, welcher nun den \bsl und die \app
+  beinhaltet, in den SDRAM ab Adresse 0 und startet die Ausführung der
+  \emph{Applikation}. Ist eine \app am \dcd vorhanden, beginnt der Bootvorgang
+  nach einem PowerOn des Gerätes in diesem Schritt.
+  \item Der Startup-Code der \app kopiert dessen Datenbereich vom Flash in den
+  Datenspeicher des \scap. Die \app kann nun die Kommunikation mit
+  einem Projektserver aufnehmen.
+  \item Für den Wechsel der \app empfängt die aktuelle \app das Kommando
+  \emph{bsl\_start}, beendet die Kommunikation mit dem Projektserver und startet
+  die Ausführung des \bsl durch einen Jump auf Adresse 0 im SDRAM.
+  Anschließend werden die Schritte in Phase 2 beginnen mit 7. durchgeführt.
+\end{enumerate}
+
+\section{Verpackungsprogramm}
+
+Die benötigten Dateien der \app werden in einer Applikationsdatei vereint,
+dessen Endung \emph{.dca \ldots Distributed Computing Application} lautet.
+Die Applikationsdatei enthält hierfür ein einfaches Dateisystem.
+Die einzelnen Dateien werden binär aufeinanderfolgend in die Applikationsdatei gespeichert.
+Vor jeder Datei liegt ein 4 Byte Header der die Größe der Datei in Bytes
+enthält. Beim Entpacken liest das Verpackungsprogramm die ersten 4 Bytes der
+Applikationsdatei aus und interpretiert diese als Länge $n$ der ersten Datei.
+Die folgenden $n$ Bytes werden als Daten interpretiert und in eine Datei mit dem
+Namen \emph{dat0.bin} gespeichert. Die nächsten 4 Bytes repräsentieren nun die
+Größe der zweiten Datei. Das Verpackungsprogramm speichert die Daten in
+\emph{dat1.bin}. Dieser Vorgang wird wiederholt, bis das Ende der
+Applikationsdatei erreicht ist.
+
+Das Verpackungsprogramm ist ein Konsolenprogramm, welches einen oder mehrere
+Dateinamen als Argumente benötigt. Von der Anzahl der Programmargumente wird der
+auszuführende Vorgang abgeleitet. Ist die Anzahl 1, so wird das Argument als
+Dateiname einer Applikationsdatei interpretiert und diese entpackt. Ist die
+Anzahl größer 1, werden die Dateien in einer Applikationsdatei vereint. 
+Das Speichern der Dateien erfolgt in der Reihenfolge der Programmargumente. 
+
+\pagebreak
+
+Sobald alle enthaltenen Dateien der Applikationsdatei entpackt wurden, sind
+diese mit Hilfe des Benutzerprogramms an das \emph{DCD} zu senden.
+Der Inhalt einer Applikationsdatei ist wie folgt definiert:
+
+\begin{enumerate}
+  \item Instruktionen der \app
+  \item \emph{Applikationsdaten}
+  \item \emph{User-Design} der \app
+\end{enumerate} 
+
+Somit sind die Instruktionen der \app in den Flash des \dcd ab Adresse 30000h,
+die \emph{Applikationsdaten} ab Adresse 10000h und das \emph{User-Design} in den
+Konfigurationsspeicher ab Adresse 80000h zu speichern. Die, bei der Entpackung
+erzeugten, Dateien dat0.bin, dat1.bin und dat2.bin können nach der Übertragung
+an das \dcd gelöscht werden.

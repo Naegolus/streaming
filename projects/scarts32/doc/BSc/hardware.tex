@@ -1,0 +1,491 @@
+\chapter{Hardware}
+\label{cha:Hardware}
+
+Dieses Kapitel beschreibt die, in \abb{concept} gezeigten,
+Hardwarekomponenten.
+
+\section{DE0-Nano}
+
+Das Entwicklungsboard von Terasic\footnote{DE0-Nano,
+\url{http://www.terasic.com.tw/cgi-bin/page/archive.pl?No=593}} hat eine
+Abmessung von 49x79.2mm und zeichnet sich durch die geringe Anzahl an
+Bauelementen aus. Für das \dcd werden das FPGA, der SDRAM und der
+Konfigurationsspeicher benötigt.
+
+Das Cyclone-IV-FPGA von Altera besitzt 22320 Logikelemente
+\cite{AltCycIVData11} und wird am DE0-Nano Board mit einem 50MHz-Taktgeber
+versorgt \cite{TeraDE0User11}. 594 Kbits stehen als interner
+Speicher zur Verfügung \cite{AltCycIVData11}.
+
+Der Konfigurationsspeicher (EPCS16) von Altera ist ein Flash Speicher mit SPI.
+Der Speicher ist unterteilt in 32 Sektoren zu jeweils 256 Pages \cite{AltEPC11}.
+Eine Page enthält 256 Bytes \cite{AltEPC11}. Der Baustein kann somit 2
+Mbytes (16 Mbits) speichern. Die Verfügbaren SPI-Kommandos sind detailliert in
+\cite{AltEPC11} beschrieben.
+Der EPCS16 benutzt \emph{active serial
+(AS) configuration} \cite{AltConf08} für die Konfiguration der Cyclone-
+IV-FPGA's \cite{AltEPC11}. Bei \emph{active serial (AS) configuration} liest das
+FPGA als Master das Design vom Konfigurationsspeicher.
+Die Steuerleitungen zwischen EPCS16 und FPGA können nach beendeter
+Konfiguration als \emph{user IO's} benutzt
+werden\footnote{Dual-Purpose Pins, 
+\href{http://www.alteraforum.com/forum/archive/index.php/t-24146.html}{http://www.alteraforum.com/forum/}}.
+
+Der SDRAM (IS42S16160B) von ISSI hat eine Speicherkapazität von 32 Mbytes und
+ist unterteilt in 4 Bänke zu je 8192 Reihen \cite{ISSI05}. Eine Reihe enthält
+512 Spalten mit einer Größe von jeweils 2 Byte \cite{ISSI05}.
+
+\section{Platinenerweiterung}
+
+Für die Kommunikation über das Internet ist eine Erweiterung des DE0-Nano
+Board's erforderlich. Als Netzwerk-Controller wird der ENC28J60 von Microchip
+verwendet. Dieser kann per SPI konfiguriert und gesteuert werden, siehe
+\cite{MicroENC2806}.
+
+Der SPI-Flash (A25LQ023) von AMIC ist organisiert in 64 Blöcke zu je 16
+Sektoren \cite{AMIC10}. Ein Sektor enthält 16 Pages mit jeweils 256 Bytes
+\cite{AMIC10}. Es können daher 4 Mbytes gespeichert werden.
+
+\section{Prozessor} % TU Wien - SCARTS32 VHDL Soft-Core Prozessor
+
+Als CPU verwendet das \dcd den \sca Soft-Core-Prozessor der
+Technischen Universität Wien\footnote{SCARTS Homepage,
+http://ti.tuwien.ac.at/ecs/teaching/courses/hwsw\_lu\_WS2011}, welcher unter der
+GNU LGPL\footnote{GNU Lesser General Public License, http://www.gnu.org/licenses/lgpl.html}
+frei auf OpenCores\footnote{\sca OpenCores Projekt,
+http://opencores.org/project,scarts} erhältlich ist. Die Anforderung an den
+Prozessor, der Aufbau und ein Vergleich mit anderen Soft-Core Prozessoren kann
+in \cite{Fletzer08} nachgeschlagen werden. Für diese Arbeit wurde der \sca
+verwendet, da der Quellcode frei zugänglich und änderbar ist. Somit kann der
+Prozessor, falls erforderlich, jederzeit angepasst werden, um die Anforderungen
+des \emph{DCD's} zu erfüllen.
+
+Der \sca benutzt für das zu exekutierende Programm und dessen Daten getrennte
+Speicher $\Rightarrow$ Harvard-Architektur. Die Größe dieser Speicher kann bei
+der Instanziierung des Prozessors festgelegt werden. Realisiert sind diese als
+RAM/ROM Module im FPGA. Der Programmspeicher besteht aus zwei Modulen.
+Im ersten Speichermodul, in \cite{Fletzer08, Walter11} als \emph{boot memory}
+bezeichnet, ist das Boot-Programm abgelegt.
+Dieses wird nach Hardware-Reset ausgeführt und beginnt ab Adresse 4000 0000h
+\cite[Kap. 2.2.2]{Walter11}. Das zweite Speichermodul, in \cite{Fletzer08,
+Walter11} \emph{instruction memory} genannt, beinhaltet das Hauptprogramm beginnend ab
+Adresse 0000 0000h \cite[Kap. 2.2.2]{Walter11}. Da das DE0-Nano Board über einen
+SDRAM Baustein verfügt, wird das \emph{SCARTS}-interne Modul für das
+\emph{instruction memory} durch einen SDRAM-Controller ersetzt. Das
+Hauptprogramm befindet sich somit zur Laufzeit im SDRAM und dessen Daten im
+FPGA.
+Das Boot-Programm kopiert den \bsl und die \emph{Applikation}, welche im Flash
+Speicher abgelegt sind, in den SDRAM und startet eines dieser Programme (siehe
+Abschnitt~\ref{sec:bootkonzept}).
+
+Der Datenpfad des Prozessors ist konfigurierbar entweder 16 oder 32 Bit groß.
+Verwendet wird die 32-Bit-Konfiguration. Näheres hierzu in \cite[Kap. 5.2]{Fletzer08}.
+
+Für die Fehlersuche stellt die Toolchain des \scap s einen
+Protokollinterpreter des \emph{gdb Remote Serial Protocol}'s\footnote{gdb Remote
+Serial Protocol, \\
+http://sourceware.org/gdb/onlinedocs/gdb/Remote-Protocol.html} zur Verfügung
+\cite{Meier08}, welcher mittels prozessor-internem UART Modul \cite{Steiger07}
+den aktuellen Zustand des laufenden Programms an den GDB senden kann.
+
+\subsection{Ext. Memory Interface}
+
+Die CPU kann durch externe Hardwaremodule erweitert werden. \tab{tabextmemif}
+zeigt die zur Verfügung gestellten Signale.
+
+\begin{table}[h!]
+    \centering
+    \begin{small}
+        \begin{tabular}[t]{l|c|p{6.5cm}}
+            Signal & Bit Breite & Beschreibung \\
+            \hline
+            \ & \ & \ \\
+            i\_data         & 32    & Dateneingang \\
+            o\_data         & 32    & Datenausgang \\
+            o\_extsel       & 1     & \sca Anforderung an externe \newline Module \\
+            o\_write\_en    & 1     & Write enable \\
+            o\_byte\_en     & 4     & Byte enable \\
+            o\_addr(14 downto 5)    & 10    & Modul Adresse \\
+            o\_addr(4 downto 0)     & 5     & Modul interne Adresse. \newline 5 Bits
+            $\Rightarrow$ 32 Bytes Adressraum pro Modul
+        \end{tabular}
+    \end{small}
+    \caption{Signale des ext. Memory IF}
+    \label{tabextmemif}
+\end{table}
+
+In \abb{extif} ist die Schnittstelle zwischen \scap \ und den
+externen Hardwaremodulen dargestellt.
+
+\pic{extif}{Ext. Memory Interface}{ext_mem_if}
+
+Der Adressraum für externe Module beginnt ab Adresse FFFF8000h.
+Werden Daten ab dieser Adresse angesprochen, so setzt der \sca das
+Signal o\_extsel. Durch o\_addr(14 downto 5) kann ein konkretes
+Modul selektiert werden. Die Einheit \emph{Modul Select MUX} legt
+die Basisadressen aller externen Module fest. Die Adresse in o\_addr(4 downto 0)
+ist allen Modulen zugänglich und adressiert eines von 32 Bytes. Ist ein Modul
+deselektiert, so muss dieses am Datenausgang 00000000h ausgeben. Dadurch
+können die Datenausgänge aller Module über ein Oder-Gatter in den Dateneingang
+des \sca geführt werden.
+
+Die Adressen 0 und 2 aller Module sind reserviert entsprechend \cite[Kap.
+2.3.1]{Walter11} bzw. \cite[Kap. 5.6]{Fletzer08}. Die verbleibenden Adressen
+können als Daten-/Steuerregister genutzt werden.
+
+
+\abb{extmemmap} zeigt die Basisadressen der, in \abb{concept} dargestellten, Module.
+Am Beginn des Adressraumes von Adresse 0000h bis 7FFFh ist der Datenspeicher
+des \scap s, welcher im FPGA als RAM Modul realisiert ist,
+gemapped.
+
+\pic[0.9 \pw]{extmemmap}{Memory Map des Adressraumes}{ext_mem_map}
+
+\subsection{GPIO-Modul}
+
+Dieses Modul wird für die Generierung der Chipselect-Signale des SPI verwendet.
+Zusätzlich können die LED's des DE0-Nano Board's zur Fehlersuche hinzugefügt
+werden. \tab{tabmodgpio} zeigt die Registerbelegung des GPIO Modul's.
+
+\exttab{tabmodgpio}{Registerbelegung des GPIO-Modul's}{tabmodgpio}
+
+\begin{table}[h!]
+    \centering
+    \begin{small}
+        \begin{tabular}[t]{l|p{7.5cm}}
+            Bit & Beschreibung \\
+            \hline
+            \ & \ \\
+            0 & Chipselect des Netzwerk-Controllers \\
+            1 & Chipselect des Flash Speichers \\
+            2 & Chipselect des Konfigurationsspeichers
+        \end{tabular}
+    \end{small}
+    \caption{Belegung von \emph{GPIO\_REG\_GPO}}
+    \label{tabgpioreggpo}
+\end{table}
+
+\subsection{SPI-Modul}
+
+Das \dcd benötigt zur Kommunikation mit Konfigurationsspeicher, Flash Speicher
+und Netzwerk-Controller ein SPI-Master-Modul. Alle SPI-Slaves können im
+Modus\footnote{Serial Peripheral Interface,
+http://de.wikipedia.org/wiki/Serial\_Peripheral\_Interface} CPOL=0, CPHA=0
+angesprochen werden, siehe \cite{AltEPC11, MicroENC2806, AMIC10}. Der Modus kann
+in diesem Modul daher nicht geändert werden. Ein Schreibzugriff auf
+\emph{SPI\_REG\_WDATA} startet den SPI-Transfer eines Bytes. Die Daten in
+\emph{SPI\_REG\_WDATA} werden beginnend mit dem MSB an MOSI ausgegeben. Während
+des Transfers ist Bit 0 in Register \emph{SPI\_REG\_STAT} gesetzt (Busy Bit).
+Die seriellen Daten vom SPI Slave werden beginnend mit dem MSB in
+\emph{SPI\_REG\_RDATA} abgelegt. Die gelesenen SPI-Daten können verwendet oder
+ignoriert werden.
+
+Ist Bit 0 in Register \emph{SPI\_REG\_CTRL} gesetzt, so werden die Daten
+beginnend mit dem LSB gesendet bzw. abgelegt. Abschnitt \textit{Programming and
+Configuration File Support} in \cite{AltEPC11} beschreibt die Notwendigkeit für
+diesen Modus.
+
+Die Taktrate des SPI ist 12.5MHz. Der Versorgungstakt von 50MHz des DE0-Nano
+Board's wird mit einem entsprechenden Teiler herabgesetzt. Der
+Netzwerk-Controller benötigt eine SPI-Taktfrequenz größer
+8MHz siehe \cite{MicroENCERR06} und höchstens 20MHz \cite{MicroENC2806}.
+
+\tab{tabmodspi} zeigt die Registerbelegung des SPI-Modul's.
+
+\exttab{tabmodspi}{Registerbelegung des SPI-Modul's}{tabmodspi}
+
+\subsection{ALTREMOTE-Modul}
+
+Die \app eines Projektes beinhaltet neben dem auszuführenden Programm ein FPGA-
+Design mit \scap \ und falls erforderlich Spezial- und Co-Prozessor-
+Modulen.
+Beim Austausch der \app wird somit der Soft-Core-Prozessor gewechselt und im
+Konfigurationsspeicher abgelegt. Der \bsl muss nach Empfang der \app durch das
+Benutzerprogramm eine Rekonfiguration des FPGA's auslösen, damit nach Start der
+\app eventuelle Spezial/Co-Prozessor-Module zur Verfügung stehen.
+
+Hierfür wird das ALTREMOTE-Modul verwendet, welches die \emph{Remote System
+Upgrade (ALTREMOTE\_UPDATE) Megafunction} von Altera instantiiert und laut
+\cite{AltREM12} ansteuert. Zum Auslösen der Rekonfiguration des FPGA's wird Bit
+0 in \emph{AR\_REG\_CTRL} gesetzt.
+
+\exttab{tabmodaltremote}{Registerbelegung des ALTREMOTE-
+Modul's}{tabmodaltremote}
+
+\subsection{Zähler-Modul}
+
+Der DHCP Client von Microchip\footnote{Microchip
+TCP/IP Stack,\
+\href{http://www.microchip.com/stellent/idcplg?IdcService=SS\_GET\_PAGE\&nodeId=2505\&param=en535724}{http://www.microchip.com/}}
+benötigt für die Behandlung von Timeout-Ereignissen ein Zeit- bzw. Zähler-Modul.
+Hierfür wurde ein 16-Bit-Zähler implementiert. Dieser wird zyklisch im
+250-$\mu s$-Raster inkrementiert und ist als Register \emph{CNT\_REG\_TICK250US}
+im Zähler-Modul verfügbar.
+Der DHCP-Client bildet mittels \emph{CNT\_REG\_TICK250US} eine Differenz in
+$\left[TICKS\right]$ und vergleicht diese mit der internen
+Konstante TICKS\_PER\_MSEC. Diese Konstante muss den Wert 4 enthalten.
+
+Das Zähler-Modul wird von einem 250 $\mu s$ Strobe-Generator versorgt, welcher
+im \scap \ instantiiert ist.
+
+\exttab{tabmodcnt}{Registerbelegung des Zähler Moduls}{tabmodcnt}
+
+\subsection{Spezialmodul}
+
+Dieses Modul kann im FPGA-Design der \app vorhanden sein, ist jedoch nicht
+zwingend erforderlich. Als Spezialmodul werden jene Hardware-Module bezeichnet,
+welche die Berechnung einer Projektaufgabe unterstützen. 
+Im Falle von Bitcoin könnte dies ein SHA256-Modul sein.
+
+\subsection{Co-Prozessor-Modul}
+
+Das \dcd kann für die Berechnung einer Projektaufgabe die Rechenkraft weiterer
+Prozessoren oder FPGA's nutzen. Zur Kommunikation mit solchen
+Berechnungseinheiten ist ein Hardware-Modul im FPGA-Design der \app notwendig.
+Dieses wird als Co-Prozessor-Modul bezeichnet und ist ebenfalls nicht zwingend
+erforderlich.
+
+\subsection{SDRAM-Controller}
+
+Der Datenspeicher des \scap s ist als RAM-Modul im FPGA realisiert. Befindet
+sich der Programmspeicher ebenfalls im RAM des FPGA's, so teilen sich
+diese beiden Speicher die zur Verfügung stehenden RAM-Zellen.
+Damit die RAM-Zellen im FPGA größtenteils für den Datenspeicher verwendet werden
+können, muss das \emph{instruction memory} in den externen SDRAM
+ausgelagert werden. Das \emph{boot memory} des Programmspeichers und das darin
+gespeicherte Boot-Programm liegen weiterhin im FPGA.
+
+Hierfür wird ein SDRAM-Controller implementiert. \abb{sdramctrlif} zeigt dessen
+Schnittstellen zwischen \scap \ und SDRAM.
+
+\pic{sdramctrlif}{SDRAM-Controller-Interface}{sdram_ctrl_if}
+
+\emph{nReset} ist low-aktiv und setzt die FSM\footnote{Endlicher Automat,
+http://de.wikipedia.org/wiki/Finite\_State\_Machine} des SDRAM-Controllers
+zurück. Das Signal \emph{clk} versorgt den Controller mit dem internen Takt des \scap s.
+
+Die Initialisierungphase des SDRAM-Speichers beinhaltet eine Wartezeit von
+mindestens 200 $\mu s$ \cite{ISSI05}. Hierfür wird das 250-$\mu s$-Strobesignal
+\emph{strobe250us} verwendet.
+Die Wartezeit bei der Initialisierung des SDRAM's beträgt daher 250 $\mu s$.
+
+Die Signale \emph{wdata}, \emph{waddr}, \emph{wen}, \emph{raddr}, \emph{rdata}
+bilden das Speicher-Interface für den \scap. Da die Adressen
+\emph{raddr} und \emph{waddr} den gleichen Speicher adressieren und das
+Interface zum SDRAM maximal einen Schreib-/Lesebefehl pro Takt verarbeiten kann,
+muss der Zugriff arbitriert werden. Ist \emph{wen} aktiv, so führt der
+SDRAM-Controller den Schreibvorgang vorrangig aus. Dabei wird das Signal
+\emph{hold} gesetzt und der \scap \ angehalten, bis der Schreibvorgang
+abgeschlossen ist.
+
+Der adressierbare Speicherbereich ist begrenzt mit der Größe des SDRAM-
+Speichers. Bei 32 Mbytes ($2^{25}$) bzw. $2^{24}$ Spalten zu je 16 Bit 
+werden aus Sicht des Prozessors 24 Adressleitungen benötigt
+(\emph{raddr}/\emph{waddr}). Eine Instruktion benötigt 16 Bit zur Speicherung
+(\emph{rdata}/\emph{wdata}) siehe \cite[Kap. 3.4]{Fletzer08}.
+
+Die Signale mit den Prefix \emph{DRAM\_} versorgen alle Leitungen für die
+Kommunikation zum SDRAM. \emph{CKE} (Clock Enable \cite{ISSI05}) ist
+stets aktiv. Die zwei Leitungen von \emph{DQM} (Output Enable
+\cite{ISSI05}) sind ebenfalls stets aktiv.
+
+Die Signale \emph{CS\_N}, \emph{RAS\_N}, \emph{CAS\_N} und 
+\emph{WE\_N} bilden eines von 13 möglichen Kommandos, wie z.B. Daten
+lesen/schreiben, selektieren/abwählen einer Reihe und Self-Refresh
+\cite{ISSI05}.
+\emph{BA} selektiert eine von 4 Bänken \cite{ISSI05}. Mit \emph{ADDR} kann eine
+Reihe bzw. eine Spalte adressiert werden \cite{ISSI05}. Eine Spalte des SDRAM's
+speichert eine \emph{SCARTS}-Instruktion und kann mit \emph{DQ} beschrieben bzw.
+gelesen werden. Beim Wechsel einer Reihe, können keine Speicherdaten transportiert
+werden. Der SDRAM-Controller hält den \scap \ daher mit
+\emph{hold} an.
+
+Der SDRAM benötigt in 64 ms 8192 Refreshzyklen bzw. einen Zyklus pro 7.8125
+$\mu s$. Bedingt durch die Implementierung des SDRAM-Controllers wird ein
+Zyklus im 6 $\mu s$ Raster ausgeführt. Während eines Refreshzyklus' hält der
+Controller den \scap \ mit \emph{hold} an.
+
+Als Taktversorgung für den SDRAM dient das Signal \emph{DRAM\_CLK}. Dieses ist
+nicht gleichzusetzten mit der Taktversorgung des SDRAM-Controllers
+(\emph{clk}), sondern bedarf einer besonderen Aufmerksamkeit und wird im
+folgenden behandelt.
+
+\subsubsection{Taktversorgung des SDRAM's}
+
+Das \emph{instruction memory} Modul soll ohne Änderung am \scap \
+durch den SDRAM-Controller ersetzt werden. Daher ergeben sich seitens des
+Speicher Interfaces des \sca bestimmte Anforderungen. \abb{sdramreq} stellt
+diese dar.
+
+\pic[0.8 \pw]{sdramreq}{Anforderung an den SDRAM-Controller}{sdram_req}
+
+\begin{table}[h!]
+    \begin{small}
+        {
+        \centering
+        \begin{tabular}[t]{l|c|p{8.5cm}}
+            Bezeichnung & Quelle & Beschreibung \\
+            \hline
+            \ & \ & \ \\
+            $t_{Transfer}$  & -         & Zeit in der Datentransfer
+            abgeschlossen sein muss \\
+            $t_{clk}$       & -         & Periodendauer des Prozessortaktes \\
+            $t_{co}$        & QCR & Clock-to-Output. Zeit bis Daten
+            nach steigender Taktflanke stabil anliegen
+        \end{tabular}
+        \ \\
+        \ \\
+        }
+        QCR \ldots Quartus Compilation Report
+    \end{small}
+    \caption{Legende zu \abb{sdramreq}}
+    \label{tabsdramreq}
+\end{table}
+
+Wird eine Adresse $n$ bei positiver Taktflanke $m$ von \emph{clk} ausgegeben, so
+erwartet der \scap \ die Daten $n$ bei positiver Taktflanke $m + 2$ von
+\emph{clk} $\Rightarrow t_{Transfer}$ bzw. $2 \ t_{clk}$. Hierfür wird versucht,
+das invertierte \emph{clk}-Signal als Takteingang für den SDRAM zu
+verwenden.
+
+Durch $t_{co}$ kann es jedoch bei höheren Traktfrequenzen zu Setup-
+Time-Verletzungen am SDRAM kommen. Wird der 50-MHz-Taktgeber am DE0-Nano-Board
+als Taktversorgung für den \scap \ verwendet, so ist $t_{clk} = 20 ns$. Somit
+sind die positiven Taktflanken von \emph{clk} und \emph{DRAM\_CLK} durch $10 ns$
+getrennt. Die Setup-Zeiten des SDRAM-Speichers betragen $1.5 ns$ \cite{ISSI05}.
+Es muss daher folgende Ungleichung erfüllt sein:
+
+\begin{equation}
+    t_{co} < \frac{1}{2}t_{clk} - 1.5 ns \Rightarrow t_{co} < 8.5 ns \ @ \ 50
+    MHz
+    \label{equngleichung}
+\end{equation}
+
+\pagebreak
+
+Das Design wurde mit Quartus synthetisiert. Die maximale Clock-to-Output-Zeit
+aller SDRAM-relevanten Signale beträgt $12.5 ns$. Die Ungleichung
+\ref*{equngleichung} ist somit nicht erfüllt. Es wird daher versucht, das
+Taktsignal des SDRAM's durch Verwendung einer PLL entsprechend zu verschieben.
+Als Basis wird die Berechnung in \cite[Kap. 2]{AltEmbIP11} verwendet.
+\abb{sdramtransferpll} zeigt den Datentransfer mit Berücksichtigung der Setup-,
+Hold- und Clock-to-Output-Zeiten, welche aus dem Quartus-Compilation-Report und
+\cite{ISSI05} entnommen wurden. \tab{tabsdrampll} listet alle Zeiten und deren
+Werte auf.
+
+\pic{sdramtransferpll}{Datentransfer auf Hardware mit $t_{shift} = -1.893
+ns$}{sdram_transfer_pll}
+
+\begin{table}[h!]
+    \begin{small}
+        {
+        \centering
+        \begin{tabular}[t]{l|c|c|p{7.0cm}}
+            Bezeichnung & Wert [ns] & Quelle & Beschreibung \\
+            \hline
+            \ & \ & \ \\
+            $t_{co\_max}$ & 12.508 & QCR           & Maximale Clock-to-Ouput-
+            Zeit für alle SDRAM-relevanten Signale \\
+            $t_{co\_min}$ & 3.006 & QCR           & Minimale Clock-to-Ouput-Zeit
+            \\
+            $t_{S\_max}$  & 9.688 & QCR           & Maximale Setup-Time für clk
+            \\
+            $t_{H\_max}$  & -3.486 & QCR           & Maximale Hold-Time \\
+            $t_{AC2}$     & 6.5 & \cite{ISSI05} & Access Time From CLK
+            bei CAS-Latency = 2. Entspricht Clock-to-Output bei
+            SDRAM \\
+            $t_{OH2}$     & 3 & \cite{ISSI05} & Output-Data-Hold-Time
+            bei \newline CAS-Latency = 2 \\
+            $t_{AS}$      & 1.5 & \cite{ISSI05} & Address-Setup-Time \\
+            $t_{AH}$      & 0.8 & \cite{ISSI05} & Address-Hold-Time \\
+            $t_{shift}$   & -1.893 & -             & Phasenshift des
+            \emph{DRAM\_CLK}-Signals
+        \end{tabular}
+        \ \\
+        \ \\
+        }
+        QCR \ldots Quartus Compilation Report
+    \end{small}
+    \caption{Legende zu \abb{sdramtransferpll}}
+    \label{tabsdrampll}
+\end{table}
+
+\pagebreak
+
+Die Berechnung in \cite[Kap. 2]{AltEmbIP11} erfolgt in 3 Schritten. Im ersten
+Schritt wird der maximale negative Shift des \emph{DRAM\_CLK}-Signals entlang
+der Zeitachse ermittelt. Im zweiten Schritt ist der maximale positive Shift zu
+berechnen. Ein negativer Shift des \emph{DRAM\_CLK}-Signals relativ zu
+\emph{clk} wird in \cite{AltEmbIP11} als Lag, ein positiver Shift als Lead
+bezeichnet.
+Die maximalen Werte für Lead und Lag werden jeweils in Schreib-
+und Leserichtung begrenzt, siehe Auszug aus \cite{AltEmbIP11}:
+
+\begin{equation}
+    Maximum \ Lag = minimum(Read \ Lag, \ Write \ Lag)
+\end{equation}
+
+\begin{equation}
+    Maximum \ Lead = minimum(Read \ Lead, \ Write \ Lead)
+\end{equation}
+
+Im letzten Schritt wird aus den maximalen Lead- und Lag-Werten ein Fenster
+gebildet. Die positive Taktflanke des \emph{DRAM\_CLK}-Signals wird in
+die Mitte dieses Fensters geshiftet $\Rightarrow t_{shift}$.
+
+Im folgenden wird die Berechnung von $t_{shift}$ mit den Werten aus
+\tab{tabsdrampll} durchgeführt:
+
+\begin{equation}
+    Read \ Lag = t_{OH2} - t_{H\_max} = 6.486ns
+\end{equation}
+
+\begin{equation}
+    Write \ Lag = t_{clk} - t_{co\_max} - t_{AS} = 5.992 ns
+\end{equation}
+
+\begin{equation}
+    Maximum \ Lag = minimum(Read \ Lag, \ Write \ Lag) = 5.992 ns
+\end{equation}
+
+\begin{equation}
+    Read \ Lead = t_{clk} - t_{AC2} - t_{S\_max} = 3.812 ns
+\end{equation}
+
+\begin{equation}
+    Write \ Lead = t_{co\_min} - t_{AH} = 2.206 ns
+\end{equation}
+
+\begin{equation}
+    Maximum \ Lead = minimum(Read \ Lead, \ Write \ Lead) = 2.206 ns
+\end{equation}
+
+\begin{equation}
+    \underline{t_{shift}} = \frac{Maximum \ Lead - Maximum \ Lag}{2} = \underline{-1.893 ns}
+\end{equation}
+
+\abb{sdramtransferpll} zeigt, dass durch das Verschieben des \emph{DRAM\_CLK}-
+Signals mittels PLL keine Setup/Hold-Time Verletzungen auftreten. Die Zeit
+$t_{Transfer}$ beträgt jedoch $3 \ t_{clk}$ und erfüllt die, in \abb{sdramreq}
+gegebene, Anforderung nicht.
+
+\pagebreak
+
+Die Taktversorgung des \scap s wird daher
+auf eine Taktfrequenz von 25MHz herabgesetzt, die PLL entfernt und
+\emph{DRAM\_CLK} zu \emph{clk} invertiert ausgegeben. \abb{sdramtransferfinal}
+zeigt den finalen Datentransfer zwischen SDRAM-Controller und Speicher. Damit
+die Setup-Zeiten in \abb{sdramtransferfinal} nicht verletzt werden, müssen
+folgende Ungleichungen erfüllt sein:
+
+\begin{equation}
+    t_{co\_max} < \frac{t_{clk}}{2} - t_{AS}
+\end{equation}
+
+\begin{equation}
+    t_{AC2} < \frac{t_{clk}}{2} - t_{S\_max}
+\end{equation}
+
+Die in \tab{tabsdrampll} gelisteten Zeiten erfüllen diese Ungleichungen.
+
+\pic{sdramtransferfinal}{Finaler Datentransfer}{sdram_transfer_final}

@@ -1,0 +1,76 @@
+\chapter{Einleitung}
+\label{cha:Einleitung}
+
+Die Verwendung der ungenutzten Rechenleistung vieler verteilter PCs bzw. deren
+Grafikprozessoren und sogar der Einsatz von Spielkonsolen unterstützt inzwischen
+einige rechenintensive Projekte in den unterschiedlichsten Bereichen der
+Forschung (Mathematik, Physik, Chemie, Medizin, Finanzwesen, usw\ldots) mit
+kostenloser Rechenleistung.
+Das Lösen von Berechnungsaufgaben durch verteilte
+Computersysteme wird als verteiltes Rechnen bezeichnet\footnote{Verteiltes Rechnen, \url{http://de.wikipedia.org/wiki/Verteiltes_Rechnen}}. Durch die bis
+zu mehreren hunderttausend vernetzten Computersysteme können diese Projekte auf
+eine Rechenkraft äquivalent aktueller Supercomputer
+zurückgreifen \cite{Folding12}.
+
+Im Rahmen dieser Bachelorarbeit soll ein netzwerkfähiges Gerät, im folgenden
+\dcd (Distributed Computing Device) genannt, zur Unterstützung solcher Projekte
+im Internet entstehen.
+Dieses soll nicht an ein bestimmtes Projekt gebunden sein, sondern durch eine leicht austauschbare
+\app für unterschiedliche Projekte arbeiten können. Zu Beginn dieser
+Arbeit wird schrittweise ein Konzept (Kap.~\ref{cha:Konzept}) für dieses
+Vorhaben erstellt und jeweils die Motivation der Entscheidungen dokumentiert.
+Kapitel~\ref{cha:Hardware} beschreibt ausführlich die ausgewählten
+Hardwaremodule. Der Aufbau der Software und die Verwendung der Toolchain werden
+in Kapitel~\ref{cha:Software} erläutert. 
+Kapitel~\ref{cha:Schluss} untersucht die Verwendbarkeit des \dcd
+anhand des Beispielprojektes \emph{Bitcoin}, fasst die Eigenschaften des
+Gerätes zusammen und listet mögliche Erweiterungen der Hard- und Software des
+Computersystems auf.
+
+\pagebreak
+
+\section{Motivation}
+\label{sec:motivation}
+
+Des Systems des verteilten Rechnens bedienen sich mittlerweile viele Projekte im
+Internet. Einige davon sind in der \emph{BOINC}\footnote{Berkeley Open
+Infrastructure for Network Computing, \\
+\url{http://de.wikipedia.org/wiki/Berkeley_Open_Infrastructure_for_Network_Computing}}
+organisatorisch zusammengefasst. \emph{BOINC} ist ein Framework für Projekte,
+welche verteiltes Rechnen nutzen möchten.
+
+Das Projekt \emph{Bitcoin}\footnote{Bitcoin,
+\url{http://de.wikipedia.org/wiki/Bitcoin}} bedient sich im Gegensatz dazu
+einer eigenen Infrastruktur. \emph{Bitcoin} ist ein dezentral
+organisiertes, elektronisches Geld, welches aktuell (Stand August 2012) einen
+Wechselkurs von 8,49 Euro \cite{BitcoinKurs12} hat.
+
+Die Informationen einer getätigten Transaktion zwischen zwei Bitcoin Benutzern
+werden vom jeweiligen Sender an alle beteiligten Nutzer des dezentralen
+Netzwerkes gesendet. Diese sammeln alle empfangenen und im Netzwerk als unbestätigt
+geltenden Transaktionen in einer Liste, welche als Block bezeichnet wird.
+Ein beliebiger Benutzer kann seinen Block abschließen und somit die darin
+enthaltenen Transaktionen vom Netzwerk als bestätigt markieren lassen.
+Zum Abschließen eines Blockes muss der SHA256\footnote{Secure Hash Algorithm,
+http://de.wikipedia.org/wiki/SHA256}-Hashwert des Blockheaders berechnet
+werden.
+Der Header enthält unter anderem einen Zeitstempel, den für das Abschließen des
+Blockes verantwortlichen Benutzer und einen 32 Bit langen, variablen Wert
+(Nonce).
+Anschließen wird der SHA256-Hashwert des erhaltenen Hashwertes vom Blockheader
+berechnet. Ist der Wert dieses Ergebnisses nun kleiner-gleich als der eines, vom
+Netzwerk bestimmten, Zielwertes, so ist der Block erfolgreich abgeschlossen.
+Ist der Wert des Ergebnisses größer, muss der Benutzer den variablen Wert des
+Blockheaders um eins erhöhen und den SHA256 Hashwert erneut zweimal berechnen.
+Das Lösen dieses Problems kann, abhängig vom rechnenden Computersystem, mehrere
+Minuten benötigen. Ob ein Block gültig ist, kann jedoch vom Netzwerk schnell
+überprüft werden\footnote{Einwegfunktion,
+http://de.wikipedia.org/wiki/Einwegfunktion}. Für das Abschließen eine Blockes
+erhält der verantwortliche Benutzer von Netzwerk als Anerkennung Bitcoins, da
+die Benutzer des Bicoin-Netzwerkes dadurch die getätigten Transaktionen
+nachvollziehen können.
+
+Die Berechnung der Bitcoin-Hashes dient als exemplarische Aufgabe zum Einsatz
+des \emph{DCD}.
+Unabhängig von der vorhandenen Infrastruktur und den verwendeten Protokollen zur
+Kommunikation soll das \dcd auch für andere Projekte arbeiten können.

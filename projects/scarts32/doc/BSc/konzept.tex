@@ -1,0 +1,117 @@
+\chapter{Entwicklung}
+\label{cha:Konzept}
+
+Dieses Kapitel widmet sich den gestellten Anforderungen an das \emph{DCD}. Es
+wird hierzu aus Sicht des Benutzers vorgegangen, also die Verwendung des \dcd in
+den Vordergrund gestellt. Zusätzlich enthält dieses Kapitel die Auswahl der
+Hardwarekomponenten. Die
+ausführliche Beschreibung der gewählten Hardwarekomponenten erfolgt in
+Kapitel~\ref{cha:Hardware}.
+
+\section{Kommunikation}
+
+Zu Beginn stellt sich die Frage, welche Parteien an der Kommunikation
+beteiligt sind und was übertragen werden soll.
+Das \dcd soll die Arbeitspakete eines Projektservers empfangen, diese
+verarbeiten und die Ergebnisse an den Projektserver zur Validierung zurück
+senden. Diese Aufgabe wird von einem Programm am \emph{DCD}, im
+folgenden als \app bezeichnet, bearbeitet.
+
+Zusätzlich kann der Benutzer jederzeit die aktuelle \app durch eine
+andere ersetzen. Dies ist die Aufgabe eines weiteren Programmes am \emph{DCD},
+welches in diesem Dokument \emph{BSL} (\emph{bootstrap loader}) genannt wird.
+Bevor das \dcd eine andere \app empfangen kann, muss der \bsl gestartet werden.
+Dieser kann von einem Benutzerprogramm per Internet eine neue \app empfangen,
+am \dcd speichern und anschließend starten.
+
+Die \app kann nun mit dem selben Projektserver
+kommunizieren oder auch mit einem anderen und für ein anderes Projekt rechnen.
+Die Standorte aller beteiligten Parteien können unterschiedlich sein.
+\abb{fig:kommu} zeigt die Kommunikationspartner.
+
+\pic{fig:kommu}{Kommunikationspartner}{Kommunikationspartner}
+
+\pagebreak
+
+\subsection{Protokolle}
+
+Die Übertragung der Daten aller Kommunikationspartner erfolgt über das Internet.
+\dcd und Benutzerprogramm benötigen daher einen entsprechenden
+Protokollstack. Für die Übertragung der \app steht ein, vom Autor dieses
+Dokumentes spezifiziertes, Protokoll auf Ethernetebene zur Verfügung.
+Das Benutzerprogramm ist ebenfalls vorhanden. Kapitel~\ref{cha:Software}
+beschreibt Benutzerprogramm und Protokoll im Detail. Für die Kommunikation über
+das Internet muss das Benutzerprogramm erweitert und das Internetprotokoll mit
+Transportschicht in den Protokollstack integriert werden. Als Transportschicht
+wird das \emph{User Datagram Protocol (UDP)} gewählt, da es eine
+geeignete einfache Datenüberprüfung besitzt und weniger Resourcen im \dcd
+beansprucht als die Implementierung des \emph{Transmission Control Protocol's
+(TCP)}. Die Erweiterung ist in \abb{fig:proto_app} dargestellt.
+Die verwendeten Protokolle zwischen Projektserver und \dcd sind
+projektspezifisch.
+
+\pic{fig:proto_app}{Erweiterung des
+Benutzerprogramms und dessen Protokollstacks}{proto_app}
+
+\subsection{Arbeitsablauf}
+
+Die \app wird vom Benutzer an das \dcd gesendet und aktiviert.
+Sobald diese startet, wird eine Verbindung mit dem Projektserver aufgebaut und
+ein Arbeitspaket angefordert. Nach erfolgter Verarbeitung der Daten, schickt
+das \dcd die Ergebnisse zur Beurteilung an den Server zurück und fordert
+sogleich neue Aufgaben an. Alle Ergebnisse werden vom Projektserver auf
+Richtigkeit überprüft und die Resultate an das \dcd gesendet.
+
+Eventuelle Statusmeldungen, Statistiken und Arbeitsprotokolle können
+applikationsspezifisch vorhanden sein. Dies soll jedoch nicht Teil dieser
+Arbeit sein.
+
+
+\section{Anforderungen}
+
+\subsection{Hardware}
+
+Folgende Punkte sind aus Hardwaresicht vom \dcd zu erfüllen:
+\begin{itemize}
+  \item Möglichst Kompakt,
+  \item leicht Erweiterbar,
+  \item arbeitet autonom
+\end{itemize}
+Zur Erfüllung dieser Aufgaben wird eine Kombination aus Prozessor und
+FPGA verwendet. Hierbei kann zum einen die gesamte Netzwerkkommunikation
+komfortabel in C implementiert werden, zum anderen können rechenintensive und
+zeitkritische Aufgaben vom FPGA übernommen werden. Aus Sicht des Prozessors
+sind diese unterstützenden Hardwaremodule memory-mapped als
+\emph{Spezialregister} verfügbar.
+
+Um das Rechengerät kompakt zu halten, wird ein Soft-Core Prozessor verwendet.
+Hierbei handelt es sich um einen Prozessor, welcher in einem FPGA-Design
+integrierbar ist. Somit kann das gesamte Framework inklusive \bsl und \app auf
+einem Chip bzw. Entwicklungsboard ausgeführt werden.
+
+Als Entwicklungsboard wird das \emph{DE0-Nano Development and Education
+Board}\footnote{DE0-Nano Board,
+http://www.terasic.com.tw/cgi-bin/page/archive.pl?No=593} der Firmwa Terasic verwendet.
+
+\subsection{Verwendung (Toolchain)}
+
+\begin{itemize}
+  \item Die \app besteht aus einer Datei am PC und beinhaltet alle, für
+  die Erfüllung der Aufgaben erforderlichen, Programme und Hardwaremodule 
+  \item Die \app kann per
+  Doppelklick auf die Datei, oder per Konsole an das Gerät gesendet und
+  aktiviert werden
+\end{itemize}
+
+\section{Übersicht}
+
+\abb{concept} zeigt den Aufbau des \emph{DCD's}. Das Cyclone-IV-FPGA,
+der SDRAM und der Konfigurationsspeicher des DE0-Nano Board's werden verwendet.
+Erweitert wird dieses durch einen Flash Speicher und einen Netzwerk-Controller. 
+Der Flash Speicher enthält den \bsl und die \emph{Applikation},
+welche beim Start in den SDRAM kopiert werden. Im Konfigurationsspeicher ist
+das FPGA-Design gespeichert. Dieses beinhaltet den Soft-Core-Prozessor mit
+SDRAM-Controller und alle Hardwaremodule inklusive applikationsspezifischem
+Spezialmodul und Co-Prozessor Modul, falls diese für die \app benötigt werden.
+
+\pic{concept}{\emph{DCD}-Übersicht}{concept_de0nano}

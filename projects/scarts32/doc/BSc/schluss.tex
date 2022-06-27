@@ -1,0 +1,195 @@
+\chapter{Ergebnisse}
+\label{cha:Schluss}
+
+Dieses Kapitel fasst die Ergebnisse dieser Arbeit zusammen. Darin enthalten ist
+der Entwicklungsstand der Hard- und Software, die Verwendbarkeit und mögliche
+Erweiterungen des Gerätes.
+
+\section{Entwicklungstand}
+
+\subsection{Hardware}
+
+Es wurden folgende Hardware-Teile des \dcd fertiggestellt:
+
+\begin{itemize}
+  \item Platinenerweiterung mit Flash und Netzwerk-Controller
+  \item GPIO-Modul
+  \item SPI-Modul
+  \item Zähler-Modul
+  \item SDRAM-Controller
+\end{itemize}
+
+Die Instantiierung und Bedienung der \emph{ALTREMOTE\_UPDATE-Mega\-function} im
+ALTREMOTE Modul wurde begonnen, jedoch aus Zeitgründen nicht fertiggestellt.
+Dieses Modul ist nicht funktionsfähig.
+Es kann daher per Software keine Rekonfiguration des FPGA's
+eingeleitet werden.
+Das \emph{Factory-Default-Design} ist nicht implementiert.
+Als Workaround wird das \emph{User-Design} im Konfigurationsspeicher ab Adresse
+0 abgelegt. Eine Rekonfiguration des FPGA's wird durch Power-Off-On des
+\dcd durchgeführt.
+
+\subsection{Software}
+
+Folgende Teile der Software sind funktionsfähig:
+
+\begin{itemize}
+  \item Benutzerprogramm mit UDP/IP Erweiterung
+  \item Verpackungsprogramm
+  \item Boot-Programm des \emph{boot memorys} im \scap
+  \item \bsl mit folgenden Programmteilen:
+  \begin{itemize}
+    \item C-Runtime/Startup-Code
+    \item Treiber für SPI-Modul, Flash, Konfigurationsspeicher und
+    Netz\-werk-Controller
+    \item Microchip-TCP/IP-Stack mit IP, ARP, UDP, DHCP, ICMP
+    \item BSL Protokollinterpreter
+  \end{itemize}
+\end{itemize}
+
+Der \bsl kann sich selbst und eine \app per Internet empfangen und am \dcd
+speichern. Eine \app wurde in dieser Arbeit nicht implementiert.
+
+Das gesetzte Ziel wurde somit fast erreicht. Da die Rekonfiguration und daher
+der Neustart des \dcd jedoch nicht per Software durchführbar ist, muss das \dcd
+für den Benutzer erreichbar sein. Die dafür erforderlichen Hardwarekomponenten
+sind das ALTREMOTE-Modul und das \emph{Factory-De\-fault-Design}.
+
+\subsection{Übersicht}
+
+In \tab{taboverviewdcd} sind die Eckdaten der Hard- und Software des \dcd
+aufgelistet.
+
+\begin{table}[h!]
+    \centering
+    \begin{small}
+        \begin{tabular}[t]{p{8.5cm}r}
+            Software & \ \\
+            \hline
+            \ & \ \\
+            Prozessor & \emph{SCARTS32} \\
+            Prozessortakt & 25MHz \\
+            Größe des Datenspeichers & 32KB \\
+            Maximale Programmgröße der \app & 512KB \\
+            Benötigte Bootzeit & ca. 1s \\
+            \ & \ \\
+            Hardware & \ \\
+            \hline
+            \ & \ \\
+            Anzahl der benötigten Logikeinheiten für das \emph{User-Design} mit
+            \scap, SDRAM-Controller, GPIO-, SPI-, ALTREMOTE- und
+            Zähler-Modul & 6.734 von 22.320
+            \\
+            Anzahl der benötigten Speicherbits für das \emph{User-Design} &
+            350.208 von 608.256 \\
+            Taktversorgung des FPGA's & 50MHz \\
+            Netzwerkanschluss & 10Base-T Ethernet
+        \end{tabular}
+    \end{small}
+    \caption{Eigenschaften des \dcd}
+    \label{taboverviewdcd}
+\end{table}
+
+\section{Verwendbarkeit}
+
+Das Abschließen eines Bitcoin Blocks, siehe Punkt~\ref{sec:motivation}, benötigt
+die Berechnung von SHA256-Hashwerten, welche durch ein Spezialmodul der \app
+effizient in Hardware durchgeführt werden könnte.
+Das Spezialmodul verwendet hierfür das auf OpenCores frei erhältliche
+SHA256-Hardware-Modul von Arif Endro Nugroho\footnote{SHA256-Modul von Arif
+Endro Nugroho, http://opencores.org/project,nfhc}. Dieses Modul Berechnet den
+Hashwert von 512 Bit langen Datenblöcken beginnend mit einem initialen Hashwert
+in 40 Taktzyklen und benötigt hierfür ca. 2200 Logikeinheiten.
+Die Berechnung eines Bitcoin Hashwertes erfordert die Berechnung von zwei
+SHA256-Hashwerten und ist demnach in 80 Taktzyklen abgeschlossen. Wird nun das
+256 Bit lange Ergebnis in 8 Taktzyklen mit den Zielwert verglichen, benötigt
+der Vorgang zum Berechnen und Validieren eines Bitcoin Hashwertes 88
+Taktzyklen. Bei einer Taktversorgung des Hardwaremoduls von 50MHz liegt die
+Leistung eines einzelnen Moduls daher bei ca. 568 kBitcoinhashes/s. Durch
+Instantiierung zusätzlicher, parallel arbeitender Hardwaremodule kann die
+Leistung gesteigert werden. Das \emph{User-Design} stellt hierfür 15586
+verbleibende Logikeinheiten bereit. Bei 7 instantiierbaren
+SHA256-Hardwaremodulen könnte die Leistung somit 3.976 MBitcoinhashes/s betragen.
+Dieser Wert ist im Vergleich zu aktuellen (Stand August 2012) Grafikkarten,
+welche ebenfalls für die Berechnung von Bitcoinhashes Verwendung finden und
+eine Leistung von mehreren hundert MBitcoinhashes/s erzeugen, sehr
+gering\footnote{Mining hardware comparison, \\
+https://en.bitcoin.it/wiki/Mining\_hardware\_comparison}.
+
+Für die Verwendung des Gerätes als Bitcoin-Rechner ist jedoch weiters die
+spezifische Leistung in "`Anzahl der Bitcoinhashes pro verrichteter elektrischer
+Arbeit"' [Bitcoinhashes/J] heranzuziehen und berechnet sich wie folgt:
+
+\begin{equation}
+    P_{spez} = \frac{P_{Bh}}{P_{el}}
+    \label{eq:bitcoin}
+\end{equation}
+
+\begin{table}[h!]
+    \centering
+        \begin{tabular}[t]{l|c|l}
+            Zeichen & Einheit & Beschreibung \\
+            \hline
+            \ & \ & \ \\
+            $P_{spez}$ & $\left[\frac{Bitcoinhashes}{J}\right]$ & Spezifische
+            Rechenleistung \\
+            \ & \ & \ \\
+            $P_{Bh}$ & $\left[\frac{Bitcoinhashes}{s}\right]$ & Rechenleistung
+            \\
+            \ & \ & \ \\
+            $P_{el}$ & $\left[\frac{J}{s}\right]$ & Elektrische Leistung
+        \end{tabular}
+    \caption{Legende zu Gleichung~\ref{eq:bitcoin}}
+    \label{tab:bitcoin}
+\end{table}
+
+Die spezifische Leistung lässt eine Beurteilung über die Rentabilität
+des Rechengerätes zu, da es die Anzahl der errechneten Bitcoinhashes mit der
+dafür aufgebrachten Energie vergleicht. Im allgemeinen ist die Rechenleistung
+aktueller Grafikchips höher als die von FPGA Lösungen. Die Grafikkarten
+erwirtschaften daher schneller Bitcoins. Jedoch ist der Stromverbrauch
+verhältnismäßig höher.
+
+Um die spezifische Leistung des \dcd für die Berechnung von Bitcoinhashes
+ermitteln zu können, ist die Ermittlung der Stromaufnahme des Gerätes
+erforderlich, welche bei voller Rechenlast auftritt. Es müsste hierfür das
+Spezialmodul mit SHA256-Einheiten implementiert und die Stromaufnahme bei
+Rechenlast gemessen werden. Mit Hilfe des aktuellen Wechselkurses von Bitcoins,
+einigen Parametern des Bitcoin-Netzwerkes und den Stromkosten, kann somit ein
+Gewinn/Verlust bei Einsatz des Rechengerätes ermittelt werden.
+
+Mittels Co-Prozessor Modul bietet das \dcd die Möglichkeit weitere FPGA
+Bausteine zur Unterstützung bei der Berechnung von Bitcoinhashes heranzuziehen.
+
+Außerhalb der Verwendung als Rechengerät für Bitcoins, oder sonstigen Projekten
+ist das \dcd durch den Verbund von Hard- und Software vielseitig einsetzbar.
+Das DE0-Nano-Board stellt zudem 96 Benutzerpins zur Verfügung.
+
+\section{Mögliche Erweiterungen}
+
+Das \dcd kann in vielen Bereichen der Hard- und Software verbessert und
+erweitert werden. Einige Punkte sollen hier aufgelistet werden.
+
+\subsection{Hardware}
+
+\begin{itemize}
+  \item Fertigstellung des ALTREMOTE-Moduls und Erstellung des
+  \emph{Factory-Default-Designs} um das FPGA per Software rekonfigurieren zu können.
+  \item Modifizierung des \scap s, sodass die Übertragung der
+  Instruktionen vom SDRAM zum Prozessor mit einer Taktrate von 50MHz möglich
+  ist.
+  \item Erweiterung des \scap s mit einer
+  Hardware-Multiplizier\-einheit.
+\end{itemize}
+
+\subsection{Software}
+
+\begin{itemize}
+  \item Fertigstellung des \emph{gdb-Remote-Serial-Protocol}-Interpreters für
+  die Kommunikation zum GDB über UART, oder auch Ethernet.
+  \item Verwendung des TCP-Moduls im TCP/IP Stack.
+  \item Unterstützung von Applikationsdateien im Benutzerprogramm, um das
+  Entpacken zu umgehen und die Daten in der Applikationsdatei direkt per
+  BSL-Protokoll an das \dcd zu senden.
+  \item Verwendung des HTTP- und FTP-Moduls im TCP/IP-Stack für Diagnosezwecke.
+\end{itemize}
