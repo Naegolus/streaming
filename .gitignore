@@ -8,3 +8,19 @@
 *.obj
 *.stl
 *.gcode
+
+# Praesentation
+**/Praesentation/images/*.eps
+**/Praesentation/images/*.ps
+**/Praesentation/images/*-eps-converted-to*
+do-not-upload/
+
+# LaTeX
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.synctex
+*.toc
+
