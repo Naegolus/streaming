@@ -1,0 +1,3 @@
+
+set remotelogfile gdb_com.log
+target remote COM3
