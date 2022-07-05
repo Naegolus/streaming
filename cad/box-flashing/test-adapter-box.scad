@@ -148,7 +148,7 @@ module testAdapterBox()
 		translate([23, 0.5 * taBoxDepth() - 20, -10])
 		cylinder(h = 60, d = 3);
 
-		translate([10, 110, 12])
+		translate([10, 110, 21])
 		rotate([90, 0, 0])
 		union()
 		{
