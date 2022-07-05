@@ -12,7 +12,7 @@ use <./bridge.scad>
 use <./rpizero.scad>
 use <./led-plate.scad>
 
-extShow = true;
+extShow = false;
 platesShow = false;
 
 //intersection()
