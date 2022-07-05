@@ -3,13 +3,17 @@ $fa = 1.0;
 $fs = 0.4;
 
 use <../lib/lib.scad>
+use <../lib/st-link-v2-clone.scad>
+use <../lib/usb-to-uart.scad>
+
 use <./test-adapter-plate.scad>
 use <./test-adapter-box.scad>
-use <./st-link-v2-clone.scad>
-use <./usb-to-uart.scad>
 use <./bridge.scad>
+use <./rpizero.scad>
+use <./led-plate.scad>
 
-extShow = false;
+extShow = true;
+platesShow = false;
 
 //intersection()
 //{
@@ -18,37 +22,45 @@ extShow = false;
 testAdapterBox();
 //}
 
+translate([-15, 15, taBoxGroundHeight()])
+color([0.4, 0.4, 0.4, 1.0])
+rpiBase();
+
 if (extShow)
 {
 
-	translate([1.5, 29, taBoxGroundHeight() + intBoxHeight() + 5])
+	translate([1.5, -5, taBoxGroundHeight() + intBoxHeight() + 5])
 	rotate([180, 0, 0])
 	bridge();
 
 	translate
 	([
 		programmerOffsetX(),
-		0.5 * taBoxDepth() - stLinkCloneHeight(),
+		0.5 * taBoxDepth() - stLinkCloneHeight() - 50,
 		taBoxGroundHeight() + 0.5 * stLinkCloneWidth()
 	])
 	rotate([-90, 90, 0])
 	stLinkClone();
 
-	translate
-	([
-		uartOffsetX(),
-		0.5 * taBoxDepth() + usbHeight(),
-		taBoxGroundHeight() + 0.5 * stLinkCloneWidth()
-	])
-	rotate([90, -90, 0])
-	usbToUart();
+	translate([-15, 15, taBoxGroundHeight()])
+	translate([0, 0, rpiBaseHeight() + eps()])
+	rpizero();
 
-	if (false)
+	if (platesShow)
 	{
-	color([0, 0.4, 0, 0.4])
-	translate([0, 0, taBoxPlateHeight() + 0.01])
-	testAdapterPlate();
-	}
+		color([0, 0.4, 0, 0.4])
+		union()
+		{
+			translate([0, 15, taBoxPlateHeight() + 0.01])
+			testAdapterPlate();
 
+			translate([
+				0,
+				-0.5 * (taBoxDepth() - ledPlateDepth()),
+				taBoxHeight() + eps()
+			])
+			ledPlate();
+		}
+	}
 }
 

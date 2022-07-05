@@ -3,16 +3,17 @@ $fa = 1.0;
 $fs = 0.4;
 
 use <../lib/lib.scad>
+use <../lib/st-link-v2-clone.scad>
+use <../lib/usb-to-uart.scad>
+
 use <./test-adapter-plate.scad>
-use <./st-link-v2-clone.scad>
-use <./usb-to-uart.scad>
 
 function taBoxGroundHeight() = 6;
 taBoxWallTh = 3;
 
 function taBoxWidth() = taPlateWidth();
-function taBoxDepth() = taPlateDepth();
-function taBoxHeight() = 35;
+function taBoxDepth() = taPlateDepth() + 30;
+function taBoxHeight() = 40;
 
 function taBoxPlateHeight() = taBoxHeight();
 
@@ -52,6 +53,21 @@ module testAdapterBoxBase()
 		], center = true);
 	}
 
+	cmirror()
+	translate
+	([
+		0.5 * taBoxWidth() - 9,
+		0.5 * taBoxDepth() - taPlateDepth(),
+		0
+	])
+	difference()
+	{
+		cube([9, 10, taBoxPlateHeight()]);
+
+		translate([4, 5, taBoxPlateHeight() - 10])
+		cylinder(h = 20, d = 2);
+	}
+
 	cmirror([0, 1, 0])
 	cmirror()
 	translate
@@ -81,20 +97,11 @@ module devicesCut()
 	translate
 	([
 		programmerOffsetX(),
-		0.5 * taBoxDepth() - stLinkCloneHeight(),
+		0.5 * taBoxDepth() - stLinkCloneHeight() - 50,
 		taBoxGroundHeight() + 0.5 * stLinkCloneWidth()
 	])
 	rotate([-90, 90, 0])
 	stLinkClone();
-
-	translate
-	([
-		uartOffsetX(),
-		0.5 * taBoxDepth() + usbHeight(),
-		taBoxGroundHeight() + 0.5 * stLinkCloneWidth()
-	])
-	rotate([90, -90, 0])
-	usbToUart();
 
 }
 
@@ -111,13 +118,13 @@ module testAdapterBox()
 			translate
 			([
 				0.5 * (uartOffsetX() + programmerOffsetX())
-				- 16,
-				0,
+				- 4,
+				- 35,
 				taBoxGroundHeight()
 			])
 			cube
 			([
-				32,
+				20,
 				36,
 				intBoxHeight()
 			]);
@@ -125,49 +132,42 @@ module testAdapterBox()
 
 		devicesCut();
 
+		translate([19.25, -9, 0])
+		//cmirror()
 		translate
 		([
-			5,
-			25,
+			7.75,
+			0,
 			intBoxHeight() - 10
 		])
 		cylinder(h = 20, d = 2);
 
-		translate
-		([
-			27,
-			25,
-			intBoxHeight() - 10
-		])
-		cylinder(h = 20, d = 2);
+		translate([-23, -0.5 * taBoxDepth() + 20, -10])
+		cylinder(h = 60, d = 3);
 
-		color([1, 0, 0, 1])
-		translate
-		([
-			programmerOffsetX() - 0.5 * stLinkCloneDepthM(),
-			0.5 * taBoxDepth() - 2 * taBoxWallTh,
-			taBoxGroundHeight()
-		])
-		cube
-		([
-			stLinkCloneDepthM(),
-			3 * taBoxWallTh,
-			taBoxHeight() - taBoxGroundHeight() + 0.1
-		]);
+		translate([23, 0.5 * taBoxDepth() - 20, -10])
+		cylinder(h = 60, d = 3);
 
-		color([1, 0, 0, 1])
-		translate
-		([
-			uartOffsetX() - 0.5 * usbDepth(),
-			0.5 * taBoxDepth() - 2 * taBoxWallTh,
-			taBoxGroundHeight() + 0.1
-		])
-		cube
-		([
-			usbDepth(),
-			3 * taBoxWallTh,
-			taBoxHeight() - taBoxGroundHeight() + 0.1
-		]);
+		translate([10, 110, 12])
+		rotate([90, 0, 0])
+		union()
+		{
+			cmirror()
+			translate([9, 0, 0])
+			cylinder(h = 60, d = 3);
+
+			rcube
+			(
+				[
+					10,
+					6,
+					60
+				],
+				aX = 1,
+				aY = 1,
+				r = 1
+			);
+		}
 	}
 }
 
