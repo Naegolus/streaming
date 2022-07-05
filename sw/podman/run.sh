@@ -31,7 +31,7 @@ fi
 
 echo "Running image $img"
 
-podman run --rm $mappings --dns=8.8.8.8 -it $img entry.sh \
+docker run --rm $mappings --dns=8.8.8.8 -it $img entry.sh \
 	"cd $HOME/$dirProj" \
 	"ssh-add $HOME/.ssh/id_rsa" \
 	"$SHELL"
