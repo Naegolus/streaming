@@ -1,5 +1,5 @@
 
-FROM debian:bullseye
+FROM debian:testing
 
 # arguments
 ARG user
