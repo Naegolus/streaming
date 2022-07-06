@@ -1,4 +1,7 @@
 
+$fa = 1.0;
+$fs = 0.4;
+
 use <../lib/lib.scad>
 
 use <./test-adapter-plate.scad>
@@ -40,3 +43,4 @@ module ledPlate()
 
 }
 
+// ledPlate();
