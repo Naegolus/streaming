@@ -24,18 +24,18 @@ module rcube2d
 	{
 		cmirror([0, 1, 0])
 		cmirror()
-		translate([(width - r) / 2, (depth - r) / 2, 0])
-		cylinder(h = height, d = r);
-		translate([-(width - r) / 2, -depth / 2, 0])
-		cube([width - r, depth, height]);
-		translate([-width / 2, -(depth - r) / 2, 0])
-		cube([width, depth - r, height]);
+		translate([width / 2 - r, depth / 2 - r, 0])
+		cylinder(h = height, r = r);
+		translate([r - width / 2, -depth / 2, 0])
+		cube([width - r*2, depth, height]);
+		translate([-width / 2, r - depth / 2, 0])
+		cube([width, depth - r*2, height]);
 	}
 
 	if (singleSided)
 	{
 		translate([-width / 2, -depth / 2, 0])
-		cube([width, r, height]);
+		cube([width, r*2, height]);
 	}
 }
 
@@ -50,20 +50,20 @@ module rcube3d
 	depth = s[1];
 	height = s[2];
 
-	w2 = width - r;
-	d2 = depth - r;
-	h2 = height - r;
+	w2 = width - r*2;
+	d2 = depth - r*2;
+	h2 = height - r*2;
 
-	translate([0, 0, r / 2])
+	translate([0, 0, r])
 	rcube2d([width, depth, h2], r);
 
 	translate([0, 0, height / 2])
 	cmirror([0, 0, 1])
 	cmirror([0, 1, 0])
-	translate([0, d2 / 2, (height - r) / 2])
+	translate([0, d2 / 2, height / 2 - r])
 	translate([-w2 / 2, 0, 0])
 	rotate([0, 90, 0])
-	cylinder(h = w2, d = r);
+	cylinder(h = w2, r = r);
 
 	translate([0, 0, height / 2])
 	cmirror([0, 0, 1])
@@ -71,7 +71,7 @@ module rcube3d
 	translate([w2 / 2, 0, h2 / 2])
 	translate([0, d2 / 2, 0])
 	rotate([90, 0, 0])
-	cylinder(h = d2, d = r);
+	cylinder(h = d2, r = r);
 
 	translate([-w2 / 2, -d2 / 2, 0])
 	cube([w2, d2, height]);
@@ -81,13 +81,13 @@ module rcube3d
 	cmirror([0, 1, 0])
 	cmirror()
 	translate([w2 / 2, d2 / 2, h2 / 2])
-	sphere(r / 2);
+	sphere(r);
 
 	if (singleSided)
 	{
 		translate([0, -depth / 2, height / 2])
 		rotate([-90, 0, 0])
-		rcube2d([width, height, r], r);
+		rcube2d([width, height, r*2], r);
 	}
 }
 
