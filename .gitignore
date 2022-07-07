@@ -36,3 +36,5 @@ do-not-upload/
 *.synctex
 *.toc
 
+*.hex
+__pycache__/
