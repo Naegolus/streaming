@@ -40,7 +40,6 @@ class Dm4Flashing(Processing):
 		self.procDbgLog("Initialized")
 
 		self.state = self.SystemInit
-		self.flashingDone = True
 		self.mStart = 0
 
 		return Positive
