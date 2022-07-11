@@ -6,21 +6,42 @@ use <../lib/lib.scad>
 use <../lib/st-link-v2-clone.scad>
 use <../lib/usb-to-uart.scad>
 
+use <./rpizero.scad>
 use <./test-adapter-plate.scad>
 
 function taBoxGroundHeight() = 6;
 taBoxWallTh = 3;
 
-function taBoxWidth() = taPlateWidth();
+function taBoxWidth() = taPlateWidth() + 30;
 function taBoxDepth() = taPlateDepth() + 30;
-function taBoxHeight() = 40;
+function taBoxHeight() = 50;
 
 function taBoxPlateHeight() = taBoxHeight();
 
-function programmerOffsetX() = 20;
-function uartOffsetX() = 10;
-
 function intBoxHeight() = stLinkCloneWidthM() + 0.5 * (stLinkCloneWidth() - stLinkCloneWidthM()) - 2;
+
+module plateSupport
+(
+	x = 10,
+	y = 10,
+)
+{
+	cmirror([0, 1, 0])
+	cmirror()
+	translate
+	([
+		0.5 * x - 10,
+		0.5 * y - 10,
+		0
+	])
+	difference()
+	{
+		cube([10, 10, taBoxPlateHeight()]);
+
+		translate([5, 5, taBoxPlateHeight() - 10])
+		cylinder(h = 20, d = 2);
+	}
+}
 
 module testAdapterBoxBase()
 {
@@ -53,27 +74,20 @@ module testAdapterBoxBase()
 		], center = true);
 	}
 
-	cmirror()
 	translate
 	([
-		0.5 * taBoxWidth() - 9,
-		0.5 * taBoxDepth() - taPlateDepth(),
-		0
+		- 0.5 * (taBoxWidth() - taPlateWidth()),
+		0.5 * (taBoxDepth() - taPlateDepth()),
+		0,
 	])
-	difference()
-	{
-		cube([9, 10, taBoxPlateHeight()]);
+	plateSupport(taPlateWidth(), taPlateDepth());
 
-		translate([4, 5, taBoxPlateHeight() - 10])
-		cylinder(h = 20, d = 2);
-	}
+	plateSupport(taBoxWidth(), taBoxDepth());
 
-	cmirror([0, 1, 0])
-	cmirror()
 	translate
 	([
-		0.5 * taBoxWidth() - 10,
-		0.5 * taBoxDepth() - 10,
+		- 0.5 * taBoxWidth() + taPlateWidth() - 10,
+		- 0.5 * taBoxDepth(),
 		0
 	])
 	difference()
@@ -87,22 +101,14 @@ module testAdapterBoxBase()
 
 module devicesCut()
 {
-//	linear_extrude
-//	(
-//		stLinkCloneWidthM() +
-//		0.5 * (stLinkCloneWidth() - stLinkCloneWidthM())
-//		+ 0.1
-//	)
-//	projection(cut = false)
 	translate
 	([
-		programmerOffsetX(),
-		0.5 * taBoxDepth() - stLinkCloneHeight() - 50,
+		0,
+		0,
 		taBoxGroundHeight() + 0.5 * stLinkCloneWidth()
 	])
-	rotate([-90, 90, 0])
+	rotate([-90, 90, 180])
 	stLinkClone();
-
 }
 
 module testAdapterBox()
@@ -117,9 +123,8 @@ module testAdapterBox()
 
 			translate
 			([
-				0.5 * (uartOffsetX() + programmerOffsetX())
-				- 4,
-				- 35,
+				- 0.5 * taBoxWidth() + taPlateWidth(),
+				0.5 * taBoxDepth() - 36 - 10 - 5,
 				taBoxGroundHeight()
 			])
 			cube
@@ -128,39 +133,71 @@ module testAdapterBox()
 				36,
 				intBoxHeight()
 			]);
+
+			translate
+			([
+				- 0.5 * (taBoxWidth() - rpiDepth()) + 5,
+				0.5 * (taBoxDepth() - rpiWidth()) - 11.5,
+				taBoxGroundHeight()
+			])
+			rpiBase();
+
+			translate
+			([
+				- 0.5 * taBoxWidth() + taPlateWidth() - taBoxWallTh,
+				- 0.5 * taBoxDepth(),
+				0,
+			])
+			cube
+			([
+				taBoxWallTh,
+				taBoxDepth() - taPlateDepth(),
+				taBoxHeight(),
+			]);
 		}
 
-		devicesCut();
-
-		translate([19.25, -9, 0])
-		//cmirror()
 		translate
 		([
-			7.75,
+			30,
+			42,
 			0,
-			intBoxHeight() - 10
 		])
-		cylinder(h = 20, d = 2);
+		devicesCut();
 
-		translate([-23, -0.5 * taBoxDepth() + 20, -10])
+		//translate([19.25, -9, 0])
+		//cmirror()
+		//translate
+		//([
+			//7.75,
+			//0,
+			//intBoxHeight() - 10
+		//])
+		//cylinder(h = 20, d = 2);
+
+		translate([- 0.5 * taBoxWidth() + 10, -0.5 * taBoxDepth() + 20, -10])
 		cylinder(h = 60, d = 3);
 
-		translate([23, 0.5 * taBoxDepth() - 20, -10])
+		translate([0.5 * taBoxWidth() - 10, 0, -10])
 		cylinder(h = 60, d = 3);
 
-		translate([10, 110, 21])
+		translate
+		([
+			- 0.5 * taBoxWidth() + taPlateWidth() - 22,
+			100,
+			taBoxGroundHeight() + 4.5
+		])
 		rotate([90, 0, 0])
 		union()
 		{
 			cmirror()
-			translate([9, 0, 0])
-			cylinder(h = 60, d = 3);
+			translate([8.5, 0, 0])
+			cylinder(h = 60, d = 3.2);
 
 			rcube
 			(
 				[
-					10,
-					6,
+					12,
+					8,
 					60
 				],
 				aX = 1,

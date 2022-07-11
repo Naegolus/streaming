@@ -5,7 +5,7 @@ function rpiWidth() = 65;
 function rpiDepth() = 30;
 function rpiHeight() = 1.6;
 
-function rpiBaseHeight() = 6;
+function rpiBaseHeight() = 11;
 
 module rpizeroCut
 (
