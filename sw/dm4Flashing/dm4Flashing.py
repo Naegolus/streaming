@@ -26,7 +26,7 @@
 import subprocess
 
 from Processing import *
-#from libLed import *
+from libLed import *
 
 def millis():
 	return time_ns() // 10**6
