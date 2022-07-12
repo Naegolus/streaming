@@ -28,6 +28,7 @@
 #  SOFTWARE.
 
 import os
+import sys
 import argparse
 import traceback
 import inspect
@@ -217,4 +218,5 @@ class Processing:
 		logEntry += " " + message
 
 		print(logEntry)
+		sys.stdout.flush()
 
