@@ -8,12 +8,12 @@ use <../lib/usb-to-uart.scad>
 
 use <./test-adapter-plate.scad>
 use <./test-adapter-box.scad>
-use <./bridge.scad>
 use <./rpizero.scad>
-use <./led-plate.scad>
+use <./plate-led.scad>
+use <./plate-side.scad>
 
-extShow = false;
-platesShow = false;
+extShow = true;
+platesShow = true;
 
 //intersection()
 //{
@@ -27,11 +27,10 @@ if (extShow)
 
 	translate([1.5, -5, taBoxGroundHeight() + intBoxHeight() + 5])
 	rotate([180, 0, 0])
-	bridge();
 
 	translate
 	([
-		programmerOffsetX(),
+		- 0.5 * (taBoxWidth() - rpiDepth()) + 5,
 		0.5 * taBoxDepth() - stLinkCloneHeight() - 50,
 		taBoxGroundHeight() + 0.5 * stLinkCloneWidth()
 	])
@@ -47,15 +46,29 @@ if (extShow)
 		color([0, 0.4, 0, 0.4])
 		union()
 		{
-			translate([0, 15, taBoxPlateHeight() + 0.01])
+			translate
+			([
+				- 0.5 * (taBoxWidth() - taPlateWidth()),
+				15,
+				taBoxPlateHeight() + 0.01
+			])
 			testAdapterPlate();
 
-			translate([
-				0,
+			translate
+			([
+				- 0.5 * (taBoxWidth() - taPlateWidth()),
 				-0.5 * (taBoxDepth() - ledPlateDepth()),
 				taBoxHeight() + eps()
 			])
 			ledPlate();
+
+			translate
+			([
+				0.5 * (taBoxWidth() - plateSideDim().x),
+				0,
+				taBoxHeight() + eps(),
+			])
+			plateSide();
 		}
 	}
 }

@@ -7,7 +7,7 @@ use <../lib/lib.scad>
 use <./test-adapter-plate.scad>
 use <./test-adapter-box.scad>
 
-function ledPlateWidth() = taBoxWidth();
+function ledPlateWidth() = taPlateWidth();
 function ledPlateDepth() = 30;
 function ledPlateHeight() = taPlateHeight();
 
