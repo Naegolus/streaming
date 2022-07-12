@@ -91,7 +91,7 @@ class Dm4Flashing(Processing):
 					"--format=ihex",
 					"--reset",
 					"write",
-					"test.hex",
+					"~/production.hex",
 				],
 				stdin = subprocess.PIPE,
 				stdout = subprocess.PIPE,
