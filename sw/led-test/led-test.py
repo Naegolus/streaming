@@ -62,7 +62,7 @@ def lightBlue():
     
 while True:
     turnOff()
-    sleep(1) #1second
+    sleep(1)
     white()
     sleep(1)
     red()
@@ -71,10 +71,10 @@ while True:
     sleep(1)
     blue()
     sleep(1)
-    yellow()
-    sleep(1)
-    purple()
-    sleep(1)
-    lightBlue()
-    sleep(1)
+    #yellow()
+    #sleep(1)
+    #purple()
+    #sleep(1)
+    #lightBlue()
+    #sleep(1)
 
