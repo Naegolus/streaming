@@ -35,7 +35,7 @@ module rcube2d
 	if (singleSided)
 	{
 		translate([-width / 2, -depth / 2, 0])
-		cube([width, r*2, height]);
+		cube([width, r, height]);
 	}
 }
 
@@ -87,7 +87,7 @@ module rcube3d
 	{
 		translate([0, -depth / 2, height / 2])
 		rotate([-90, 0, 0])
-		rcube2d([width, height, r*2], r);
+		rcube2d([width, height, r], r);
 	}
 }
 
@@ -106,7 +106,8 @@ module rcube
 	depth = s[1];
 	height = s[2];
 
-	rw = r > width ? width : r;
+	ref = min(width, depth);
+	rSat = min(r, ref/2);
 
 	translate
 	([
@@ -115,11 +116,11 @@ module rcube
 		-aZ * height / 2
 	])
 	if (flat)
-		rcube2d(s, rw, singleSided);
+		rcube2d(s, rSat, singleSided);
 	else
 	{
-		rh = rw > height ? height : rw;
-		rcube3d(s, rh, singleSided);
+		rhSat = min(rSat, height/2);
+		rcube3d(s, rhSat, singleSided);
 	}
 }
 
