@@ -99,7 +99,7 @@ class Dm4Flashing(Processing):
 			)
 
 		self.procDbgLog("LED Yellow")
-		#yellow()
+		yellow()
 
 		self.mStart = millis()
 		self.state = self.FlashingDoneWait
@@ -120,10 +120,10 @@ class Dm4Flashing(Processing):
 
 		if not res:
 			self.procDbgLog("LED Green")
-			#green()
+			green()
 		else:
 			self.procDbgLog("LED Red")
-			#red()
+			red()
 
 		self.mStart = millis()
 		self.state = self.BoardDetachedWait
