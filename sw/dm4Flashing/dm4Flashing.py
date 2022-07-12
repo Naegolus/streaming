@@ -91,14 +91,14 @@ class Dm4Flashing(Processing):
 					"--format=ihex",
 					"--reset",
 					"write",
-					"~/production.hex",
+					"/home/pi/production.hex",
 				],
 				stdin = subprocess.PIPE,
 				stdout = subprocess.PIPE,
 				stderr = subprocess.PIPE
 			)
 
-		self.procDbgLog("LED Yellow")
+		self.procDbgLog("Flashing")
 		yellow()
 
 		self.mStart = millis()
@@ -114,15 +114,19 @@ class Dm4Flashing(Processing):
 		if res is None:
 			return
 
+		if res:
+			out, err = self.p.communicate()
+
 		self.p.terminate()
 
 		self.procDbgLog("Flashing done")
 
 		if not res:
-			self.procDbgLog("LED Green")
+			self.procDbgLog("Success")
 			green()
 		else:
-			self.procDbgLog("LED Red")
+			self.procDbgLog("Failed")
+			print(err.decode("utf-8"))
 			red()
 
 		self.mStart = millis()
