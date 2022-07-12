@@ -1,0 +1,38 @@
+
+@startuml
+
+database "Board\nUnprogrammed" as unprogrammed
+database "Board\nProgrammed" as programmed
+
+component "Disman 4\nApp Flashing" as dm4Flashing {
+
+  component "Init" as init
+  component "Board\nAttached\nWait" as brAttWait
+  component "Flashing Done\nWait" as flDoneWait
+
+  component "Flashing\nFailed" as flFailed
+  component "Board\nDetached\nWait" as flDetWait
+
+  component "Flashing\nSucceded" as flSucceded
+}
+
+init --> brAttWait
+brAttWait -> brAttWait : "No board"
+brAttWait --> flDoneWait : "Board detected\nFlashing start\nLED Yellow"
+unprogrammed -r-> flDoneWait
+
+flDoneWait --> flDoneWait : "Flashing\nnot done"
+flDoneWait ..> flFailed : "Flashing\nfailed\nLED Red"
+flFailed -l-> unprogrammed
+flFailed --> flDetWait
+flDetWait --> brAttWait : "Board detached"
+
+
+flDoneWait ..> flSucceded : "Flashing\nsucceded\nLED Green"
+flSucceded -r-> programmed
+flSucceded --> flDetWait
+
+flDetWait --> flDetWait : "Board still\nattached"
+
+@enduml
+

@@ -1,0 +1,14 @@
+
+@startuml
+
+skinparam linetype ortho
+
+database "Board\nUnprogrammed" as unprogrammed
+component "Discman4\nApp Flashing" as dm4Flashing
+database "Board\nProgrammed" as programmed
+
+unprogrammed <-d-> dm4Flashing
+dm4Flashing -d-> programmed
+
+@enduml
+

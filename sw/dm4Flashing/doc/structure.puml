@@ -1,0 +1,27 @@
+
+@startuml
+
+' skinparam linetype ortho
+
+component "Power supply" as pwr
+component "DUT Board" as dut
+
+component "Box\n(3D Printed)" as box {
+  portin "USB\nPower only" as piUsbTop
+  portin " " as piDbg
+  portout "RGB Led" as poLed
+
+  component "R-Pi" as rpi
+  component "ST-Link V2" as stLink
+}
+
+pwr <--> piUsbTop
+piUsbTop <--> rpi
+rpi <-> stLink
+stLink <--> piDbg
+dut <--> piDbg
+
+rpi <--> poLed
+
+@enduml
+
