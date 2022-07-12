@@ -1,0 +1,18 @@
+
+[Unit]
+Description=Joe-ing
+StartLimitIntervalSec=20
+StartLimitBurst=10
+
+[Service]
+Type=simple
+ExecStart=python /home/pi/streaming/sw/dm4Flashing/dm4Flashing.py
+TimeoutStopSec=2
+Restart=always
+RestartSec=1
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+
