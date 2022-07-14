@@ -33,6 +33,8 @@ def millis():
 
 CheckWaitTimeMs = 100
 
+fileHex = ""
+
 class Dm4Flashing(Processing):
 
 	def initialize(self):
@@ -91,7 +93,7 @@ class Dm4Flashing(Processing):
 					"--format=ihex",
 					"--reset",
 					"write",
-					"/home/pi/production.hex",
+					fileHex,
 				],
 				stdin = subprocess.PIPE,
 				stdout = subprocess.PIPE,
@@ -159,11 +161,11 @@ class Dm4Flashing(Processing):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description = 'Flashing Discman 4')
-	#parser.add_argument('-c', '--channel', type = str, help = 'Debug channel: tty (default), socket', required = False, default = 'tty')
+	parser.add_argument('-h', '--fileHex', type = str, help = 'HEX file to download to uC', required = False, default = '/home/pi/production.hex')
 	#parser.add_argument('-p', '--port', type = int, help = 'Port', required = False, default = 2000)
 	args = parser.parse_args()
 
-	#aEnv.dbgChannel = args.channel
+	fileHex = args.fileHex
 	#aEnv.dbgPort = args.port
 
 	pApp = Dm4Flashing()
