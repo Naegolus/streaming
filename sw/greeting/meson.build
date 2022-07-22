@@ -17,7 +17,7 @@ srcsSpecific = [
 
 srcs = [srcsSpecific]
 foreach file : srcsCommon
-	srcs += join_paths('../common/', file)
+	srcs += join_paths('../common/core', file)
 endforeach
 
 cxx = meson.get_compiler('cpp')

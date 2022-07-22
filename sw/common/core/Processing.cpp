@@ -28,8 +28,6 @@
   SOFTWARE.
 */
 
-#include <new>
-
 #include "Processing.h"
 #if CONFIG_PROC_HAVE_DRIVERS
 #if __unix__
