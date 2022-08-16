@@ -1,0 +1,20 @@
+
+- 0x559f62194290 GameSupervising()
+  - 0x559f621955e0 SystemDebugging()
+    Update period [ms]		500
+    - 0x559f621984c0 TcpListening()
+      0.0.0.0:3000
+      Connections created:	1
+    - 0x559f62199630 TcpListening()
+      0.0.0.0:3001
+      Connections created:	0
+    - 0x559f6219a5b0 TcpListening()
+      0.0.0.0:3002
+      Connections created:	0
+    - 0x559f6219cc90 TcpTransfering()
+      127.0.0.1:3000 <--> 127.0.0.1:58954
+      Bytes received		0
+  - 0x559f621952e0 TicTacToeGaming()
+    - 0x559f6219c790 TcpListening()
+      0.0.0.0:4000
+      Connections created:	1
