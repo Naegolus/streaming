@@ -29,7 +29,7 @@ myApp = executable(
 	'greeting',
 	srcs,
 	include_directories : include_directories([
-		'../common',
+		'../common/core',
 	]),
 	dependencies : [
 		deps,
