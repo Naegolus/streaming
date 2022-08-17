@@ -124,6 +124,7 @@ private:
 	std::string mProcTree;
 	bool mProcTreeChanged;
 	clock_t mProcTreeChangedTime;
+	bool mProcTreePeerAdded;
 
 	std::string mEnvironment;
 	bool mEnvironmentChanged;

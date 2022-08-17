@@ -58,6 +58,7 @@ SystemDebugging::SystemDebugging(Processing *pTreeRoot)
 	, mpLstEnv(NULL)
 	, mProcTree("")
 	, mProcTreeChanged(false)
+	, mProcTreePeerAdded(false)
 	, mEnvironment("")
 	, mEnvironmentChanged(false)
 {
@@ -193,7 +194,10 @@ void SystemDebugging::peerAdd(TcpListening *pListener, enum PeerType peerType, c
 		mPeerList.push_back(peer);
 
 		if (peerType == PeerProc)
+		{
 			mProcTreeChangedTime -= mUpdateMs;
+			mProcTreePeerAdded = true;
+		}
 #if CONFIG_DBG_HAVE_ENVIRONMENT
 		else
 		if (peerType == PeerEnv)
@@ -222,8 +226,10 @@ void SystemDebugging::processTreeSend()
 
 	string procTree(buffProcTree);
 
-	if (procTree == mProcTree)
+	if (procTree == mProcTree or !mProcTreePeerAdded)
 		return;
+
+	mProcTreePeerAdded = false;
 
 	//procDbgLog(LOG_LVL, "process tree changed");
 	//procDbgLog(LOG_LVL, "\n%s", procTree.c_str());
