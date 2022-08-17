@@ -22,6 +22,7 @@
 */
 
 #include <signal.h>
+#include <iostream>
 
 #include "GameSupervising.h"
 
@@ -56,11 +57,28 @@ void applicationCloseRequest(int signum)
 	pApp->unusedSet();
 }
 
+void licensesPrint()
+{
+	cout << endl;
+	cout << "This program uses the following external components" << endl;
+	cout << endl;
+
+	cout << "JsonCpp" << endl;
+	cout << "https://github.com/open-source-parsers/jsoncpp" << endl;
+	cout << endl;
+}
+
 int main(int argc, char *argv[])
 {
 	/* https://www.gnu.org/software/libc/manual/html_node/Termination-Signals.html */
 	signal(SIGINT, applicationCloseRequest);
 	signal(SIGTERM, applicationCloseRequest);
+
+	if (argc > 1)
+	{
+		licensesPrint();
+		return 0;
+	}
 
 	env["args"]["verbosity"] = 10;
 
