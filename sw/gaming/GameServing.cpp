@@ -5,7 +5,7 @@
   Author(s):
       - Johannes Natter, office@dsp-crowd.com
 
-  File created on 16.08.2022
+  File created on 17.08.2022
 
   Copyright (C) 2022 Authors and www.dsp-crowd.com
 
@@ -23,40 +23,33 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "GameSupervising.h"
-#include "SystemDebugging.h"
 #include "GameServing.h"
-#include "TicTacToeGaming.h"
 
 using namespace std;
 
 #define LOG_LVL	0
 
-GameSupervising::GameSupervising()
-	: Processing("GameSupervising")
+GameServing::GameServing()
+	: Processing("GameServing")
 {}
 
 /* member functions */
-Success GameSupervising::initialize()
+Success GameServing::initialize()
 {
-	start(SystemDebugging::create(this));
-	start(TicTacToeGaming::create());
-	start(GameServing::create());
-
 	return Positive;
 }
 
-Success GameSupervising::process()
+Success GameServing::process()
 {
 	return Pending;
 }
 
-Success GameSupervising::shutdown()
+Success GameServing::shutdown()
 {
 	return Positive;
 }
 
-void GameSupervising::processInfo(char *pBuf, char *pBufEnd)
+void GameServing::processInfo(char *pBuf, char *pBufEnd)
 {
 	(void)pBuf;
 	(void)pBufEnd;

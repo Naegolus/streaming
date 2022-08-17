@@ -18,8 +18,9 @@ srcsCommon = [
 srcsSpecific = [
 	'main.cpp',
 	'GameSupervising.cpp',
-	'TicTacToeGaming.cpp',
+	'GameServing.cpp',
 	'GamerInteracting.cpp',
+	'TicTacToeGaming.cpp',
 ]
 
 srcs = [srcsSpecific]

@@ -5,7 +5,7 @@
   Author(s):
       - Johannes Natter, office@dsp-crowd.com
 
-  File created on 16.08.2022
+  File created on 17.08.2022
 
   Copyright (C) 2022 Authors and www.dsp-crowd.com
 
@@ -23,44 +23,51 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "GameSupervising.h"
-#include "SystemDebugging.h"
-#include "GameServing.h"
-#include "TicTacToeGaming.h"
+#ifndef GAME_SERVING_H
+#define GAME_SERVING_H
 
-using namespace std;
+#include "Processing.h"
 
-#define LOG_LVL	0
-
-GameSupervising::GameSupervising()
-	: Processing("GameSupervising")
-{}
-
-/* member functions */
-Success GameSupervising::initialize()
+class GameServing : public Processing
 {
-	start(SystemDebugging::create(this));
-	start(TicTacToeGaming::create());
-	start(GameServing::create());
 
-	return Positive;
-}
+public:
 
-Success GameSupervising::process()
-{
-	return Pending;
-}
+	static GameServing *create()
+	{
+		return new (std::nothrow) GameServing;
+	}
 
-Success GameSupervising::shutdown()
-{
-	return Positive;
-}
+protected:
 
-void GameSupervising::processInfo(char *pBuf, char *pBufEnd)
-{
-	(void)pBuf;
-	(void)pBufEnd;
-}
+	GameServing();
+	virtual ~GameServing() {}
 
-/* static functions */
+private:
+
+	GameServing(const GameServing &) : Processing("") {}
+	GameServing &operator=(const GameServing &) { return *this; }
+
+	/*
+	 * Naming of functions:  objectVerb()
+	 * Example:              peerAdd()
+	 */
+
+	/* member functions */
+	Success initialize();
+	Success process();
+	Success shutdown();
+	void processInfo(char *pBuf, char *pBufEnd);
+
+	/* member variables */
+
+	/* static functions */
+
+	/* static variables */
+
+	/* constants */
+
+};
+
+#endif
 
