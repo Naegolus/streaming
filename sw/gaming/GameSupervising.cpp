@@ -40,7 +40,6 @@ GameSupervising::GameSupervising()
 Success GameSupervising::initialize()
 {
 	start(SystemDebugging::create(this));
-	start(TicTacToeGaming::create());
 	start(GameServing::create());
 
 	return Positive;
