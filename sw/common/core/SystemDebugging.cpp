@@ -226,7 +226,9 @@ void SystemDebugging::processTreeSend()
 
 	string procTree(buffProcTree);
 
-	if (procTree == mProcTree or !mProcTreePeerAdded)
+	bool procTreeUpdated = procTree != mProcTree or mProcTreePeerAdded;
+
+	if (!procTreeUpdated)
 		return;
 
 	mProcTreePeerAdded = false;
