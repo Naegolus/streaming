@@ -27,6 +27,8 @@
 #define GAME_SERVING_H
 
 #include "Processing.h"
+#include "TcpListening.h"
+#include "GamerInteracting.h"
 
 class GameServing : public Processing
 {
@@ -58,7 +60,13 @@ private:
 	Success process();
 	void processInfo(char *pBuf, char *pBufEnd);
 
+	void gamerListUpdate();
+	void gamerRemove();
+	void gamerAdd();
+
 	/* member variables */
+	TcpListening *mpLst;
+	std::list<GamerInteracting *> mGamerList;
 
 	/* static functions */
 

@@ -29,25 +29,84 @@ using namespace std;
 
 #define LOG_LVL	0
 
+typedef list<GamerInteracting *>::iterator GamerIter;
+
 GameServing::GameServing()
 	: Processing("GameServing")
+	, mpLst(NULL)
 {}
 
 /* member functions */
 Success GameServing::initialize()
 {
+	mpLst = TcpListening::create();
+	mpLst->portSet(4000);
+	start(mpLst);
+
 	return Positive;
 }
 
 Success GameServing::process()
 {
+	gamerListUpdate();
+
 	return Pending;
+}
+
+void GameServing::gamerListUpdate()
+{
+	gamerRemove();
+	gamerAdd();
+}
+
+void GameServing::gamerRemove()
+{
+	GamerIter iter;
+	GamerInteracting *pGamer;
+
+	iter = mGamerList.begin();
+	while (iter != mGamerList.end())
+	{
+		pGamer = *iter;
+
+		if (pGamer->success() == Pending)
+		{
+			++iter;
+			continue;
+		}
+
+		procDbgLog(LOG_LVL, "removing gamer. process: %p", pGamer);
+		repel(pGamer);
+
+		iter = mGamerList.erase(iter);
+	}
+}
+
+void GameServing::gamerAdd()
+{
+	int peerFd;
+	GamerInteracting *pGamer = NULL;
+
+	while (1)
+	{
+		if (mpLst->ppPeerFd.isEmpty())
+			break;
+
+		peerFd = mpLst->ppPeerFd.front();
+		mpLst->ppPeerFd.pop();
+
+		pGamer = GamerInteracting::create(peerFd);
+		start(pGamer);
+
+		procDbgLog(LOG_LVL, "adding gamer. process: %p", pGamer);
+
+		mGamerList.push_back(pGamer);
+	}
 }
 
 void GameServing::processInfo(char *pBuf, char *pBufEnd)
 {
-	(void)pBuf;
-	(void)pBufEnd;
+	dInfo("Gamers\t\t%ld", mGamerList.size());
 }
 
 /* static functions */
