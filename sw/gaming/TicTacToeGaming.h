@@ -27,8 +27,9 @@
 #define TIC_TAC_TOE_GAMING_H
 
 #include "Processing.h"
+#include "Gaming.h"
 
-class TicTacToeGaming : public Processing
+class TicTacToeGaming : public Gaming
 {
 
 public:
@@ -45,7 +46,7 @@ protected:
 
 private:
 
-	TicTacToeGaming(const TicTacToeGaming &) : Processing("") {}
+	TicTacToeGaming(const TicTacToeGaming &) : Gaming("") {}
 	TicTacToeGaming &operator=(const TicTacToeGaming &) { return *this; }
 
 	/*

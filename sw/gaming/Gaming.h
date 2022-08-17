@@ -40,11 +40,14 @@ public:
 
 protected:
 
-	Gaming();
+	Gaming(const char *name)
+		: Processing(name)
+	{}
 	virtual ~Gaming() {}
 
 private:
 
+	Gaming() : Processing("") {}
 	Gaming(const Gaming &) : Processing("") {}
 	Gaming &operator=(const Gaming &) { return *this; }
 

@@ -29,10 +29,6 @@ using namespace std;
 
 #define LOG_LVL	0
 
-Gaming::Gaming()
-	: Processing("Gaming")
-{}
-
 /* member functions */
 Success Gaming::initialize()
 {

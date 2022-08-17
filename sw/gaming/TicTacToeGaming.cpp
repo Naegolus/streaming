@@ -30,7 +30,7 @@ using namespace std;
 #define LOG_LVL	0
 
 TicTacToeGaming::TicTacToeGaming()
-	: Processing("TicTacToeGaming")
+	: Gaming("TicTacToeGaming")
 {}
 
 /* member functions */
