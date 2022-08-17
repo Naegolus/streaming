@@ -56,7 +56,6 @@ private:
 	/* member functions */
 	Success initialize();
 	Success process();
-	Success shutdown();
 	void processInfo(char *pBuf, char *pBufEnd);
 
 	/* member variables */

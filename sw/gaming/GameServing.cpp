@@ -44,11 +44,6 @@ Success GameServing::process()
 	return Pending;
 }
 
-Success GameServing::shutdown()
-{
-	return Positive;
-}
-
 void GameServing::processInfo(char *pBuf, char *pBufEnd)
 {
 	(void)pBuf;
