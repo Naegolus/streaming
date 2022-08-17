@@ -27,19 +27,6 @@
 #define TIC_TAC_TOE_GAMING_H
 
 #include "Processing.h"
-#include "TcpListening.h"
-
-enum GamingPeerType {
-	GamingPeerStd = 0,
-};
-
-struct GamingPeer
-{
-	enum GamingPeerType type;
-	std::string typeDesc;
-	std::string name;
-	Processing *pProc;
-};
 
 class TicTacToeGaming : public Processing
 {
@@ -71,13 +58,7 @@ private:
 	Success process();
 	void processInfo(char *pBuf, char *pBufEnd);
 
-	void peerListUpdate();
-	void peerRemove();
-	void peerAdd(TcpListening *pListener, enum GamingPeerType peerType, const char *pTypeDesc);
-
 	/* member variables */
-	TcpListening *mpLst;
-	std::list<struct GamingPeer> mPeerList;
 
 	/* static functions */
 
