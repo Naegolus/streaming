@@ -41,7 +41,7 @@ TicTacToeGaming::TicTacToeGaming()
 Success TicTacToeGaming::initialize()
 {
 	mpLst = TcpListening::create();
-	mpLst->portSet(4000);
+	mpLst->portSet(4001);
 	start(mpLst);
 
 	return Positive;
