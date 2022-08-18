@@ -64,7 +64,15 @@ void GamerInteracting::dataRead()
 
 	buf[numBytesRead] = 0;
 
-	procWrnLog("data received, %d: %s", numBytesRead, buf);
+	char outBuf[64];
+	char *pBuf = outBuf;
+	char *pBufEnd = pBuf + sizeof(outBuf);
+
+	*pBuf = 0;
+	for (ssize_t i = 0; i < numBytesRead; ++i)
+		dInfo(" 0x%02X", buf[i] & 0xFF);
+
+	procWrnLog("data received, %d:%s", numBytesRead, outBuf);
 }
 
 void GamerInteracting::processInfo(char *pBuf, char *pBufEnd)
