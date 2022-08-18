@@ -40,6 +40,8 @@ Success GamerInteracting::initialize()
 	mpConn = TcpTransfering::create(mSocketFd);
 	start(mpConn);
 
+	mpConn->send("\xFF\xFB\x01\xFF\xFB\x03\xFF\xFC\x22", 9);
+
 	return Positive;
 }
 
