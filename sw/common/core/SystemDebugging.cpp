@@ -69,8 +69,6 @@ Success SystemDebugging::initialize()
 {
 	mPeerList.clear();
 
-	procTreeDisplaySet(false);
-
 	// proc tree
 	mpLstProc = TcpListening::create();
 	mpLstProc->portSet(3000);
