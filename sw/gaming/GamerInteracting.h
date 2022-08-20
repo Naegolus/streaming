@@ -28,6 +28,7 @@
 
 #include "Processing.h"
 #include "TcpTransfering.h"
+#include "ServerSelecting.h"
 
 #define dForEach_GiState(errorStateGen) \
 		errorStateGen(GiStart) \
@@ -35,6 +36,7 @@
 		errorStateGen(GiWelcomeSend) \
 		errorStateGen(GiContinueWait) \
 		errorStateGen(GiNameSet) \
+		errorStateGen(GiSelectionDoneWait) \
 		errorStateGen(GiIdle) \
 
 #define dGenGiStateEnum(giStateEnum)			giStateEnum,
@@ -91,6 +93,7 @@ private:
 	enum GiState mState;
 	int mSocketFd;
 	TcpTransfering *mpConn;
+	ServerSelecting *mpSelect;
 
 	/* static functions */
 

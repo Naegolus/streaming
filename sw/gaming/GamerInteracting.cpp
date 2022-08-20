@@ -39,6 +39,8 @@ GamerInteracting::GamerInteracting(int fd)
 	, mGamerName("")
 	, mState(GiStart)
 	, mSocketFd(fd)
+	, mpConn(NULL)
+	, mpSelect(NULL)
 {}
 
 /* member functions */
@@ -111,7 +113,7 @@ Success GamerInteracting::process()
 		if (!key)
 			break;
 
-		if (keyIsCommon(key) and mGamerName.size() < 16)
+		if (keyIsCommon(key) and mGamerName.size() < 15)
 		{
 			mGamerName.push_back(key);
 			msgName(msg);
@@ -128,9 +130,19 @@ Success GamerInteracting::process()
 		if (key == keyEnter and 1 < mGamerName.size() and mGamerName.size() < 16)
 		{
 			procInfLog("Continuing to server selection");
-			mState = GiIdle;
+
+			mpSelect = ServerSelecting::create();
+			start(mpSelect);
+
+			mState = GiSelectionDoneWait;
 			break;
 		}
+
+		break;
+	case GiSelectionDoneWait:
+
+		if (mpSelect->success() == Pending)
+			break;
 
 		break;
 	case GiIdle:
@@ -237,8 +249,8 @@ bool GamerInteracting::keyIsCommon(uint8_t key)
 
 void GamerInteracting::processInfo(char *pBuf, char *pBufEnd)
 {
-	dInfo("State\t\t%s\n", giStateString[mState]);
-	dInfo("Name\t\t%s\n", mGamerName.c_str());
+	dInfo("State\t\t\t%s\n", giStateString[mState]);
+	dInfo("Name\t\t\t%s\n", mGamerName.c_str());
 }
 
 /* static functions */

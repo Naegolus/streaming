@@ -106,7 +106,7 @@ void GameServing::gamerAdd()
 
 void GameServing::processInfo(char *pBuf, char *pBufEnd)
 {
-	dInfo("Gamers\t\t%ld", mGamerList.size());
+	dInfo("Gamers\t\t\t%ld", mGamerList.size());
 }
 
 /* static functions */
