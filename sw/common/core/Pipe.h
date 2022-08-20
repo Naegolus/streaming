@@ -245,6 +245,21 @@ public:
 		return true;
 	}
 
+	bool get(PipeEntry<T> &entry)
+	{
+		Guard lock(mEntryMtx);
+
+		if (!mSize)
+			return false;
+
+		entry = mEntries.front();
+		mEntries.pop();
+
+		--mSize;
+
+		return true;
+	}
+
 	bool commit(T particle, ParticleTime t1 = 0, ParticleTime t2 = 0)
 	{
 		Guard lock(mEntryMtx);
