@@ -29,6 +29,25 @@
 #include "Processing.h"
 #include "TcpTransfering.h"
 
+#define dForEach_GiState(errorStateGen) \
+		errorStateGen(GiStart) \
+		errorStateGen(GiTerminalInit) \
+		errorStateGen(GiWelcomeSend) \
+		errorStateGen(GiContinueWait) \
+		errorStateGen(GiNameSet) \
+		errorStateGen(GiIdle) \
+
+#define dGenGiStateEnum(giStateEnum)			giStateEnum,
+#define dGenGiStateString(giStateString)		#giStateString,
+
+enum GiState
+{
+	dForEach_GiState(dGenGiStateEnum)
+};
+
+const uint8_t keyBackspace = 0x7F;
+const uint8_t keyEnter = 0x0D;
+
 class GamerInteracting : public Processing
 {
 
@@ -38,6 +57,8 @@ public:
 	{
 		return new (std::nothrow) GamerInteracting(fd);
 	}
+
+	std::string mGamerName;
 
 protected:
 
@@ -60,9 +81,14 @@ private:
 	Success process();
 	void processInfo(char *pBuf, char *pBufEnd);
 
-	void dataRead();
+	void msgWelcome(std::string &msg);
+	void msgName(std::string &msg);
+	uint8_t dataRead();
+	bool keyIsAlphaNum(uint8_t key);
+	bool keyIsCommon(uint8_t key);
 
 	/* member variables */
+	enum GiState mState;
 	int mSocketFd;
 	TcpTransfering *mpConn;
 
