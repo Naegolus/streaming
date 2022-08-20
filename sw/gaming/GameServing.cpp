@@ -64,8 +64,8 @@ void GameServing::gamerRemove()
 	GamerIter iter;
 	GamerInteracting *pGamer;
 
-	iter = mGamerList.begin();
-	while (iter != mGamerList.end())
+	iter = GamerInteracting::gamerList.begin();
+	while (iter != GamerInteracting::gamerList.end())
 	{
 		pGamer = *iter;
 
@@ -78,7 +78,7 @@ void GameServing::gamerRemove()
 		procDbgLog(LOG_LVL, "removing gamer. process: %p", pGamer);
 		repel(pGamer);
 
-		iter = mGamerList.erase(iter);
+		iter = GamerInteracting::gamerList.erase(iter);
 	}
 }
 
@@ -100,13 +100,13 @@ void GameServing::gamerAdd()
 
 		procDbgLog(LOG_LVL, "adding gamer. process: %p", pGamer);
 
-		mGamerList.push_back(pGamer);
+		GamerInteracting::gamerList.push_back(pGamer);
 	}
 }
 
 void GameServing::processInfo(char *pBuf, char *pBufEnd)
 {
-	dInfo("Gamers\t\t\t%ld", mGamerList.size());
+	dInfo("Gamers\t\t\t%ld", GamerInteracting::gamerList.size());
 }
 
 /* static functions */

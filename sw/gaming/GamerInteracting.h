@@ -26,6 +26,8 @@
 #ifndef GAMER_INTERACTING_H
 #define GAMER_INTERACTING_H
 
+#include <list>
+
 #include "Processing.h"
 #include "TcpTransfering.h"
 #include "GameSelecting.h"
@@ -62,6 +64,8 @@ public:
 	}
 
 	std::string mGamerName;
+
+	static std::list<GamerInteracting *> gamerList;
 
 protected:
 

@@ -66,7 +66,6 @@ private:
 
 	/* member variables */
 	TcpListening *mpLst;
-	std::list<GamerInteracting *> mGamerList;
 
 	/* static functions */
 

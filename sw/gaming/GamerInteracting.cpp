@@ -34,6 +34,8 @@ using namespace std;
 
 #define LOG_LVL	0
 
+list<GamerInteracting *> GamerInteracting::gamerList;
+
 GamerInteracting::GamerInteracting(int fd)
 	: Processing("GamerInteracting")
 	, mGamerName("")
