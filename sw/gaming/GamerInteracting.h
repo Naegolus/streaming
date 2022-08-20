@@ -36,6 +36,7 @@
 		errorStateGen(GiWelcomeSend) \
 		errorStateGen(GiContinueWait) \
 		errorStateGen(GiNameSet) \
+		errorStateGen(GiSelectionStart) \
 		errorStateGen(GiSelectionDoneWait) \
 		errorStateGen(GiIdle) \
 

@@ -130,13 +130,17 @@ Success GamerInteracting::process()
 		if (key == keyEnter and 1 < mGamerName.size() and mGamerName.size() < 16)
 		{
 			procInfLog("Continuing to server selection");
-
-			mpSelect = ServerSelecting::create();
-			start(mpSelect);
-
-			mState = GiSelectionDoneWait;
+			mState = GiSelectionStart;
 			break;
 		}
+
+		break;
+	case GiSelectionStart:
+
+		mpSelect = ServerSelecting::create();
+		start(mpSelect);
+
+		mState = GiSelectionDoneWait;
 
 		break;
 	case GiSelectionDoneWait:
