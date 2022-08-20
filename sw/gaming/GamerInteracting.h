@@ -28,7 +28,7 @@
 
 #include "Processing.h"
 #include "TcpTransfering.h"
-#include "ServerSelecting.h"
+#include "GameSelecting.h"
 
 #define dForEach_GiState(errorStateGen) \
 		errorStateGen(GiStart) \
@@ -94,7 +94,7 @@ private:
 	enum GiState mState;
 	int mSocketFd;
 	TcpTransfering *mpConn;
-	ServerSelecting *mpSelect;
+	GameSelecting *mpSelect;
 
 	/* static functions */
 

@@ -21,7 +21,7 @@ srcsSpecific = [
 	'GameServing.cpp',
 	'Gaming.cpp',
 	'GamerInteracting.cpp',
-	'ServerSelecting.cpp',
+	'GameSelecting.cpp',
 	'TicTacToeGaming.cpp',
 ]
 

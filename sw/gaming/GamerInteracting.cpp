@@ -137,7 +137,7 @@ Success GamerInteracting::process()
 		break;
 	case GiSelectionStart:
 
-		mpSelect = ServerSelecting::create();
+		mpSelect = GameSelecting::create();
 		start(mpSelect);
 
 		mState = GiSelectionDoneWait;

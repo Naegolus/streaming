@@ -23,51 +23,37 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SERVER_SELECTING_H
-#define SERVER_SELECTING_H
+#include "GameSelecting.h"
 
-#include "Processing.h"
+using namespace std;
 
-class ServerSelecting : public Processing
+#define LOG_LVL	0
+
+GameSelecting::GameSelecting()
+	: Processing("GameSelecting")
+{}
+
+/* member functions */
+Success GameSelecting::initialize()
 {
+	return Positive;
+}
 
-public:
+Success GameSelecting::process()
+{
+	return Pending;
+}
 
-	static ServerSelecting *create()
-	{
-		return new (std::nothrow) ServerSelecting;
-	}
+Success GameSelecting::shutdown()
+{
+	return Positive;
+}
 
-protected:
+void GameSelecting::processInfo(char *pBuf, char *pBufEnd)
+{
+	(void)pBuf;
+	(void)pBufEnd;
+}
 
-	ServerSelecting();
-	virtual ~ServerSelecting() {}
-
-private:
-
-	ServerSelecting(const ServerSelecting &) : Processing("") {}
-	ServerSelecting &operator=(const ServerSelecting &) { return *this; }
-
-	/*
-	 * Naming of functions:  objectVerb()
-	 * Example:              peerAdd()
-	 */
-
-	/* member functions */
-	Success initialize();
-	Success process();
-	Success shutdown();
-	void processInfo(char *pBuf, char *pBufEnd);
-
-	/* member variables */
-
-	/* static functions */
-
-	/* static variables */
-
-	/* constants */
-
-};
-
-#endif
+/* static functions */
 
