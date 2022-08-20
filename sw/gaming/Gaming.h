@@ -27,6 +27,7 @@
 #define GAMING_H
 
 #include <list>
+#include <mutex>
 
 #include "Processing.h"
 
@@ -38,6 +39,7 @@ public:
 	std::string mGameName;
 	std::string mGameFlags;
 
+	static std::mutex mtxGamesList;
 	static std::list<Gaming *> gamesList;
 
 protected:

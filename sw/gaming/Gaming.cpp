@@ -29,6 +29,7 @@ using namespace std;
 
 #define LOG_LVL	0
 
+mutex Gaming::mtxGamesList;
 list<Gaming *> Gaming::gamesList;
 
 /* member functions */
