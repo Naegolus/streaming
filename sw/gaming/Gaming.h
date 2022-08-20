@@ -26,6 +26,8 @@
 #ifndef GAMING_H
 #define GAMING_H
 
+#include <list>
+
 #include "Processing.h"
 
 class Gaming : public Processing
@@ -33,10 +35,17 @@ class Gaming : public Processing
 
 public:
 
+	std::string mGameName;
+	std::string mGameFlags;
+
+	static std::list<Gaming *> gamesList;
+
 protected:
 
 	Gaming(const char *name)
 		: Processing(name)
+		, mGameName("")
+		, mGameFlags("")
 	{}
 	virtual ~Gaming() {}
 

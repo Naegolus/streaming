@@ -29,6 +29,8 @@ using namespace std;
 
 #define LOG_LVL	0
 
+list<Gaming *> Gaming::gamesList;
+
 /* member functions */
 Success Gaming::initialize()
 {
