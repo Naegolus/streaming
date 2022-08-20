@@ -148,6 +148,8 @@ Success GamerInteracting::process()
 		if (mpSelect->success() == Pending)
 			break;
 
+		mState = GiIdle;
+
 		break;
 	case GiIdle:
 
@@ -253,8 +255,8 @@ bool GamerInteracting::keyIsCommon(uint8_t key)
 
 void GamerInteracting::processInfo(char *pBuf, char *pBufEnd)
 {
-	dInfo("State\t\t\t%s\n", giStateString[mState]);
 	dInfo("Name\t\t\t%s\n", mGamerName.c_str());
+	dInfo("State\t\t\t%s\n", giStateString[mState]);
 }
 
 /* static functions */
