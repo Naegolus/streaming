@@ -44,11 +44,6 @@ Success GameSelecting::process()
 	return Pending;
 }
 
-Success GameSelecting::shutdown()
-{
-	return Positive;
-}
-
 void GameSelecting::processInfo(char *pBuf, char *pBufEnd)
 {
 	(void)pBuf;
