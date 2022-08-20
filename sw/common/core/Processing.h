@@ -121,6 +121,7 @@ public:
 	const bool progress() const;
 	const Success success() const;
 	void unusedSet();
+	void procTreeDisplaySet(bool display);
 
 	int processTreeStr(char *pBuf, char *pBufEnd, bool detailed = true, bool colored = false);
 
@@ -152,7 +153,6 @@ protected:
 #endif
 
 	bool initDone() const;
-	void procTreeDisplaySet(bool display);
 
 #if CONFIG_PROC_HAVE_GLOBAL_DESTRUCTORS
 	static void globalDestructorRegister(GlobDestructorFunc globDestr);

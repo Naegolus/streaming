@@ -291,6 +291,16 @@ void Processing::unusedSet()
 	mStatParent |= PsbParUnused;
 }
 
+void Processing::procTreeDisplaySet(bool display)
+{
+	mStatDrv |= PsbDrvPrTreeDisable;
+
+	if (!display)
+		return;
+
+	mStatDrv &= ~PsbDrvPrTreeDisable;
+}
+
 int Processing::processTreeStr(char *pBuf, char *pBufEnd, bool detailed, bool colored)
 {
 	Processing *pChild = NULL;
@@ -756,16 +766,6 @@ void Processing::maxChildrenSet(size_t cnt)
 bool Processing::initDone() const
 {
 	return mStatDrv & PsbDrvInitDone;
-}
-
-void Processing::procTreeDisplaySet(bool display)
-{
-	mStatDrv |= PsbDrvPrTreeDisable;
-
-	if (!display)
-		return;
-
-	mStatDrv &= ~PsbDrvPrTreeDisable;
 }
 
 void Processing::globalDestructorRegister(GlobDestructorFunc globDestr)
