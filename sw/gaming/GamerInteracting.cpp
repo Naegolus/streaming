@@ -187,14 +187,16 @@ void GamerInteracting::msgName(string &msg)
 {
 	msg = "\033[2J\033[H";
 	msg += "\r\n";
+	msg += "Set your name warrior!";
+	msg += "\r\n";
+	msg += "Press [Enter] to continue";
+	msg += "\r\n";
+	msg += "\r\n";
 	msg += "Name: ";
 	msg += mGamerName;
 	msg += "\r\n";
 	msg += "\r\n";
 	msg += "Requirements: 1 < len < 16";
-	msg += "\r\n";
-	msg += "\r\n";
-	msg += "Press [Enter] to continue";
 	msg += "\r\n";
 }
 
