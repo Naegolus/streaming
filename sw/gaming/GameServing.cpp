@@ -41,6 +41,7 @@ Success GameServing::initialize()
 {
 	mpLst = TcpListening::create();
 	mpLst->portSet(4000);
+	mpLst->procTreeDisplaySet(false);
 	start(mpLst);
 
 	return Positive;

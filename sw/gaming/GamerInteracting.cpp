@@ -25,10 +25,12 @@
 
 #include "GamerInteracting.h"
 
+#if 0
 static const char *giStateString[] =
 {
 	dForEach_GiState(dGenGiStateString)
 };
+#endif
 
 using namespace std;
 
@@ -49,6 +51,7 @@ GamerInteracting::GamerInteracting(int fd)
 Success GamerInteracting::initialize()
 {
 	mpConn = TcpTransfering::create(mSocketFd);
+	mpConn->procTreeDisplaySet(false);
 	start(mpConn);
 
 	return Positive;
@@ -140,6 +143,7 @@ Success GamerInteracting::process()
 	case GiSelectionStart:
 
 		mpSelect = GameSelecting::create();
+		mpSelect->procTreeDisplaySet(false);
 		start(mpSelect);
 
 		mState = GiSelectionDoneWait;
@@ -258,7 +262,9 @@ bool GamerInteracting::keyIsCommon(uint8_t key)
 void GamerInteracting::processInfo(char *pBuf, char *pBufEnd)
 {
 	dInfo("Name\t\t\t%s\n", mGamerName.c_str());
+#if 0
 	dInfo("State\t\t\t%s\n", giStateString[mState]);
+#endif
 }
 
 /* static functions */

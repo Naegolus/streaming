@@ -39,7 +39,10 @@ GameSupervising::GameSupervising()
 /* member functions */
 Success GameSupervising::initialize()
 {
-	start(SystemDebugging::create(this));
+	SystemDebugging *pDbg = SystemDebugging::create(this);
+	pDbg->procTreeDisplaySet(false);
+	start(pDbg);
+
 	start(GameServing::create());
 
 	return Positive;
