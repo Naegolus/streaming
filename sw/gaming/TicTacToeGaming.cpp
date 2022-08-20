@@ -39,7 +39,7 @@ Success TicTacToeGaming::initialize()
 	return Positive;
 }
 
-Success TicTacToeGaming::process()
+Success TicTacToeGaming::gameProcess()
 {
 	return Pending;
 }

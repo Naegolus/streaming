@@ -33,11 +33,6 @@ class Gaming : public Processing
 
 public:
 
-	static Gaming *create()
-	{
-		return new (std::nothrow) Gaming;
-	}
-
 protected:
 
 	Gaming(const char *name)
@@ -61,6 +56,8 @@ private:
 	Success process();
 	Success shutdown();
 	void processInfo(char *pBuf, char *pBufEnd);
+
+	virtual Success gameProcess() = 0;
 
 	/* member variables */
 

@@ -37,7 +37,14 @@ Success Gaming::initialize()
 
 Success Gaming::process()
 {
-	return Pending;
+	try
+	{
+		return gameProcess();
+	}
+	catch (...)
+	{
+		return procErrLog(-1, "Unhandled gaming exception");
+	}
 }
 
 Success Gaming::shutdown()

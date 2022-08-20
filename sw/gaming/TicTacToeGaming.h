@@ -56,7 +56,7 @@ private:
 
 	/* member functions */
 	Success initialize();
-	Success process();
+	Success gameProcess();
 	void processInfo(char *pBuf, char *pBufEnd);
 
 	/* member variables */

@@ -84,16 +84,16 @@ void GameServing::gamerRemove()
 
 void GameServing::gamerAdd()
 {
+	PipeEntry<int> peerFdEntry;
 	int peerFd;
 	GamerInteracting *pGamer = NULL;
 
 	while (1)
 	{
-		if (mpLst->ppPeerFd.isEmpty())
+		if (!mpLst->ppPeerFd.get(peerFdEntry))
 			break;
 
-		peerFd = mpLst->ppPeerFd.front();
-		mpLst->ppPeerFd.pop();
+		peerFd = peerFdEntry.particle;
 
 		pGamer = GamerInteracting::create(peerFd);
 		start(pGamer);
