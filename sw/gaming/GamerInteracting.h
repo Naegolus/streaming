@@ -42,7 +42,7 @@
 		gen(GiSelectionDoneWait) \
 		gen(GiIdle) \
 
-#define dGenGiStateEnum(giStateEnum)			giStateEnum,
+#define dGenGiStateEnum(s) s,
 dProcessStateEnum(GiState);
 
 const uint8_t keyBackspace = 0x7F;

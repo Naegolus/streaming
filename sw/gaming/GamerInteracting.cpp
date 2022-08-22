@@ -26,7 +26,7 @@
 #include "GamerInteracting.h"
 
 #if 0
-#define dGenGiStateString(giStateString)		#giStateString,
+#define dGenGiStateString(s) #s,
 dProcessStateStr(GiState);
 #endif
 
