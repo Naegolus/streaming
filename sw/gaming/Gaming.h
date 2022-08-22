@@ -31,6 +31,8 @@
 
 #include "Processing.h"
 
+class Gaming;
+
 struct TypeListElem
 {
 	std::string name;
@@ -38,6 +40,7 @@ struct TypeListElem
 	std::string author;
 	std::string authorPage;
 	std::string desc;
+	Gaming *(*pFctCreate)();
 };
 
 class Gaming : public Processing
