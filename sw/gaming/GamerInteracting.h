@@ -29,7 +29,7 @@
 #include <list>
 
 #include "Processing.h"
-#include "TcpTransfering.h"
+#include "LibGame.h"
 #include "GameSelecting.h"
 
 #define dForEach_GiState(gen) \
@@ -44,10 +44,6 @@
 
 #define dGenGiStateEnum(s) s,
 dProcessStateEnum(GiState);
-
-const uint8_t keyBackspace = 0x7F;
-const uint8_t keyEnter = 0x0D;
-const uint8_t keyEsc = 0x1B;
 
 class GamerInteracting : public Processing
 {
@@ -65,12 +61,12 @@ public:
 
 protected:
 
-	GamerInteracting() : Processing("GamerInteracting") {}
 	GamerInteracting(int fd);
 	virtual ~GamerInteracting() {}
 
 private:
 
+	GamerInteracting() : Processing("GamerInteracting") {}
 	GamerInteracting(const GamerInteracting &) : Processing("") {}
 	GamerInteracting &operator=(const GamerInteracting &) { return *this; }
 
@@ -86,7 +82,6 @@ private:
 
 	void msgWelcome(std::string &msg);
 	void msgName(std::string &msg);
-	uint8_t dataRead();
 	bool keyIsAlphaNum(uint8_t key);
 	bool keyIsCommon(uint8_t key);
 
@@ -94,6 +89,7 @@ private:
 	enum GiState mState;
 	int mSocketFd;
 	TcpTransfering *mpConn;
+	uint32_t mKeyLastGotMs;
 	GameSelecting *mpSelect;
 
 	/* static functions */

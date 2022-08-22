@@ -37,7 +37,8 @@ class Gaming : public Processing
 public:
 
 	std::string mGameName;
-	std::string mGameFlags;
+	std::string mType;
+	std::string mFlags;
 
 	static std::mutex mtxGamesList;
 	static std::list<Gaming *> gamesList;
@@ -47,7 +48,8 @@ protected:
 	Gaming(const char *name)
 		: Processing(name)
 		, mGameName("")
-		, mGameFlags("")
+		, mType("")
+		, mFlags("")
 	{}
 	virtual ~Gaming() {}
 

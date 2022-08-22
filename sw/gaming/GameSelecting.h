@@ -26,33 +26,43 @@
 #ifndef GAME_SELECTING_H
 #define GAME_SELECTING_H
 
+#include <vector>
+
 #include "Processing.h"
+#include "LibGame.h"
 
 #define dForEach_GsState(gen) \
 		gen(GsStart) \
-		gen(GsTerminalInit) \
-		gen(GsWelcomeSend) \
+		gen(GsGamesListRead) \
+		gen(GsIdle) \
 
 #define dGenGsStateEnum(s) s,
 dProcessStateEnum(GsState);
+
+struct GameListElem
+{
+	std::string name;
+	std::string type;
+};
 
 class GameSelecting : public Processing
 {
 
 public:
 
-	static GameSelecting *create()
+	static GameSelecting *create(TcpTransfering *pConn)
 	{
-		return new (std::nothrow) GameSelecting;
+		return new (std::nothrow) GameSelecting(pConn);
 	}
 
 protected:
 
-	GameSelecting();
+	GameSelecting(TcpTransfering *pConn);
 	virtual ~GameSelecting() {}
 
 private:
 
+	GameSelecting() : Processing("") {}
 	GameSelecting(const GameSelecting &) : Processing("") {}
 	GameSelecting &operator=(const GameSelecting &) { return *this; }
 
@@ -66,8 +76,14 @@ private:
 	Success process();
 	void processInfo(char *pBuf, char *pBufEnd);
 
+	void msgGamesList(std::string &msg);
+
 	/* member variables */
 	enum GsState mState;
+	std::vector<struct GameListElem> mGamesList;
+	TcpTransfering *mpConn;
+	uint32_t mKeyLastGotMs;
+	uint32_t mNumGames;
 
 	/* static functions */
 

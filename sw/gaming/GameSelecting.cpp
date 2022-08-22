@@ -24,6 +24,7 @@
 */
 
 #include "GameSelecting.h"
+#include "Gaming.h"
 
 #if 1
 #define dGenGsStateString(s) #s,
@@ -34,8 +35,12 @@ using namespace std;
 
 #define LOG_LVL	0
 
-GameSelecting::GameSelecting()
+GameSelecting::GameSelecting(TcpTransfering *pConn)
 	: Processing("GameSelecting")
+	, mState(GsStart)
+	, mpConn(pConn)
+	, mKeyLastGotMs(0)
+	, mNumGames(0)
 {}
 
 /* member functions */
@@ -46,7 +51,82 @@ Success GameSelecting::initialize()
 
 Success GameSelecting::process()
 {
+	string msg = "";
+	uint8_t key;
+
+	switch (mState)
+	{
+	case GsStart:
+
+		mState = GsGamesListRead;
+
+		break;
+	case GsGamesListRead:
+
+		procInfLog("Getting server list");
+
+		mGamesList.clear();
+
+		{
+			lock_guard<mutex> lock(Gaming::mtxGamesList);
+			list<Gaming *>::iterator iter;
+			Gaming *pGaming = NULL;
+			int i = 0;
+
+			mNumGames = Gaming::gamesList.size();
+			mGamesList.reserve(mNumGames);
+
+			for (iter = Gaming::gamesList.begin(); iter != Gaming::gamesList.end(); ++iter, ++i)
+			{
+				pGaming = *iter;
+
+				mGamesList[i].name = pGaming->mGameName;
+				mGamesList[i].type = pGaming->mType;
+			}
+		}
+
+		procInfLog("Got server list");
+
+		msgGamesList(msg);
+		mState = GsIdle;
+
+		break;
+	case GsIdle:
+
+		key = keyGet(mpConn, mKeyLastGotMs);
+
+		if (!key)
+			break;
+
+		if (key == keyEsc)
+			return Positive;
+
+		break;
+	default:
+		break;
+	}
+
+	if (!msg.size())
+		return Pending;
+
+	mpConn->send(msg.c_str(), msg.size());
+
 	return Pending;
+}
+
+void GameSelecting::msgGamesList(string &msg)
+{
+	msg = "\033[2J\033[H";
+	msg += "\r\n";
+	msg += "Games " + to_string(mNumGames);
+	msg += "\r\n";
+	msg += "\r\n";
+	msg += "[k]\tUp";
+	msg += "\r\n";
+	msg += "[j]\tDown";
+	msg += "\r\n";
+	msg += "[esc]\tQuit";
+	msg += "\r\n";
 }
 
 void GameSelecting::processInfo(char *pBuf, char *pBufEnd)

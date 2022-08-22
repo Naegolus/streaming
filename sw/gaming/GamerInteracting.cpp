@@ -42,6 +42,7 @@ GamerInteracting::GamerInteracting(int fd)
 	, mState(GiStart)
 	, mSocketFd(fd)
 	, mpConn(NULL)
+	, mKeyLastGotMs(0)
 	, mpSelect(NULL)
 {}
 
@@ -99,7 +100,7 @@ Success GamerInteracting::process()
 		break;
 	case GiContinueWait:
 
-		key = dataRead();
+		key = keyGet(mpConn, mKeyLastGotMs);
 
 		if (!key)
 			break;
@@ -117,7 +118,7 @@ Success GamerInteracting::process()
 		break;
 	case GiNameSet:
 
-		key = dataRead();
+		key = keyGet(mpConn, mKeyLastGotMs);
 
 		if (!key)
 			break;
@@ -149,7 +150,7 @@ Success GamerInteracting::process()
 		break;
 	case GiSelectionStart:
 
-		mpSelect = GameSelecting::create();
+		mpSelect = GameSelecting::create(mpConn);
 		//mpSelect->procTreeDisplaySet(false);
 		start(mpSelect);
 
@@ -210,42 +211,6 @@ void GamerInteracting::msgName(string &msg)
 	msg += "\r\n";
 	msg += "Requirements: 1 < len < 16";
 	msg += "\r\n";
-}
-
-uint8_t GamerInteracting::dataRead()
-{
-	ssize_t numBytesRead;
-	char buf[8];
-	uint8_t key;
-
-	numBytesRead = mpConn->read(buf, sizeof(buf) - 1);
-	if (!numBytesRead)
-		return 0;
-
-	buf[numBytesRead] = 0;
-
-	char outBuf[64];
-	char *pBuf = outBuf;
-	char *pBufEnd = pBuf + sizeof(outBuf);
-
-	*pBuf = 0;
-	for (ssize_t i = 0; i < numBytesRead; ++i)
-		dInfo(" 0x%02X", buf[i] & 0xFF);
-
-	if (buf[0] == 0x0D)
-		numBytesRead = 1;
-
-	if (numBytesRead >= 2)
-	{
-		procWrnLog("data received, %d:%s", numBytesRead, outBuf);
-		return 0;
-	}
-
-	key = buf[0];
-
-	procInfLog("key received: 0x%02X '%c'", key, key);
-
-	return key;
 }
 
 bool GamerInteracting::keyIsAlphaNum(uint8_t key)
