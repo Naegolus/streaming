@@ -86,6 +86,9 @@ Success GamerInteracting::process()
 		// Hide cursor
 		msg += "\e[?25l";
 
+		// Set terminal title
+		msg += "\e]2;twitch.tv/Naegolus\a";
+
 		mState = GiWelcomeSend;
 
 		break;
