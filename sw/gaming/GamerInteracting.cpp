@@ -162,6 +162,9 @@ Success GamerInteracting::process()
 		if (mpSelect->success() == Pending)
 			break;
 
+		if (mpSelect->aborted)
+			return Positive;
+
 		mState = GiIdle;
 
 		break;

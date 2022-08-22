@@ -35,12 +35,19 @@ using namespace std;
 
 #define LOG_LVL	0
 
+#define dNameColSize	20
+#define dGameRowSize	5
+
 GameSelecting::GameSelecting(TcpTransfering *pConn)
 	: Processing("GameSelecting")
+	, aborted(false)
 	, mState(GsStart)
 	, mpConn(pConn)
 	, mKeyLastGotMs(0)
 	, mNumGames(0)
+	, mNumGamers(0)
+	, mOffCursor(0)
+	, mOffGames(0)
 {}
 
 /* member functions */
@@ -99,7 +106,10 @@ Success GameSelecting::process()
 			break;
 
 		if (key == keyEsc)
+		{
+			aborted = true;
 			return Positive;
+		}
 
 		break;
 	default:
@@ -116,17 +126,48 @@ Success GameSelecting::process()
 
 void GameSelecting::msgGamesList(string &msg)
 {
+	struct GameListElem *pElem = NULL;
+	size_t u = mOffGames;
+	size_t i = 0;
+	string str;
+
 	msg = "\033[2J\033[H";
 	msg += "\r\n";
-	msg += "Games " + to_string(mNumGames);
+	msg += "Games " + to_string(mNumGames) + ", Gamers " + to_string(mNumGamers) + "\r\n";
 	msg += "\r\n";
+	str = "  Name";
+	str.insert(str.size(), dNameColSize - str.size(), ' ');
+	msg += str + "Type\r\n";
+	msg += "-----------------------------------\r\n";
+
+	for (i = 0; i < dGameRowSize; ++i, ++u)
+	{
+		if (u >= mGamesList.size())
+		{
+			msg += "\r\n";
+			continue;
+		}
+
+		pElem = &mGamesList[mOffGames];
+
+		if (i == mOffCursor)
+			msg += ">";
+		else
+			msg += " ";
+
+		str = pElem->name;
+		if (str.size() > dNameColSize)
+			str.insert(str.size(), dNameColSize - str.size(), ' ');
+
+		msg += " " + str + pElem->type + "\r\n";
+	}
+
+	msg += "-----------------------------------\r\n";
 	msg += "\r\n";
-	msg += "[k]\tUp";
-	msg += "\r\n";
-	msg += "[j]\tDown";
-	msg += "\r\n";
-	msg += "[esc]\tQuit";
-	msg += "\r\n";
+	msg += "[k]\tUp\r\n";
+	msg += "[j]\tDown\r\n";
+	msg += "[c]\tCreate\r\n";
+	msg += "[esc]\tQuit\r\n";
 }
 
 void GameSelecting::processInfo(char *pBuf, char *pBufEnd)

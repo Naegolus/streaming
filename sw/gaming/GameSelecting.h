@@ -55,6 +55,8 @@ public:
 		return new (std::nothrow) GameSelecting(pConn);
 	}
 
+	bool aborted;
+
 protected:
 
 	GameSelecting(TcpTransfering *pConn);
@@ -84,6 +86,10 @@ private:
 	TcpTransfering *mpConn;
 	uint32_t mKeyLastGotMs;
 	uint32_t mNumGames;
+	uint32_t mNumGamers;
+
+	uint32_t mOffCursor;
+	uint32_t mOffGames;
 
 	/* static functions */
 
