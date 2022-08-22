@@ -23,7 +23,7 @@ srcsSpecific = [
 	'Gaming.cpp',
 	'GamerInteracting.cpp',
 	'GameSelecting.cpp',
-	'TicTacToeGaming.cpp',
+	'games/TicTacToe/TicTacToeGaming.cpp',
 ]
 
 srcs = [srcsSpecific]
@@ -37,11 +37,15 @@ deps = []
 deps += dependency('threads')
 deps += dependency('jsoncpp')
 
+incs = []
+incs += '../common/core'
+incs += 'games/TicTacToe'
+
 myApp = executable(
 	'gaming',
 	srcs,
 	include_directories : include_directories([
-		'../common/core',
+		incs,
 	]),
 	dependencies : [
 		deps,
