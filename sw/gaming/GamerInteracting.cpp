@@ -152,7 +152,7 @@ Success GamerInteracting::process()
 	case GiSelectionStart:
 
 		mpSelect = GameSelecting::create();
-		mpSelect->procTreeDisplaySet(false);
+		//mpSelect->procTreeDisplaySet(false);
 		start(mpSelect);
 
 		mState = GiSelectionDoneWait;
