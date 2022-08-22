@@ -252,5 +252,17 @@ inline int16_t logEntryCreate(const int severity, const char *filename, const ch
 #define dInfo(m, ...)					dInfoDebugPrefix pBuf = (pBuf += snprintf(pBuf, pBufEnd - pBuf, m, ##__VA_ARGS__), pBuf > pBufEnd ? pBufEnd : pBuf)
 #define dTrace(x)						pBuf += mncpy(pBuf, pBufEnd - pBuf, (char *)&x, sizeof(x))
 
+#define dProcessStateEnum(StateName) \
+enum StateName \
+{ \
+	dForEach_ ## StateName(dGen ## StateName ## Enum) \
+};
+
+#define dProcessStateStr(StateName) \
+static const char *StateName ## String[] = \
+{ \
+	dForEach_ ## StateName(dGen ## StateName ## String) \
+};
+
 #endif
 
