@@ -46,8 +46,10 @@ GameSelecting::GameSelecting(TcpTransfering *pConn)
 	, mKeyLastGotMs(0)
 	, mNumGames(0)
 	, mNumGamers(0)
-	, mOffCursor(0)
+	, mOffGamesCursor(0)
 	, mOffGames(0)
+	, mOffTypesCursor(0)
+	, mOffTypes(0)
 {}
 
 /* member functions */
@@ -172,7 +174,7 @@ void GameSelecting::msgGamesList(string &msg)
 
 		pElem = &mGamesList[mOffGames];
 
-		if (i == mOffCursor)
+		if (i == mOffGamesCursor)
 			msg += ">";
 		else
 			msg += " ";

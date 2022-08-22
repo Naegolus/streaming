@@ -31,6 +31,15 @@
 
 #include "Processing.h"
 
+struct TypeListElem
+{
+	std::string name;
+	std::string author;
+	std::string page;
+	std::string art;
+	std::string desc;
+};
+
 class Gaming : public Processing
 {
 
@@ -42,6 +51,7 @@ public:
 
 	static std::mutex mtxGamesList;
 	static std::list<Gaming *> gamesList;
+	static std::list<struct TypeListElem> typesList;
 
 protected:
 

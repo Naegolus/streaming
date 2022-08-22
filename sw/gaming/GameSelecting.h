@@ -90,8 +90,11 @@ private:
 	uint32_t mNumGames;
 	uint32_t mNumGamers;
 
-	uint32_t mOffCursor;
+	uint32_t mOffGamesCursor;
 	uint32_t mOffGames;
+
+	uint32_t mOffTypesCursor;
+	uint32_t mOffTypes;
 
 	/* static functions */
 
