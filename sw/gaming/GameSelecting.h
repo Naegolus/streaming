@@ -42,6 +42,7 @@ dProcessStateEnum(GsState);
 
 struct GameListElem
 {
+	void *id;
 	std::string name;
 	std::string type;
 };

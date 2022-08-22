@@ -89,6 +89,7 @@ Success GameSelecting::process()
 			{
 				pGaming = *iter;
 
+				mGamesList[i].id = pGaming;
 				mGamesList[i].name = pGaming->mGameName;
 				mGamesList[i].type = pGaming->mType;
 			}
