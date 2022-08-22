@@ -26,10 +26,8 @@
 #include "GamerInteracting.h"
 
 #if 0
-static const char *giStateString[] =
-{
-	dForEach_GiState(dGenGiStateString)
-};
+#define dGenGiStateString(giStateString)		#giStateString,
+dProcessStateStr(GiState);
 #endif
 
 using namespace std;
@@ -279,7 +277,7 @@ void GamerInteracting::processInfo(char *pBuf, char *pBufEnd)
 {
 	dInfo("Name\t\t\t%s\n", mGamerName.c_str());
 #if 0
-	dInfo("State\t\t\t%s\n", giStateString[mState]);
+	dInfo("State\t\t\t%s\n", GiStateString[mState]);
 #endif
 }
 

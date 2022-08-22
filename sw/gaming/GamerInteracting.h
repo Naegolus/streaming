@@ -32,23 +32,18 @@
 #include "TcpTransfering.h"
 #include "GameSelecting.h"
 
-#define dForEach_GiState(errorStateGen) \
-		errorStateGen(GiStart) \
-		errorStateGen(GiTerminalInit) \
-		errorStateGen(GiWelcomeSend) \
-		errorStateGen(GiContinueWait) \
-		errorStateGen(GiNameSet) \
-		errorStateGen(GiSelectionStart) \
-		errorStateGen(GiSelectionDoneWait) \
-		errorStateGen(GiIdle) \
+#define dForEach_GiState(gen) \
+		gen(GiStart) \
+		gen(GiTerminalInit) \
+		gen(GiWelcomeSend) \
+		gen(GiContinueWait) \
+		gen(GiNameSet) \
+		gen(GiSelectionStart) \
+		gen(GiSelectionDoneWait) \
+		gen(GiIdle) \
 
 #define dGenGiStateEnum(giStateEnum)			giStateEnum,
-#define dGenGiStateString(giStateString)		#giStateString,
-
-enum GiState
-{
-	dForEach_GiState(dGenGiStateEnum)
-};
+dProcessStateEnum(GiState);
 
 const uint8_t keyBackspace = 0x7F;
 const uint8_t keyEnter = 0x0D;
