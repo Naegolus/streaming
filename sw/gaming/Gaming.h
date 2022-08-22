@@ -34,9 +34,9 @@
 struct TypeListElem
 {
 	std::string name;
-	std::string author;
-	std::string page;
 	std::string art;
+	std::string author;
+	std::string authorPage;
 	std::string desc;
 };
 
