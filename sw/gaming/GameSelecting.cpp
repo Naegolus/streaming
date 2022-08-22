@@ -25,6 +25,11 @@
 
 #include "GameSelecting.h"
 
+#if 1
+#define dGenGsStateString(s) #s,
+dProcessStateStr(GsState);
+#endif
+
 using namespace std;
 
 #define LOG_LVL	0
@@ -46,8 +51,9 @@ Success GameSelecting::process()
 
 void GameSelecting::processInfo(char *pBuf, char *pBufEnd)
 {
-	(void)pBuf;
-	(void)pBufEnd;
+#if 1
+	dInfo("State\t\t\t%s\n", GsStateString[mState]);
+#endif
 }
 
 /* static functions */

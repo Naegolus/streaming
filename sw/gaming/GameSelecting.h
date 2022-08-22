@@ -28,6 +28,14 @@
 
 #include "Processing.h"
 
+#define dForEach_GsState(gen) \
+		gen(GsStart) \
+		gen(GsTerminalInit) \
+		gen(GsWelcomeSend) \
+
+#define dGenGsStateEnum(s) s,
+dProcessStateEnum(GsState);
+
 class GameSelecting : public Processing
 {
 
@@ -59,6 +67,7 @@ private:
 	void processInfo(char *pBuf, char *pBufEnd);
 
 	/* member variables */
+	enum GsState mState;
 
 	/* static functions */
 
