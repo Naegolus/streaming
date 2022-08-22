@@ -34,7 +34,8 @@
 #define dForEach_GsState(gen) \
 		gen(GsStart) \
 		gen(GsGamesListRead) \
-		gen(GsIdle) \
+		gen(GsGamesList) \
+		gen(GsTypesList) \
 
 #define dGenGsStateEnum(s) s,
 dProcessStateEnum(GsState);
@@ -79,6 +80,7 @@ private:
 	void processInfo(char *pBuf, char *pBufEnd);
 
 	void msgGamesList(std::string &msg);
+	void msgTypesList(std::string &msg);
 
 	/* member variables */
 	enum GsState mState;

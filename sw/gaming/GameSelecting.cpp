@@ -95,10 +95,10 @@ Success GameSelecting::process()
 		procInfLog("Got server list");
 
 		msgGamesList(msg);
-		mState = GsIdle;
+		mState = GsGamesList;
 
 		break;
-	case GsIdle:
+	case GsGamesList:
 
 		key = keyGet(mpConn, mKeyLastGotMs);
 
@@ -109,6 +109,28 @@ Success GameSelecting::process()
 		{
 			aborted = true;
 			return Positive;
+		}
+
+		if (key == 'c')
+		{
+			msgTypesList(msg);
+			mState = GsTypesList;
+			break;
+		}
+
+		break;
+	case GsTypesList:
+
+		key = keyGet(mpConn, mKeyLastGotMs);
+
+		if (!key)
+			break;
+
+		if (key == keyEsc)
+		{
+			msgGamesList(msg);
+			mState = GsGamesList;
+			break;
 		}
 
 		break;
@@ -164,10 +186,26 @@ void GameSelecting::msgGamesList(string &msg)
 
 	msg += "-----------------------------------\r\n";
 	msg += "\r\n";
-	msg += "[k]\tUp\r\n";
-	msg += "[j]\tDown\r\n";
-	msg += "[c]\tCreate\r\n";
-	msg += "[esc]\tQuit\r\n";
+	msg += "[k]\t\tUp\r\n";
+	msg += "[j]\t\tDown\r\n";
+	msg += "[enter]\t\tSelect\r\n";
+	msg += "[c]\t\tCreate\r\n";
+	msg += "[esc]\t\tQuit\r\n";
+}
+
+void GameSelecting::msgTypesList(string &msg)
+{
+	msg = "\033[2J\033[H";
+	msg += "\r\n";
+
+	msg += "Available Games\r\n";
+	msg += "\r\n";
+
+	msg += "\r\n";
+	msg += "[k]\t\tUp\r\n";
+	msg += "[j]\t\tDown\r\n";
+	msg += "[enter]\t\tSelect\r\n";
+	msg += "[esc]\t\tReturn\r\n";
 }
 
 void GameSelecting::processInfo(char *pBuf, char *pBufEnd)
