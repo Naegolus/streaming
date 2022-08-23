@@ -17,7 +17,7 @@ srcsCommon = [
 
 srcsSpecific = [
 	'main.cpp',
-	'LibGame.cpp',
+	'LibGaming.cpp',
 	'GameSupervising.cpp',
 	'GameServing.cpp',
 	'Gaming.cpp',

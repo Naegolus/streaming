@@ -29,7 +29,7 @@
 #include <list>
 
 #include "Processing.h"
-#include "LibGame.h"
+#include "LibGaming.h"
 #include "GameSelecting.h"
 
 #define dForEach_GiState(gen) \

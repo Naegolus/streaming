@@ -23,43 +23,16 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "LibGame.h"
+#ifndef LIB_GAMING_H
+#define LIB_GAMING_H
 
-using namespace std;
+#include "TcpTransfering.h"
 
-uint8_t keyGet(TcpTransfering *pConn, uint32_t lastGotMs)
-{
-	ssize_t numBytesRead;
-	char buf[8];
-	uint8_t key;
+const uint8_t keyBackspace = 0x7F;
+const uint8_t keyEnter = 0x0D;
+const uint8_t keyEsc = 0x1B;
 
-	numBytesRead = pConn->read(buf, sizeof(buf) - 1);
-	if (!numBytesRead)
-		return 0;
+uint8_t keyGet(TcpTransfering *pConn, uint32_t lastGotMs);
 
-	buf[numBytesRead] = 0;
-
-	char outBuf[64];
-	char *pBuf = outBuf;
-	char *pBufEnd = pBuf + sizeof(outBuf);
-
-	*pBuf = 0;
-	for (ssize_t i = 0; i < numBytesRead; ++i)
-		dInfo(" 0x%02X", buf[i] & 0xFF);
-
-	if (buf[0] == 0x0D)
-		numBytesRead = 1;
-
-	if (numBytesRead >= 2)
-	{
-		wrnLog("data received, %d:%s", numBytesRead, outBuf);
-		return 0;
-	}
-
-	key = buf[0];
-
-	infLog("key received: 0x%02X '%c'", key, key);
-
-	return key;
-}
+#endif
 

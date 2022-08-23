@@ -29,7 +29,7 @@
 #include <vector>
 
 #include "Processing.h"
-#include "LibGame.h"
+#include "LibGaming.h"
 
 #define dForEach_GsState(gen) \
 		gen(GsStart) \
