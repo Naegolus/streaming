@@ -27,10 +27,12 @@
 #define GAMER_INTERACTING_H
 
 #include <list>
+#include <jsoncpp/json/json.h>
 
 #include "Processing.h"
 #include "LibGaming.h"
 #include "GameSelecting.h"
+#include "Pipe.h"
 
 #define dForEach_GiState(gen) \
 		gen(GiStart) \
@@ -56,6 +58,9 @@ public:
 	}
 
 	std::string mGamerName;
+
+	Pipe<Json::Value> in;
+	Pipe<Json::Value> out;
 
 	static std::list<GamerInteracting *> gamerList;
 

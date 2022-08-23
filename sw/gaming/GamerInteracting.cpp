@@ -165,6 +165,10 @@ Success GamerInteracting::process()
 		if (mpSelect->aborted)
 			return Positive;
 
+		out.commit(mpSelect->res);
+		repel(mpSelect);
+		mpSelect = NULL;
+
 		mState = GiIdle;
 
 		break;
