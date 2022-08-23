@@ -27,6 +27,7 @@
 #define GAME_SELECTING_H
 
 #include <vector>
+#include <jsoncpp/json/json.h>
 
 #include "Processing.h"
 #include "LibGaming.h"
@@ -58,6 +59,7 @@ public:
 	}
 
 	bool aborted;
+	Json::Value res;
 
 protected:
 

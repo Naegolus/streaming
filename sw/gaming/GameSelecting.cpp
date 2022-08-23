@@ -32,6 +32,7 @@ dProcessStateStr(GsState);
 #endif
 
 using namespace std;
+using namespace Json;
 
 #define LOG_LVL	0
 
@@ -146,6 +147,13 @@ Success GameSelecting::process()
 
 		if (key == keyEnter)
 		{
+			res["type"] = "create";
+			res["name"] = Gaming::typesList[mOffTypes + mOffTypesCursor].name;
+#if 0
+			FastWriter fastWriter;
+			string output = fastWriter.write(res);
+			procInfLog("%s", output.c_str());
+#endif
 			return Positive;
 		}
 
