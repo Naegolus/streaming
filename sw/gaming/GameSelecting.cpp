@@ -47,6 +47,7 @@ GameSelecting::GameSelecting(TcpTransfering *pConn)
 	, mpConn(pConn)
 	, mKeyLastGotMs(0)
 	, mNumGames(0)
+	, mNumTypes(0)
 	, mNumGamers(0)
 	, mOffGamesCursor(0)
 	, mOffGames(0)
@@ -97,6 +98,11 @@ Success GameSelecting::process()
 			}
 		}
 
+		{
+			lock_guard<mutex> lock(Gaming::mtxTypesList);
+			mNumTypes = Gaming::typesList.size();
+		}
+
 		procInfLog("Got server list");
 
 		msgGamesList(msg);
@@ -135,6 +141,20 @@ Success GameSelecting::process()
 		{
 			msgGamesList(msg);
 			mState = GsGamesList;
+			break;
+		}
+
+		if (key == 'j' and mOffTypesCursor < mNumTypes - 1)
+		{
+			++mOffTypesCursor;
+			msgTypesList(msg);
+			break;
+		}
+
+		if (key == 'k' and mOffTypesCursor)
+		{
+			--mOffTypesCursor;
+			msgTypesList(msg);
 			break;
 		}
 
@@ -183,7 +203,7 @@ void GameSelecting::msgGamesList(string &msg)
 			msg += " ";
 
 		str = pElem->name;
-		if (str.size() > dNameColSize)
+		if (str.size() < dNameColSize)
 			str.insert(str.size(), dNameColSize - str.size(), ' ');
 
 		msg += " " + str + pElem->type + "\r\n";
@@ -218,7 +238,7 @@ void GameSelecting::msgTypesList(string &msg)
 
 	for (i = 0; i < dTypeRowSize; ++i, ++u, ++iter)
 	{
-		if (u >= Gaming::typesList.size())
+		if (u >= mNumTypes)
 		{
 			msg += "\r\n";
 			continue;
@@ -226,13 +246,13 @@ void GameSelecting::msgTypesList(string &msg)
 
 		pElem = &(*iter);
 
-		if (i == mOffGamesCursor)
+		if (i == mOffTypesCursor)
 			msg += ">";
 		else
 			msg += " ";
 
 		str = pElem->name;
-		if (str.size() > dNameColSize)
+		if (str.size() < dNameColSize)
 			str.insert(str.size(), dNameColSize - str.size(), ' ');
 
 		msg += " " + str + " |\r\n";

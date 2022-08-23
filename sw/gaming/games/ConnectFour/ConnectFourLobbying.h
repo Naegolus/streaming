@@ -5,7 +5,7 @@
   Author(s):
       - Johannes Natter, office@dsp-crowd.com
 
-  File created on 16.08.2022
+  File created on 23.08.2022
 
   Copyright (C) 2022 Authors and www.dsp-crowd.com
 
@@ -23,40 +23,51 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "TicTacToeGaming.h"
+#ifndef CONNECT_FOUR_LOBBYING_H
+#define CONNECT_FOUR_LOBBYING_H
 
-using namespace std;
+#include "Processing.h"
 
-string TicTacToeGaming::author = "Johannes Natter";
-
-#define LOG_LVL	0
-
-TicTacToeGaming::TicTacToeGaming()
-	: Gaming("TicTacToeGaming")
+class ConnectFourLobbying : public Processing
 {
-}
 
-/* member functions */
-Success TicTacToeGaming::initialize()
-{
-	return Positive;
-}
+public:
 
-Success TicTacToeGaming::gameProcess()
-{
-	return Pending;
-}
+	static ConnectFourLobbying *create()
+	{
+		return new (std::nothrow) ConnectFourLobbying;
+	}
 
-void TicTacToeGaming::processInfo(char *pBuf, char *pBufEnd)
-{
-	(void)pBuf;
-	(void)pBufEnd;
-}
+protected:
 
-/* static functions */
+	ConnectFourLobbying();
+	virtual ~ConnectFourLobbying() {}
 
-void TicTacToeGaming::gameInfoSet(struct TypeListElem &type)
-{
-	type.author = author;
-}
+private:
+
+	ConnectFourLobbying(const ConnectFourLobbying &) : Processing("") {}
+	ConnectFourLobbying &operator=(const ConnectFourLobbying &) { return *this; }
+
+	/*
+	 * Naming of functions:  objectVerb()
+	 * Example:              peerAdd()
+	 */
+
+	/* member functions */
+	Success initialize();
+	Success process();
+	Success shutdown();
+	void processInfo(char *pBuf, char *pBufEnd);
+
+	/* member variables */
+
+	/* static functions */
+
+	/* static variables */
+
+	/* constants */
+
+};
+
+#endif
 

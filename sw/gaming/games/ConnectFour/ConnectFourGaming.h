@@ -5,7 +5,7 @@
   Author(s):
       - Johannes Natter, office@dsp-crowd.com
 
-  File created on 20.08.2022
+  File created on 23.08.2022
 
   Copyright (C) 2022 Authors and www.dsp-crowd.com
 
@@ -23,52 +23,33 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAME_SELECTING_H
-#define GAME_SELECTING_H
-
-#include <vector>
+#ifndef CONNECT_FOUR_GAMING_H
+#define CONNECT_FOUR_GAMING_H
 
 #include "Processing.h"
-#include "LibGaming.h"
+#include "Gaming.h"
 
-#define dForEach_GsState(gen) \
-		gen(GsStart) \
-		gen(GsGamesListRead) \
-		gen(GsGamesList) \
-		gen(GsTypesList) \
-
-#define dGenGsStateEnum(s) s,
-dProcessStateEnum(GsState);
-
-struct GameListElem
-{
-	void *id;
-	std::string name;
-	std::string type;
-};
-
-class GameSelecting : public Processing
+class ConnectFourGaming : public Gaming
 {
 
 public:
 
-	static GameSelecting *create(TcpTransfering *pConn)
+	static Gaming *create()
 	{
-		return new (std::nothrow) GameSelecting(pConn);
+		return new (std::nothrow) ConnectFourGaming;
 	}
 
-	bool aborted;
+	static void gameInfoSet(struct TypeListElem &type);
 
 protected:
 
-	GameSelecting(TcpTransfering *pConn);
-	virtual ~GameSelecting() {}
+	ConnectFourGaming();
+	virtual ~ConnectFourGaming() {}
 
 private:
 
-	GameSelecting() : Processing("") {}
-	GameSelecting(const GameSelecting &) : Processing("") {}
-	GameSelecting &operator=(const GameSelecting &) { return *this; }
+	ConnectFourGaming(const ConnectFourGaming &) : Gaming("") {}
+	ConnectFourGaming &operator=(const ConnectFourGaming &) { return *this; }
 
 	/*
 	 * Naming of functions:  objectVerb()
@@ -77,30 +58,15 @@ private:
 
 	/* member functions */
 	Success initialize();
-	Success process();
+	Success gameProcess();
 	void processInfo(char *pBuf, char *pBufEnd);
 
-	void msgGamesList(std::string &msg);
-	void msgTypesList(std::string &msg);
-
 	/* member variables */
-	enum GsState mState;
-	std::vector<struct GameListElem> mGamesList;
-	TcpTransfering *mpConn;
-	uint32_t mKeyLastGotMs;
-	uint32_t mNumGames;
-	uint32_t mNumTypes;
-	uint32_t mNumGamers;
-
-	uint32_t mOffGamesCursor;
-	uint32_t mOffGames;
-
-	uint32_t mOffTypesCursor;
-	uint32_t mOffTypes;
 
 	/* static functions */
 
 	/* static variables */
+	static std::string author;
 
 	/* constants */
 

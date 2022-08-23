@@ -5,7 +5,7 @@
   Author(s):
       - Johannes Natter, office@dsp-crowd.com
 
-  File created on 16.08.2022
+  File created on 23.08.2022
 
   Copyright (C) 2022 Authors and www.dsp-crowd.com
 
@@ -23,31 +23,30 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "TicTacToeGaming.h"
+#include "ConnectFourGaming.h"
 
 using namespace std;
 
-string TicTacToeGaming::author = "Johannes Natter";
+string ConnectFourGaming::author = "Johannes Natter";
 
 #define LOG_LVL	0
 
-TicTacToeGaming::TicTacToeGaming()
-	: Gaming("TicTacToeGaming")
-{
-}
+ConnectFourGaming::ConnectFourGaming()
+	: Gaming("ConnectFourGaming")
+{}
 
 /* member functions */
-Success TicTacToeGaming::initialize()
+Success ConnectFourGaming::initialize()
 {
 	return Positive;
 }
 
-Success TicTacToeGaming::gameProcess()
+Success ConnectFourGaming::gameProcess()
 {
 	return Pending;
 }
 
-void TicTacToeGaming::processInfo(char *pBuf, char *pBufEnd)
+void ConnectFourGaming::processInfo(char *pBuf, char *pBufEnd)
 {
 	(void)pBuf;
 	(void)pBufEnd;
@@ -55,7 +54,7 @@ void TicTacToeGaming::processInfo(char *pBuf, char *pBufEnd)
 
 /* static functions */
 
-void TicTacToeGaming::gameInfoSet(struct TypeListElem &type)
+void ConnectFourGaming::gameInfoSet(struct TypeListElem &type)
 {
 	type.author = author;
 }

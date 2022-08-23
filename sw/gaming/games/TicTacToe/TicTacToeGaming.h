@@ -34,12 +34,12 @@ class TicTacToeGaming : public Gaming
 
 public:
 
-	static TicTacToeGaming *create()
+	static Gaming *create()
 	{
 		return new (std::nothrow) TicTacToeGaming;
 	}
 
-	static void gameRegister(const std::string &name);
+	static void gameInfoSet(struct TypeListElem &type);
 
 protected:
 
@@ -66,6 +66,7 @@ private:
 	/* static functions */
 
 	/* static variables */
+	static std::string author;
 
 	/* constants */
 

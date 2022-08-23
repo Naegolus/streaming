@@ -24,6 +24,7 @@ srcsSpecific = [
 	'GamerInteracting.cpp',
 	'GameSelecting.cpp',
 	'games/TicTacToe/TicTacToeGaming.cpp',
+	'games/ConnectFour/ConnectFourGaming.cpp',
 ]
 
 srcs = [srcsSpecific]
@@ -40,6 +41,7 @@ deps += dependency('jsoncpp')
 incs = []
 incs += '../common/core'
 incs += 'games/TicTacToe'
+incs += 'games/ConnectFour'
 
 myApp = executable(
 	'gaming',

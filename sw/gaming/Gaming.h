@@ -37,12 +37,15 @@ class Gaming;
 
 struct TypeListElem
 {
+	// Set by Gaming()
 	std::string name;
+	Gaming *(*pFctCreate)();
+
+	// Set by <Specific>Gaming()
 	std::string art;
 	std::string author;
 	std::string authorPage;
 	std::string desc;
-	Gaming *(*pFctCreate)();
 };
 
 class Gaming : public Processing
@@ -53,7 +56,6 @@ public:
 	std::string mGameName;
 	std::string mType;
 	std::string mFlags;
-	std::string mAuthor;
 
 	static std::mutex mtxGamesList;
 	static std::list<Gaming *> gamesList;
@@ -63,6 +65,10 @@ public:
 	Pipe<Json::Value> in;
 	Pipe<Json::Value> out;
 
+	static void gameRegister(const std::string &name,
+				Gaming *(*pFctCreate)(),
+				void (*pFctInfoSet)(struct TypeListElem &type));
+
 protected:
 
 	Gaming(const char *name)
@@ -70,7 +76,6 @@ protected:
 		, mGameName("")
 		, mType("")
 		, mFlags("")
-		, mAuthor("")
 	{}
 	virtual ~Gaming() {}
 
@@ -103,7 +108,7 @@ private:
 
 };
 
-#define dGameRegister(g) g ## Gaming::gameRegister(#g)
+#define dGameRegister(g) Gaming::gameRegister(#g, g ## Gaming::create, g ## Gaming::gameInfoSet)
 
 #endif
 

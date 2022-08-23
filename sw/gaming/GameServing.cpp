@@ -26,6 +26,7 @@
 #include "GameServing.h"
 #include "Gaming.h"
 #include "TicTacToeGaming.h"
+#include "ConnectFourGaming.h"
 
 using namespace std;
 
@@ -42,12 +43,12 @@ GameServing::GameServing()
 Success GameServing::initialize()
 {
 	dGameRegister(TicTacToe);
-	// dGameRegister(FourWins);
+	dGameRegister(ConnectFour);
 	// dGameRegister(Battleship);
 
 	mpLst = TcpListening::create();
 	mpLst->portSet(4000);
-	mpLst->procTreeDisplaySet(false);
+	mpLst->procTreeDisplaySet(true);
 	start(mpLst);
 
 	return Positive;

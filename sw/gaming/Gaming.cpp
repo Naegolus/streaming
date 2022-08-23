@@ -66,3 +66,19 @@ void Gaming::processInfo(char *pBuf, char *pBufEnd)
 
 /* static functions */
 
+void Gaming::gameRegister(const std::string &name,
+			Gaming *(*pFctCreate)(),
+			void (*pFctInfoSet)(struct TypeListElem &type))
+{
+	lock_guard<mutex> lock(Gaming::mtxTypesList);
+
+	struct TypeListElem type;
+
+	type.name = name;
+	type.pFctCreate = pFctCreate;
+
+	pFctInfoSet(type);
+
+	Gaming::typesList.push_back(type);
+}
+
