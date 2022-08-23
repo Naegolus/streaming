@@ -28,8 +28,10 @@
 
 #include <list>
 #include <mutex>
+#include <jsoncpp/json/json.h>
 
 #include "Processing.h"
+#include "Pipe.h"
 
 class Gaming;
 
@@ -51,10 +53,15 @@ public:
 	std::string mGameName;
 	std::string mType;
 	std::string mFlags;
+	std::string mAuthor;
 
 	static std::mutex mtxGamesList;
 	static std::list<Gaming *> gamesList;
+	static std::mutex mtxTypesList;
 	static std::list<struct TypeListElem> typesList;
+
+	Pipe<Json::Value> in;
+	Pipe<Json::Value> out;
 
 protected:
 
@@ -63,6 +70,7 @@ protected:
 		, mGameName("")
 		, mType("")
 		, mFlags("")
+		, mAuthor("")
 	{}
 	virtual ~Gaming() {}
 
@@ -94,6 +102,8 @@ private:
 	/* constants */
 
 };
+
+#define dGameRegister(g) g ## Gaming::gameRegister(#g)
 
 #endif
 

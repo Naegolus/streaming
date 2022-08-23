@@ -1,0 +1,16 @@
+[
+	{
+		"type" : "connect",
+		"user" : "<id>"
+	},
+	{
+		"type" : "key",
+		"user" : "<id>",
+		"key"  : "<key>"
+	},
+	{
+		"type" : "disconnect",
+		"user" : "<id>"
+	}
+]
+

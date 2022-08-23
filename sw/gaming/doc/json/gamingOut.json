@@ -1,0 +1,12 @@
+[
+	{
+		"type" : "frame",
+		"users" :
+		[
+			"<id1>",
+			"<id2>",
+			"<id3>"
+		],
+		"data" : "<frame>"
+	}
+]

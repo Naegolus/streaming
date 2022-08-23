@@ -31,7 +31,9 @@ using namespace std;
 
 TicTacToeGaming::TicTacToeGaming()
 	: Gaming("TicTacToeGaming")
-{}
+{
+	mAuthor = "Johannes Natter";
+}
 
 /* member functions */
 Success TicTacToeGaming::initialize()
@@ -48,6 +50,17 @@ void TicTacToeGaming::processInfo(char *pBuf, char *pBufEnd)
 {
 	(void)pBuf;
 	(void)pBufEnd;
+}
+
+void TicTacToeGaming::gameRegister(const string &name)
+{
+	lock_guard<mutex> lock(Gaming::mtxTypesList);
+
+	struct TypeListElem type;
+
+	type.name = name;
+
+	Gaming::typesList.push_back(type);
 }
 
 /* static functions */

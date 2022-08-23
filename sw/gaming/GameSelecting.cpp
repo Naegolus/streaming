@@ -38,6 +38,8 @@ using namespace std;
 #define dNameColSize	20
 #define dGameRowSize	5
 
+#define dTypeRowSize	5
+
 GameSelecting::GameSelecting(TcpTransfering *pConn)
 	: Processing("GameSelecting")
 	, aborted(false)
@@ -198,11 +200,43 @@ void GameSelecting::msgGamesList(string &msg)
 
 void GameSelecting::msgTypesList(string &msg)
 {
+	list<struct TypeListElem>::iterator iter;
+	struct TypeListElem *pElem = NULL;
+	size_t u = mOffTypes;
+	size_t i = 0;
+	string str;
+
 	msg = "\033[2J\033[H";
 	msg += "\r\n";
 
 	msg += "Available Games\r\n";
 	msg += "\r\n";
+
+	lock_guard<mutex> lock(Gaming::mtxTypesList);
+
+	iter = Gaming::typesList.begin();
+
+	for (i = 0; i < dTypeRowSize; ++i, ++u, ++iter)
+	{
+		if (u >= Gaming::typesList.size())
+		{
+			msg += "\r\n";
+			continue;
+		}
+
+		pElem = &(*iter);
+
+		if (i == mOffGamesCursor)
+			msg += ">";
+		else
+			msg += " ";
+
+		str = pElem->name;
+		if (str.size() > dNameColSize)
+			str.insert(str.size(), dNameColSize - str.size(), ' ');
+
+		msg += " " + str + " |\r\n";
+	}
 
 	msg += "\r\n";
 	msg += "[k]\t\tUp\r\n";

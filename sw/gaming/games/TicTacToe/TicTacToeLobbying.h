@@ -5,7 +5,7 @@
   Author(s):
       - Johannes Natter, office@dsp-crowd.com
 
-  File created on 16.08.2022
+  File created on 23.08.2022
 
   Copyright (C) 2022 Authors and www.dsp-crowd.com
 
@@ -23,33 +23,30 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TIC_TAC_TOE_GAMING_H
-#define TIC_TAC_TOE_GAMING_H
+#ifndef TIC_TAC_TOE_LOBBYING_H
+#define TIC_TAC_TOE_LOBBYING_H
 
 #include "Processing.h"
-#include "Gaming.h"
 
-class TicTacToeGaming : public Gaming
+class TicTacToeLobbying : public Processing
 {
 
 public:
 
-	static TicTacToeGaming *create()
+	static TicTacToeLobbying *create()
 	{
-		return new (std::nothrow) TicTacToeGaming;
+		return new (std::nothrow) TicTacToeLobbying;
 	}
-
-	static void gameRegister(const std::string &name);
 
 protected:
 
-	TicTacToeGaming();
-	virtual ~TicTacToeGaming() {}
+	TicTacToeLobbying();
+	virtual ~TicTacToeLobbying() {}
 
 private:
 
-	TicTacToeGaming(const TicTacToeGaming &) : Gaming("") {}
-	TicTacToeGaming &operator=(const TicTacToeGaming &) { return *this; }
+	TicTacToeLobbying(const TicTacToeLobbying &) : Processing("") {}
+	TicTacToeLobbying &operator=(const TicTacToeLobbying &) { return *this; }
 
 	/*
 	 * Naming of functions:  objectVerb()
@@ -58,7 +55,8 @@ private:
 
 	/* member functions */
 	Success initialize();
-	Success gameProcess();
+	Success process();
+	Success shutdown();
 	void processInfo(char *pBuf, char *pBufEnd);
 
 	/* member variables */

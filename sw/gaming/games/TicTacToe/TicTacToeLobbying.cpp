@@ -5,7 +5,7 @@
   Author(s):
       - Johannes Natter, office@dsp-crowd.com
 
-  File created on 16.08.2022
+  File created on 23.08.2022
 
   Copyright (C) 2022 Authors and www.dsp-crowd.com
 
@@ -23,53 +23,37 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TIC_TAC_TOE_GAMING_H
-#define TIC_TAC_TOE_GAMING_H
+#include "TicTacToeLobbying.h"
 
-#include "Processing.h"
-#include "Gaming.h"
+using namespace std;
 
-class TicTacToeGaming : public Gaming
+#define LOG_LVL	0
+
+TicTacToeLobbying::TicTacToeLobbying()
+	: Processing("TicTacToeLobbying")
+{}
+
+/* member functions */
+Success TicTacToeLobbying::initialize()
 {
+	return Positive;
+}
 
-public:
+Success TicTacToeLobbying::process()
+{
+	return Pending;
+}
 
-	static TicTacToeGaming *create()
-	{
-		return new (std::nothrow) TicTacToeGaming;
-	}
+Success TicTacToeLobbying::shutdown()
+{
+	return Positive;
+}
 
-	static void gameRegister(const std::string &name);
+void TicTacToeLobbying::processInfo(char *pBuf, char *pBufEnd)
+{
+	(void)pBuf;
+	(void)pBufEnd;
+}
 
-protected:
-
-	TicTacToeGaming();
-	virtual ~TicTacToeGaming() {}
-
-private:
-
-	TicTacToeGaming(const TicTacToeGaming &) : Gaming("") {}
-	TicTacToeGaming &operator=(const TicTacToeGaming &) { return *this; }
-
-	/*
-	 * Naming of functions:  objectVerb()
-	 * Example:              peerAdd()
-	 */
-
-	/* member functions */
-	Success initialize();
-	Success gameProcess();
-	void processInfo(char *pBuf, char *pBufEnd);
-
-	/* member variables */
-
-	/* static functions */
-
-	/* static variables */
-
-	/* constants */
-
-};
-
-#endif
+/* static functions */
 
