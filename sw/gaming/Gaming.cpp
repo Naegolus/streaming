@@ -33,7 +33,7 @@ mutex Gaming::mtxGamesList;
 list<Gaming *> Gaming::gamesList;
 
 mutex Gaming::mtxTypesList;
-list<struct TypeListElem> Gaming::typesList;
+vector<struct TypeListElem> Gaming::typesList;
 
 /* member functions */
 Success Gaming::initialize()

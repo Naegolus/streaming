@@ -43,6 +43,15 @@ GameServing::GameServing()
 Success GameServing::initialize()
 {
 	dGameRegister(TicTacToe);
+	dGameRegister(TicTacToe);
+	dGameRegister(ConnectFour);
+	dGameRegister(ConnectFour);
+	dGameRegister(ConnectFour);
+	dGameRegister(TicTacToe);
+	dGameRegister(ConnectFour);
+	dGameRegister(ConnectFour);
+	dGameRegister(TicTacToe);
+	dGameRegister(TicTacToe);
 	dGameRegister(ConnectFour);
 	// dGameRegister(Battleship);
 

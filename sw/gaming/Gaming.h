@@ -27,6 +27,7 @@
 #define GAMING_H
 
 #include <list>
+#include <vector>
 #include <mutex>
 #include <jsoncpp/json/json.h>
 
@@ -60,7 +61,7 @@ public:
 	static std::mutex mtxGamesList;
 	static std::list<Gaming *> gamesList;
 	static std::mutex mtxTypesList;
-	static std::list<struct TypeListElem> typesList;
+	static std::vector<struct TypeListElem> typesList;
 
 	Pipe<Json::Value> in;
 	Pipe<Json::Value> out;

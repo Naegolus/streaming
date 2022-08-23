@@ -38,7 +38,7 @@ using namespace std;
 #define dNameColSize	20
 #define dGameRowSize	5
 
-#define dTypeRowSize	5
+#define dTypeRowSize	7
 
 GameSelecting::GameSelecting(TcpTransfering *pConn)
 	: Processing("GameSelecting")
@@ -144,16 +144,31 @@ Success GameSelecting::process()
 			break;
 		}
 
-		if (key == 'j' and mOffTypesCursor < mNumTypes - 1)
+		if (key == keyEnter)
 		{
-			++mOffTypesCursor;
+			return Positive;
+		}
+
+		if (key == 'j' and mOffTypesCursor < dTypeRowSize - 1)
+		{
+			if ((mOffTypesCursor == dTypeRowSize / 2) and
+				(mOffTypes + dTypeRowSize < mNumTypes))
+				++mOffTypes;
+			else
+				++mOffTypesCursor;
+
 			msgTypesList(msg);
 			break;
 		}
 
 		if (key == 'k' and mOffTypesCursor)
 		{
-			--mOffTypesCursor;
+			if ((mOffTypesCursor == dTypeRowSize / 2) and
+				mOffTypes)
+				--mOffTypes;
+			else
+				--mOffTypesCursor;
+
 			msgTypesList(msg);
 			break;
 		}
@@ -195,7 +210,7 @@ void GameSelecting::msgGamesList(string &msg)
 			continue;
 		}
 
-		pElem = &mGamesList[mOffGames];
+		pElem = &mGamesList[u];
 
 		if (i == mOffGamesCursor)
 			msg += ">";
@@ -220,7 +235,6 @@ void GameSelecting::msgGamesList(string &msg)
 
 void GameSelecting::msgTypesList(string &msg)
 {
-	list<struct TypeListElem>::iterator iter;
 	struct TypeListElem *pElem = NULL;
 	size_t u = mOffTypes;
 	size_t i = 0;
@@ -234,17 +248,22 @@ void GameSelecting::msgTypesList(string &msg)
 
 	lock_guard<mutex> lock(Gaming::mtxTypesList);
 
-	iter = Gaming::typesList.begin();
-
-	for (i = 0; i < dTypeRowSize; ++i, ++u, ++iter)
+	for (i = 0; i < dTypeRowSize; ++i, ++u, ++pElem)
 	{
+		if ((!i and mOffTypes) or
+			(i == dTypeRowSize - 1 and mOffTypes + dTypeRowSize < mNumTypes))
+		{
+			msg += "  ---" + string(dNameColSize - 2, ' ') + "|\r\n";
+			continue;
+		}
+
 		if (u >= mNumTypes)
 		{
 			msg += "\r\n";
 			continue;
 		}
 
-		pElem = &(*iter);
+		pElem = &Gaming::typesList[u];
 
 		if (i == mOffTypesCursor)
 			msg += ">";
