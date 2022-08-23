@@ -29,6 +29,7 @@
 #include "ConnectFourGaming.h"
 
 using namespace std;
+using namespace Json;
 
 #define LOG_LVL	0
 
@@ -65,9 +66,30 @@ Success GameServing::initialize()
 
 Success GameServing::process()
 {
+	gamerInputTransfer();
 	gamerListUpdate();
 
 	return Pending;
+}
+
+void GameServing::gamerInputTransfer()
+{
+	GamerIter iter;
+	GamerInteracting *pGamer;
+	PipeEntry<Value> msg;
+
+	iter = GamerInteracting::gamerList.begin();
+	while (iter != GamerInteracting::gamerList.end())
+	{
+		pGamer = *iter;
+
+		if (!pGamer->out.get(msg))
+			break;
+
+		FastWriter fastWriter;
+		string str = fastWriter.write(msg.particle);
+		procInfLog("%s", str.c_str());
+	}
 }
 
 void GameServing::gamerListUpdate()

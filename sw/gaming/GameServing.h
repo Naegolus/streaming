@@ -60,6 +60,8 @@ private:
 	Success process();
 	void processInfo(char *pBuf, char *pBufEnd);
 
+	void gamerInputTransfer();
+
 	void gamerListUpdate();
 	void gamerRemove();
 	void gamerAdd();
