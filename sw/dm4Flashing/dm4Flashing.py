@@ -8,7 +8,7 @@
 #
 #  File created on 07.07.2022
 #
-#  Copyright (C) 2022 Authors and www.dsp-crowd.com
+#  Copyright (C) 2022-now Authors and www.dsp-crowd.com
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

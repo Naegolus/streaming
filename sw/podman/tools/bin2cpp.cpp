@@ -5,7 +5,7 @@
   Author(s):
       - Johannes Natter, office@dsp-crowd.com
 
-  Copyright (C) 2017 Authors and www.dsp-crowd.com
+  Copyright (C) 2017-now Authors and www.dsp-crowd.com
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
