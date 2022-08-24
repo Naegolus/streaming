@@ -83,12 +83,12 @@ void GameServing::gamerInputTransfer()
 	{
 		pGamer = *iter;
 
-		if (!pGamer->out.get(msg))
-			break;
-
-		FastWriter fastWriter;
-		string str = fastWriter.write(msg.particle);
-		procInfLog("%s", str.c_str());
+		while (pGamer->out.get(msg))
+		{
+			FastWriter fastWriter;
+			string str = fastWriter.write(msg.particle);
+			procInfLog("%s", str.c_str());
+		}
 	}
 }
 
