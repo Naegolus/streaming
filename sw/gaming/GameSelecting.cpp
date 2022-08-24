@@ -130,6 +130,11 @@ Success GameSelecting::process()
 			break;
 		}
 
+		if (key != keyEnter)
+			break;
+
+		// selected server here
+
 		break;
 	case GsTypesList:
 
@@ -143,18 +148,6 @@ Success GameSelecting::process()
 			msgGamesList(msg);
 			mState = GsGamesList;
 			break;
-		}
-
-		if (key == keyEnter)
-		{
-			res["type"] = "create";
-			res["name"] = Gaming::typesList[mOffTypes + mOffTypesCursor].name;
-#if 0
-			FastWriter fastWriter;
-			string output = fastWriter.write(res);
-			procInfLog("%s", output.c_str());
-#endif
-			return Positive;
 		}
 
 		if (key == 'j' and mOffTypesCursor < dTypeRowSize - 1)
@@ -171,8 +164,7 @@ Success GameSelecting::process()
 
 		if (key == 'k' and mOffTypesCursor)
 		{
-			if ((mOffTypesCursor == dTypeRowSize / 2) and
-				mOffTypes)
+			if ((mOffTypesCursor == dTypeRowSize / 2) and mOffTypes)
 				--mOffTypes;
 			else
 				--mOffTypesCursor;
@@ -180,6 +172,18 @@ Success GameSelecting::process()
 			msgTypesList(msg);
 			break;
 		}
+
+		if (key != keyEnter)
+			break;
+
+		res["type"] = "create";
+		res["name"] = Gaming::typesList[mOffTypes + mOffTypesCursor].name;
+#if 0
+		FastWriter fastWriter;
+		string output = fastWriter.write(res);
+		procInfLog("%s", output.c_str());
+#endif
+		return Positive;
 
 		break;
 	default:
