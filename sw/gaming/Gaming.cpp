@@ -81,6 +81,7 @@ void Gaming::gameRegister(const std::string &name,
 Gaming *Gaming::create(const string &type)
 {
 	vector<struct TypeListElem>::iterator iter;
+	Gaming *pGame = NULL;
 
 	iter = typesList.begin();
 	for (; iter != typesList.end(); ++iter)
@@ -88,7 +89,13 @@ Gaming *Gaming::create(const string &type)
 		if (iter->name != type)
 			continue;
 
-		return iter->pFctCreate();
+		pGame = iter->pFctCreate();
+		if (!pGame)
+			return NULL;
+
+		pGame->mType = type;
+
+		return pGame;
 	}
 
 	return NULL;
