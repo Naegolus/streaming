@@ -104,6 +104,10 @@ void ConnectFourGaming::gamerMsgProcess()
 
 void ConnectFourGaming::gamerMsgInterpret(const Value &msg)
 {
+	FastWriter fastWriter;
+	string str = fastWriter.write(msg);
+	procInfLog("%s", str.c_str());
+
 	string type = msg["type"].asString();
 	Value tmp;
 
