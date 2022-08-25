@@ -89,6 +89,8 @@ void GameServing::gamerInputTransfer()
 			string str = fastWriter.write(msg.particle);
 			procInfLog("%s", str.c_str());
 		}
+
+		++iter;
 	}
 }
 
