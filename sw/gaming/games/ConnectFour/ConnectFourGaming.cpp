@@ -31,6 +31,7 @@ dProcessStateStr(CfState);
 #endif
 
 using namespace std;
+using namespace Json;
 
 string ConnectFourGaming::author = "Johannes Natter";
 
@@ -39,6 +40,7 @@ string ConnectFourGaming::author = "Johannes Natter";
 ConnectFourGaming::ConnectFourGaming()
 	: Gaming("ConnectFourGaming")
 	, mState(CfStart)
+	, mGameStateChanged(false)
 {}
 
 /* member functions */
@@ -53,7 +55,16 @@ Success ConnectFourGaming::gameProcess()
 	{
 	case CfStart:
 
-		mState = CfLobbyStart;
+		mState = CfTemp;
+
+		break;
+	case CfTemp:
+
+		if (!mGameStateChanged)
+			break;
+		mGameStateChanged = false;
+
+		gameStateSend();
 
 		break;
 	case CfLobbyStart:
@@ -85,19 +96,65 @@ Success ConnectFourGaming::gameProcess()
 
 void ConnectFourGaming::gamerMsgProcess()
 {
+	PipeEntry<Value> msg;
+
+	while (in.get(msg))
+		gamerMsgInterpret(msg.particle);
 }
 
-void ConnectFourGaming::msgWelcome(string &msg)
+void ConnectFourGaming::gamerMsgInterpret(const Value &msg)
 {
-	msg = "\033[2J\033[H";
-	msg += "\r\n";
-	msg += "Welcome to " + mGameName + "!";
-	msg += "\r\n";
-	msg += "\r\n";
-	msg += "[enter]\tContinue";
-	msg += "\r\n";
-	msg += "[esc]\tQuit";
-	msg += "\r\n";
+	string type = msg["type"].asString();
+	Value tmp;
+
+	if (type == "connect")
+	{
+		tmp["gamerId"] = msg["gamerId"];
+		tmp["gamerName"] = msg["gamerName"];
+
+		mGameState["gamers"].append(tmp);
+
+		mGameStateChanged = true;
+		return;
+	}
+}
+
+void ConnectFourGaming::gameStateSend()
+{
+	string frame;
+	Value msg;
+
+	msgWelcome(frame);
+
+	msg["type"] = "frame";
+	msg["data"] = frame;
+
+	for (Value::ArrayIndex i = 0; i < mGameState["gamers"].size(); ++i)
+		msg["gamers"].append(mGameState["gamers"][i]["gamerName"].asString());
+
+	out.commit(msg);
+}
+
+void ConnectFourGaming::msgWelcome(string &str)
+{
+	str = "\033[2J\033[H";
+	str += "\r\n";
+	str += "Welcome to " + mGameName + "!";
+	str += "\r\n";
+	str += "\r\n";
+	str += "Connected gamers";
+	str += "\r\n";
+	for (Value::ArrayIndex i = 0; i < mGameState["gamers"].size(); ++i)
+	{
+		str += mGameState["gamers"][i]["gamerName"].asString();
+		str += "\r\n";
+	}
+	str += "\r\n";
+	str += "\r\n";
+	str += "[enter]\tContinue";
+	str += "\r\n";
+	str += "[esc]\tExit";
+	str += "\r\n";
 }
 
 void ConnectFourGaming::processInfo(char *pBuf, char *pBufEnd)
