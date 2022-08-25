@@ -34,6 +34,8 @@ using namespace std;
 
 #define LOG_LVL	0
 
+#define dNameSizeMax		16
+
 list<GamerInteracting *> GamerInteracting::gamerList;
 
 GamerInteracting::GamerInteracting(int fd)
@@ -126,7 +128,7 @@ Success GamerInteracting::process()
 		if (key == keyEsc)
 			return Positive;
 
-		if (keyIsCommon(key) and mGamerName.size() < 15)
+		if (keyIsCommon(key) and mGamerName.size() < dNameSizeMax - 1)
 		{
 			mGamerName.push_back(key);
 			msgName(msg);
@@ -140,7 +142,7 @@ Success GamerInteracting::process()
 			break;
 		}
 
-		if (key == keyEnter and 1 < mGamerName.size() and mGamerName.size() < 16)
+		if (key == keyEnter and 1 < mGamerName.size() and mGamerName.size() < dNameSizeMax)
 		{
 			procInfLog("Continuing to server selection");
 			mState = GiSelectionStart;
