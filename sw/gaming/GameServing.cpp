@@ -156,14 +156,13 @@ void GameServing::gameMsgInterpret(Gaming *pGame, Value &msg)
 	procInfLog("%s", str.c_str());
 
 	string type = msg["type"].asString();
-	GamerInteracting *pGamer = NULL;
-	Value gamers;
 
-	if (msg.isMember("gamers"))
-	{
-		gamers = msg["gamers"];
-		msg["gamers"] = "";
-	}
+	if (!msg.isMember("gamers"))
+		return;
+
+	Value gamers = msg["gamers"];
+	msg["gamers"] = "";
+	GamerInteracting *pGamer = NULL;
 
 	for (Value::ArrayIndex i = 0; i < gamers.size(); ++i)
 	{
