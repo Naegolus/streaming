@@ -67,6 +67,7 @@ Success GamerInteracting::process()
 	string msg = "";
 	uint8_t key;
 	Value msgGame;
+	GamerInteracting *pGamer = this;
 
 	switch (mState)
 	{
@@ -168,6 +169,9 @@ Success GamerInteracting::process()
 
 		if (mpSelect->aborted)
 			return Positive;
+
+		mpSelect->res["gamerId"] = (UInt64)pGamer;
+		mpSelect->res["gamerName"] = mGamerName;
 
 		out.commit(mpSelect->res);
 		repel(mpSelect);

@@ -127,6 +127,16 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 		return;
 	}
 
+	if (type == "connect")
+	{
+		// TODO: Check if game available
+
+		pGame = (Gaming *)msg["gameId"].asUInt64();
+
+		pGamer->mpGame = pGame;
+		pGame->in.commit(msg);
+	}
+
 	if (type == "key")
 	{
 		pGamer->mpGame->in.commit(msg);

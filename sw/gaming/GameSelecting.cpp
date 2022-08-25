@@ -142,7 +142,10 @@ Success GameSelecting::process()
 		if (key != keyEnter)
 			break;
 
-		// selected server here
+		res["type"] = "connect";
+		res["gameId"] = (UInt64)mGamesList[mOffGamesCursor + mOffGames].id;
+
+		return Positive;
 
 		break;
 	case GsTypesList:
@@ -227,11 +230,7 @@ Success GameSelecting::process()
 			break;
 
 		res["gameName"] = mGameName;
-#if 0
-		FastWriter fastWriter;
-		string output = fastWriter.write(res);
-		procInfLog("%s", output.c_str());
-#endif
+
 		return Positive;
 	default:
 		break;
