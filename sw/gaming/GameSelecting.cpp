@@ -133,6 +133,12 @@ Success GameSelecting::process()
 			break;
 		}
 
+		if (key == 'r')
+		{
+			mState = GsGamesListRead;
+			break;
+		}
+
 		if (key != keyEnter)
 			break;
 
@@ -283,6 +289,7 @@ void GameSelecting::msgGamesList(string &msg)
 	msg += "[j]\t\tDown\r\n";
 	msg += "[enter]\t\tSelect\r\n";
 	msg += "[c]\t\tCreate\r\n";
+	msg += "[r]\t\tRefresh\r\n";
 	msg += "[esc]\t\tQuit\r\n";
 }
 
