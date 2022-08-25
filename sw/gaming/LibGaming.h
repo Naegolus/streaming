@@ -33,6 +33,8 @@ const uint8_t keyEnter = 0x0D;
 const uint8_t keyEsc = 0x1B;
 
 uint8_t keyGet(TcpTransfering *pConn, uint32_t lastGotMs);
+bool keyIsAlphaNum(uint8_t key);
+bool keyIsCommon(uint8_t key);
 
 #endif
 

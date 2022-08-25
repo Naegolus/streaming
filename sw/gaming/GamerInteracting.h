@@ -87,8 +87,6 @@ private:
 
 	void msgWelcome(std::string &msg);
 	void msgName(std::string &msg);
-	bool keyIsAlphaNum(uint8_t key);
-	bool keyIsCommon(uint8_t key);
 
 	/* member variables */
 	enum GiState mState;

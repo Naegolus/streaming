@@ -63,3 +63,28 @@ uint8_t keyGet(TcpTransfering *pConn, uint32_t lastGotMs)
 	return key;
 }
 
+bool keyIsAlphaNum(uint8_t key)
+{
+	if (key >= 'a' and key <= 'z')
+		return true;
+
+	if (key >= 'A' and key <= 'Z')
+		return true;
+
+	if (key >= '0' and key <= '9')
+		return true;
+
+	return false;
+}
+
+bool keyIsCommon(uint8_t key)
+{
+	if (keyIsAlphaNum(key))
+		return true;
+
+	if (key == ' ' or key == '-' or key == '_')
+		return true;
+
+	return false;
+}
+

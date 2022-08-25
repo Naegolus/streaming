@@ -222,31 +222,6 @@ void GamerInteracting::msgName(string &msg)
 	msg += "\r\n";
 }
 
-bool GamerInteracting::keyIsAlphaNum(uint8_t key)
-{
-	if (key >= 'a' and key <= 'z')
-		return true;
-
-	if (key >= 'A' and key <= 'Z')
-		return true;
-
-	if (key >= '0' and key <= '9')
-		return true;
-
-	return false;
-}
-
-bool GamerInteracting::keyIsCommon(uint8_t key)
-{
-	if (keyIsAlphaNum(key))
-		return true;
-
-	if (key == ' ' or key == '-' or key == '_')
-		return true;
-
-	return false;
-}
-
 void GamerInteracting::processInfo(char *pBuf, char *pBufEnd)
 {
 	dInfo("Name\t\t\t%s\n", mGamerName.c_str());
