@@ -24,6 +24,7 @@
 */
 
 #include "GamerInteracting.h"
+#include "LibGaming.h"
 
 #if 0
 #define dGenGiStateString(s) #s,
@@ -33,8 +34,6 @@ dProcessStateStr(GiState);
 using namespace std;
 
 #define LOG_LVL	0
-
-#define dNameSizeMax		16
 
 list<GamerInteracting *> GamerInteracting::gamerList;
 
@@ -96,7 +95,6 @@ Success GamerInteracting::process()
 	case GiWelcomeSend:
 
 		msgWelcome(msg);
-
 		mState = GiContinueWait;
 
 		break;
@@ -114,7 +112,6 @@ Success GamerInteracting::process()
 			break;
 
 		msgName(msg);
-
 		mState = GiNameSet;
 
 		break;
@@ -128,7 +125,7 @@ Success GamerInteracting::process()
 		if (key == keyEsc)
 			return Positive;
 
-		if (keyIsCommon(key) and mGamerName.size() < dNameSizeMax - 1)
+		if (keyIsCommon(key) and mGamerName.size() < cNameSizeMax - 1)
 		{
 			mGamerName.push_back(key);
 			msgName(msg);
@@ -142,12 +139,14 @@ Success GamerInteracting::process()
 			break;
 		}
 
-		if (key == keyEnter and 1 < mGamerName.size() and mGamerName.size() < dNameSizeMax)
-		{
-			procInfLog("Continuing to server selection");
-			mState = GiSelectionStart;
+		if (key != keyEnter)
 			break;
-		}
+
+		if (mGamerName.size() < cNameSizeMin or mGamerName.size() > cNameSizeMax)
+			break;
+
+		procInfLog("Continuing to server selection");
+		mState = GiSelectionStart;
 
 		break;
 	case GiSelectionStart:

@@ -37,6 +37,7 @@
 		gen(GsGamesListRead) \
 		gen(GsGamesList) \
 		gen(GsTypesList) \
+		gen(GsNameSet) \
 
 #define dGenGsStateEnum(s) s,
 dProcessStateEnum(GsState);
@@ -84,6 +85,7 @@ private:
 
 	void msgGamesList(std::string &msg);
 	void msgTypesList(std::string &msg);
+	void msgName(std::string &msg);
 
 	/* member variables */
 	enum GsState mState;
@@ -99,6 +101,8 @@ private:
 
 	uint32_t mOffTypesCursor;
 	uint32_t mOffTypes;
+
+	std::string mGameName;
 
 	/* static functions */
 

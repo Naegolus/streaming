@@ -32,6 +32,9 @@ const uint8_t keyBackspace = 0x7F;
 const uint8_t keyEnter = 0x0D;
 const uint8_t keyEsc = 0x1B;
 
+const uint8_t cNameSizeMin = 2;
+const uint8_t cNameSizeMax = 16;
+
 uint8_t keyGet(TcpTransfering *pConn, uint32_t lastGotMs);
 bool keyIsAlphaNum(uint8_t key);
 bool keyIsCommon(uint8_t key);

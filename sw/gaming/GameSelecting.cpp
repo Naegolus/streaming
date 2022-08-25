@@ -25,6 +25,7 @@
 
 #include "GameSelecting.h"
 #include "Gaming.h"
+#include "LibGaming.h"
 
 #if 1
 #define dGenGsStateString(s) #s,
@@ -36,10 +37,11 @@ using namespace Json;
 
 #define LOG_LVL	0
 
-#define dNameColSize	20
-#define dGameRowSize	5
+#define dNameColSize		20
+#define dGameRowSize		5
 
-#define dTypeRowSize	7
+#define dTypeRowSize		7
+#define dNameSizeMax		16
 
 GameSelecting::GameSelecting(TcpTransfering *pConn)
 	: Processing("GameSelecting")
@@ -54,6 +56,7 @@ GameSelecting::GameSelecting(TcpTransfering *pConn)
 	, mOffGames(0)
 	, mOffTypesCursor(0)
 	, mOffTypes(0)
+	, mGameName("")
 {}
 
 /* member functions */
@@ -177,15 +180,53 @@ Success GameSelecting::process()
 			break;
 
 		res["type"] = "create";
-		res["name"] = Gaming::typesList[mOffTypes + mOffTypesCursor].name;
+		res["gameType"] = Gaming::typesList[mOffTypes + mOffTypesCursor].name;
+
+		msgName(msg);
+		mState = GsNameSet;
+
+		break;
+	case GsNameSet:
+
+		key = keyGet(mpConn, mKeyLastGotMs);
+
+		if (!key)
+			break;
+
+		if (key == keyEsc)
+		{
+			msgTypesList(msg);
+			mState = GsTypesList;
+			break;
+		}
+
+		if (keyIsCommon(key) and mGameName.size() < cNameSizeMax - 1)
+		{
+			mGameName.push_back(key);
+			msgName(msg);
+			break;
+		}
+
+		if (key == keyBackspace and mGameName.size())
+		{
+			mGameName.pop_back();
+			msgName(msg);
+			break;
+		}
+
+		if (key != keyEnter)
+			break;
+
+		if (mGameName.size() < cNameSizeMin or mGameName.size() > cNameSizeMax)
+			break;
+
+		res["gameName"] = mGameName;
 #if 0
 		FastWriter fastWriter;
 		string output = fastWriter.write(res);
 		procInfLog("%s", output.c_str());
 #endif
 		return Positive;
-
-		break;
 	default:
 		break;
 	}
@@ -294,6 +335,26 @@ void GameSelecting::msgTypesList(string &msg)
 	msg += "[j]\t\tDown\r\n";
 	msg += "[enter]\t\tSelect\r\n";
 	msg += "[esc]\t\tReturn\r\n";
+}
+
+void GameSelecting::msgName(std::string &msg)
+{
+	msg = "\033[2J\033[H";
+	msg += "\r\n";
+	msg += "Set game name!";
+	msg += "\r\n";
+	msg += "\r\n";
+	msg += "Name: ";
+	msg += mGameName;
+	msg += "\r\n";
+	msg += "\r\n";
+	msg += "[enter]\tContinue";
+	msg += "\r\n";
+	msg += "[esc]\tReturn";
+	msg += "\r\n";
+	msg += "\r\n";
+	msg += "Requirements: 1 < len < 16";
+	msg += "\r\n";
 }
 
 void GameSelecting::processInfo(char *pBuf, char *pBufEnd)
