@@ -271,16 +271,18 @@ void GameSelecting::msgGamesList(string &msg)
 
 		pElem = &mGamesList[u];
 
+		str = "";
 		if (i == mOffGamesCursor)
-			msg += ">";
+			str += ">";
 		else
-			msg += " ";
+			str += " ";
+		str += " ";
 
-		str = pElem->name;
+		str += pElem->name;
 		if (str.size() < dNameColSize)
 			str.insert(str.size(), dNameColSize - str.size(), ' ');
 
-		msg += " " + str + pElem->type + "\r\n";
+		msg += str + pElem->type + "\r\n";
 	}
 
 	msg += "-----------------------------------\r\n";
