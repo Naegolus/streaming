@@ -66,31 +66,52 @@ Success GameServing::initialize()
 
 Success GameServing::process()
 {
-	gamerInputTransfer();
+	gamerMsgProcess();
 	gamerListUpdate();
 
 	return Pending;
 }
 
-void GameServing::gamerInputTransfer()
+void GameServing::gamerMsgProcess()
 {
 	GamerIter iter;
-	GamerInteracting *pGamer;
+	GamerInteracting *pGamer = NULL;
 	PipeEntry<Value> msg;
 
 	iter = GamerInteracting::gamerList.begin();
-	while (iter != GamerInteracting::gamerList.end())
+	for (; iter != GamerInteracting::gamerList.end(); ++iter)
 	{
 		pGamer = *iter;
 
 		while (pGamer->out.get(msg))
+			gamerMsgInterpret(pGamer, msg.particle);
+	}
+}
+
+void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Json::Value &msg)
+{
+	FastWriter fastWriter;
+	string str = fastWriter.write(msg);
+	procInfLog("%s", str.c_str());
+
+	string type = msg["type"].asString();
+	Gaming *pGame = NULL;
+
+	if (type == "create")
+	{
+		pGame = Gaming::create(msg["gameType"].asString());
+		if (!pGame)
+			return;
+
+		pGame->mGameName = msg["gameName"].asString();
+		start(pGame);
+
 		{
-			FastWriter fastWriter;
-			string str = fastWriter.write(msg.particle);
-			procInfLog("%s", str.c_str());
+			lock_guard<mutex> lock(Gaming::mtxGamesList);
+			Gaming::gamesList.push_back(pGame);
 		}
 
-		++iter;
+		return;
 	}
 }
 

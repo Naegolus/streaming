@@ -31,8 +31,6 @@ using namespace std;
 
 mutex Gaming::mtxGamesList;
 list<Gaming *> Gaming::gamesList;
-
-mutex Gaming::mtxTypesList;
 vector<struct TypeListElem> Gaming::typesList;
 
 /* member functions */
@@ -70,8 +68,6 @@ void Gaming::gameRegister(const std::string &name,
 			Gaming *(*pFctCreate)(),
 			void (*pFctInfoSet)(struct TypeListElem &type))
 {
-	lock_guard<mutex> lock(Gaming::mtxTypesList);
-
 	struct TypeListElem type;
 
 	type.name = name;
@@ -80,5 +76,21 @@ void Gaming::gameRegister(const std::string &name,
 	pFctInfoSet(type);
 
 	Gaming::typesList.push_back(type);
+}
+
+Gaming *Gaming::create(const string &type)
+{
+	vector<struct TypeListElem>::iterator iter;
+
+	iter = typesList.begin();
+	for (; iter != typesList.end(); ++iter)
+	{
+		if (iter->name != type)
+			continue;
+
+		return iter->pFctCreate();
+	}
+
+	return NULL;
 }
 

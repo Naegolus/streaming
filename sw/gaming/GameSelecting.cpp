@@ -102,10 +102,7 @@ Success GameSelecting::process()
 			}
 		}
 
-		{
-			lock_guard<mutex> lock(Gaming::mtxTypesList);
-			mNumTypes = Gaming::typesList.size();
-		}
+		mNumTypes = Gaming::typesList.size();
 
 		procInfLog("Got server list");
 
@@ -298,8 +295,6 @@ void GameSelecting::msgTypesList(string &msg)
 
 	msg += "Available Games\r\n";
 	msg += "\r\n";
-
-	lock_guard<mutex> lock(Gaming::mtxTypesList);
 
 	for (i = 0; i < dTypeRowSize; ++i, ++u, ++pElem)
 	{

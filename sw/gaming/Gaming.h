@@ -54,21 +54,22 @@ class Gaming : public Processing
 
 public:
 
+	static void gameRegister(const std::string &name,
+				Gaming *(*pFctCreate)(),
+				void (*pFctInfoSet)(struct TypeListElem &type));
+
+	static Gaming *create(const std::string &type);
+
 	std::string mGameName;
 	std::string mType;
 	std::string mFlags;
 
 	static std::mutex mtxGamesList;
 	static std::list<Gaming *> gamesList;
-	static std::mutex mtxTypesList;
 	static std::vector<struct TypeListElem> typesList;
 
 	Pipe<Json::Value> in;
 	Pipe<Json::Value> out;
-
-	static void gameRegister(const std::string &name,
-				Gaming *(*pFctCreate)(),
-				void (*pFctInfoSet)(struct TypeListElem &type));
 
 protected:
 

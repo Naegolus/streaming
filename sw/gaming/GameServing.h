@@ -60,7 +60,8 @@ private:
 	Success process();
 	void processInfo(char *pBuf, char *pBufEnd);
 
-	void gamerInputTransfer();
+	void gamerMsgProcess();
+	void gamerMsgInterpret(GamerInteracting *pGamer, const Json::Value &msg);
 
 	void gamerListUpdate();
 	void gamerRemove();
