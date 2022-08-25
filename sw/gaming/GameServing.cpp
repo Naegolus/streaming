@@ -44,6 +44,7 @@ GameServing::GameServing()
 /* member functions */
 Success GameServing::initialize()
 {
+	dGameRegister(ConnectFour);
 	dGameRegister(TicTacToe);
 	dGameRegister(TicTacToe);
 	dGameRegister(ConnectFour);
@@ -118,7 +119,7 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 		pGamer->mpGame = pGame;
 
 		gameMsg["type"] = "connect";
-		gameMsg["gamerId"] = pGamer;
+		gameMsg["gamerId"] = (UInt64)pGamer;
 		gameMsg["gamerName"] = pGamer->mGamerName;
 
 		pGame->in.commit(gameMsg);
@@ -128,7 +129,7 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 
 	if (type == "key")
 	{
-		pGamer->mpGame->in.commit(gameMsg);
+		pGamer->mpGame->in.commit(msg);
 		return;
 	}
 }
@@ -166,7 +167,7 @@ void GameServing::gameMsgInterpret(Gaming *pGame, Value &msg)
 
 	for (Value::ArrayIndex i = 0; i < gamers.size(); ++i)
 	{
-		pGamer = (GamerInteracting *)gamers[i].asInt64();
+		pGamer = (GamerInteracting *)gamers[i].asUInt64();
 		pGamer->in.commit(msg);
 	}
 }

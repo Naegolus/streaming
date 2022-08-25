@@ -211,7 +211,7 @@ void GamerInteracting::keyProcess()
 
 	msgKey["type"] = "key";
 	msgKey["key"] = key;
-	msgKey["gamerId"] = pGamer;
+	msgKey["gamerId"] = (UInt64)pGamer;
 
 	out.commit(msgKey);
 }

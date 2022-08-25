@@ -51,6 +51,8 @@ Success ConnectFourGaming::initialize()
 
 Success ConnectFourGaming::gameProcess()
 {
+	gamerMsgProcess();
+
 	switch (mState)
 	{
 	case CfStart:
@@ -134,7 +136,7 @@ void ConnectFourGaming::gameStateSend()
 	msg["data"] = frame;
 
 	for (Value::ArrayIndex i = 0; i < mGameState["gamers"].size(); ++i)
-		msg["gamers"].append(mGameState["gamers"][i]["gamerName"].asString());
+		msg["gamers"].append(mGameState["gamers"][i]["gamerId"].asUInt64());
 
 	out.commit(msg);
 }
@@ -153,7 +155,6 @@ void ConnectFourGaming::msgWelcome(string &str)
 		str += mGameState["gamers"][i]["gamerName"].asString();
 		str += "\r\n";
 	}
-	str += "\r\n";
 	str += "\r\n";
 	str += "[enter]\tContinue";
 	str += "\r\n";
