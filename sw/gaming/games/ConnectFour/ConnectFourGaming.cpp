@@ -25,6 +25,11 @@
 
 #include "ConnectFourGaming.h"
 
+#if 1
+#define dGenCfStateString(s) #s,
+dProcessStateStr(CfState);
+#endif
+
 using namespace std;
 
 string ConnectFourGaming::author = "Johannes Natter";
@@ -33,6 +38,7 @@ string ConnectFourGaming::author = "Johannes Natter";
 
 ConnectFourGaming::ConnectFourGaming()
 	: Gaming("ConnectFourGaming")
+	, mState(CfStart)
 {}
 
 /* member functions */
@@ -43,13 +49,63 @@ Success ConnectFourGaming::initialize()
 
 Success ConnectFourGaming::gameProcess()
 {
+	switch (mState)
+	{
+	case CfStart:
+
+		mState = CfLobbyStart;
+
+		break;
+	case CfLobbyStart:
+
+		mState = CfLobbyDoneWait;
+
+		break;
+	case CfLobbyDoneWait:
+
+		mState = CfMatchStart;
+
+		break;
+	case CfMatchStart:
+
+		mState = CfMatchDoneWait;
+
+		break;
+	case CfMatchDoneWait:
+
+		mState = CfLobbyStart;
+
+		break;
+	default:
+		break;
+	}
+
 	return Pending;
+}
+
+void ConnectFourGaming::gamerMsgProcess()
+{
+}
+
+void ConnectFourGaming::msgWelcome(string &msg)
+{
+	msg = "\033[2J\033[H";
+	msg += "\r\n";
+	msg += "Welcome to " + mGameName + "!";
+	msg += "\r\n";
+	msg += "\r\n";
+	msg += "[enter]\tContinue";
+	msg += "\r\n";
+	msg += "[esc]\tQuit";
+	msg += "\r\n";
 }
 
 void ConnectFourGaming::processInfo(char *pBuf, char *pBufEnd)
 {
-	(void)pBuf;
-	(void)pBufEnd;
+	dInfo("Name\t\t\t%s\n", mGameName.c_str());
+#if 1
+	dInfo("State\t\t\t%s\n", CfStateString[mState]);
+#endif
 }
 
 /* static functions */

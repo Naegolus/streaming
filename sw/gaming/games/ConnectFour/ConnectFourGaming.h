@@ -29,6 +29,16 @@
 #include "Processing.h"
 #include "Gaming.h"
 
+#define dForEach_CfState(gen) \
+		gen(CfStart) \
+		gen(CfLobbyStart) \
+		gen(CfLobbyDoneWait) \
+		gen(CfMatchStart) \
+		gen(CfMatchDoneWait) \
+
+#define dGenCfStateEnum(s) s,
+dProcessStateEnum(CfState);
+
 class ConnectFourGaming : public Gaming
 {
 
@@ -61,7 +71,12 @@ private:
 	Success gameProcess();
 	void processInfo(char *pBuf, char *pBufEnd);
 
+	void gamerMsgProcess();
+	void msgWelcome(std::string &msg);
+
 	/* member variables */
+	enum CfState mState;
+	uint32_t mKeyLastGotMs;
 
 	/* static functions */
 
