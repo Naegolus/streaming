@@ -30,8 +30,8 @@
 #include <jsoncpp/json/json.h>
 
 #include "Processing.h"
-#include "GameSelecting.h"
 #include "Pipe.h"
+#include "GameSelecting.h"
 
 #define dForEach_GiState(gen) \
 		gen(GiStart) \
@@ -41,10 +41,12 @@
 		gen(GiNameSet) \
 		gen(GiSelectionStart) \
 		gen(GiSelectionDoneWait) \
-		gen(GiIdle) \
+		gen(GiKeysSend) \
 
 #define dGenGiStateEnum(s) s,
 dProcessStateEnum(GiState);
+
+class Gaming;
 
 class GamerInteracting : public Processing
 {
@@ -60,6 +62,8 @@ public:
 
 	Pipe<Json::Value> in;
 	Pipe<Json::Value> out;
+
+	Gaming *mpGame;
 
 	static std::list<GamerInteracting *> gamerList;
 

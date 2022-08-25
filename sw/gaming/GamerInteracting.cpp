@@ -32,6 +32,7 @@ dProcessStateStr(GiState);
 #endif
 
 using namespace std;
+using namespace Json;
 
 #define LOG_LVL	0
 
@@ -40,6 +41,7 @@ list<GamerInteracting *> GamerInteracting::gamerList;
 GamerInteracting::GamerInteracting(int fd)
 	: Processing("GamerInteracting")
 	, mGamerName("")
+	, mpGame(NULL)
 	, mState(GiStart)
 	, mSocketFd(fd)
 	, mpConn(NULL)
@@ -64,6 +66,8 @@ Success GamerInteracting::process()
 
 	string msg = "";
 	uint8_t key;
+	Value msgKey;
+	GamerInteracting *pGamer = NULL;
 
 	switch (mState)
 	{
@@ -170,10 +174,24 @@ Success GamerInteracting::process()
 		repel(mpSelect);
 		mpSelect = NULL;
 
-		mState = GiIdle;
+		mState = GiKeysSend;
 
 		break;
-	case GiIdle:
+	case GiKeysSend:
+
+		key = keyGet(mpConn, mKeyLastGotMs);
+
+		if (!key)
+			break;
+
+		if (!keyIsCommon(key))
+			break;
+
+		msgKey["type"] = "key";
+		msgKey["key"] = key;
+		msgKey["gamerId"] = pGamer;
+
+		out.commit(msgKey);
 
 		break;
 	default:

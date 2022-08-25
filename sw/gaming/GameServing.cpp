@@ -88,7 +88,7 @@ void GameServing::gamerMsgProcess()
 	}
 }
 
-void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Json::Value &msg)
+void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 {
 	FastWriter fastWriter;
 	string str = fastWriter.write(msg);
@@ -96,6 +96,7 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Json::Value 
 
 	string type = msg["type"].asString();
 	Gaming *pGame = NULL;
+	Value gameMsg;
 
 	if (type == "create")
 	{
@@ -111,6 +112,20 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Json::Value 
 			Gaming::gamesList.push_back(pGame);
 		}
 
+		pGamer->mpGame = pGame;
+
+		gameMsg["type"] = "connect";
+		gameMsg["gamerId"] = pGamer;
+		gameMsg["gamerName"] = pGamer->mGamerName;
+
+		pGame->in.commit(gameMsg);
+
+		return;
+	}
+
+	if (type == "key")
+	{
+		pGamer->mpGame->in.commit(gameMsg);
 		return;
 	}
 }
