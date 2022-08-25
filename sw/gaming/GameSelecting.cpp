@@ -74,6 +74,8 @@ Success GameSelecting::process()
 	{
 	case GsStart:
 
+		mNumTypes = Gaming::typesList.size();
+
 		mState = GsGamesListRead;
 
 		break;
@@ -87,22 +89,23 @@ Success GameSelecting::process()
 			lock_guard<mutex> lock(Gaming::mtxGamesList);
 			list<Gaming *>::iterator iter;
 			Gaming *pGaming = NULL;
-			int i = 0;
+			GameListElem game;
 
 			mNumGames = Gaming::gamesList.size();
 			mGamesList.reserve(mNumGames);
 
-			for (iter = Gaming::gamesList.begin(); iter != Gaming::gamesList.end(); ++iter, ++i)
+			iter = Gaming::gamesList.begin();
+			for (; iter != Gaming::gamesList.end(); ++iter)
 			{
 				pGaming = *iter;
 
-				mGamesList[i].id = pGaming;
-				mGamesList[i].name = pGaming->mGameName;
-				mGamesList[i].type = pGaming->mType;
+				game.id = pGaming;
+				game.name = pGaming->mGameName;
+				game.type = pGaming->mType;
+
+				mGamesList.push_back(game);
 			}
 		}
-
-		mNumTypes = Gaming::typesList.size();
 
 		procInfLog("Got server list");
 
