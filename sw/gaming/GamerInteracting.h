@@ -41,7 +41,7 @@
 		gen(GiNameSet) \
 		gen(GiSelectionStart) \
 		gen(GiSelectionDoneWait) \
-		gen(GiKeysSend) \
+		gen(GiDataTransfer) \
 
 #define dGenGiStateEnum(s) s,
 dProcessStateEnum(GiState);
@@ -87,6 +87,9 @@ private:
 	Success initialize();
 	Success process();
 	void processInfo(char *pBuf, char *pBufEnd);
+
+	void keyProcess();
+	void gameMsgProcess(std::string &msg);
 
 	void msgWelcome(std::string &msg);
 	void msgName(std::string &msg);

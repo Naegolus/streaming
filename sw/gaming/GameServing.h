@@ -62,6 +62,8 @@ private:
 
 	void gamerMsgProcess();
 	void gamerMsgInterpret(GamerInteracting *pGamer, const Json::Value &msg);
+	void gameMsgProcess();
+	void gameMsgInterpret(Gaming *pGame, Json::Value &msg);
 
 	void gamerListUpdate();
 	void gamerRemove();

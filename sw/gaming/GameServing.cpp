@@ -34,6 +34,7 @@ using namespace Json;
 #define LOG_LVL	0
 
 typedef list<GamerInteracting *>::iterator GamerIter;
+typedef list<Gaming *>::iterator GameIter;
 
 GameServing::GameServing()
 	: Processing("GameServing")
@@ -66,8 +67,10 @@ Success GameServing::initialize()
 
 Success GameServing::process()
 {
-	gamerMsgProcess();
 	gamerListUpdate();
+
+	gamerMsgProcess();
+	gameMsgProcess();
 
 	return Pending;
 }
@@ -127,6 +130,45 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 	{
 		pGamer->mpGame->in.commit(gameMsg);
 		return;
+	}
+}
+
+void GameServing::gameMsgProcess()
+{
+	GameIter iter;
+	Gaming *pGame = NULL;
+	PipeEntry<Value> msg;
+
+	iter = Gaming::gamesList.begin();
+	for (; iter != Gaming::gamesList.end(); ++iter)
+	{
+		pGame = *iter;
+
+		while (pGame->out.get(msg))
+			gameMsgInterpret(pGame, msg.particle);
+	}
+}
+
+void GameServing::gameMsgInterpret(Gaming *pGame, Value &msg)
+{
+	FastWriter fastWriter;
+	string str = fastWriter.write(msg);
+	procInfLog("%s", str.c_str());
+
+	string type = msg["type"].asString();
+	GamerInteracting *pGamer = NULL;
+	Value gamers;
+
+	if (msg.isMember("gamers"))
+	{
+		gamers = msg["gamers"];
+		msg["gamers"] = "";
+	}
+
+	for (Value::ArrayIndex i = 0; i < gamers.size(); ++i)
+	{
+		pGamer = (GamerInteracting *)gamers[i].asInt64();
+		pGamer->in.commit(msg);
 	}
 }
 

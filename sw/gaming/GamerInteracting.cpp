@@ -66,8 +66,7 @@ Success GamerInteracting::process()
 
 	string msg = "";
 	uint8_t key;
-	Value msgKey;
-	GamerInteracting *pGamer = NULL;
+	Value msgGame;
 
 	switch (mState)
 	{
@@ -174,24 +173,13 @@ Success GamerInteracting::process()
 		repel(mpSelect);
 		mpSelect = NULL;
 
-		mState = GiKeysSend;
+		mState = GiDataTransfer;
 
 		break;
-	case GiKeysSend:
+	case GiDataTransfer:
 
-		key = keyGet(mpConn, mKeyLastGotMs);
-
-		if (!key)
-			break;
-
-		if (!keyIsCommon(key))
-			break;
-
-		msgKey["type"] = "key";
-		msgKey["key"] = key;
-		msgKey["gamerId"] = pGamer;
-
-		out.commit(msgKey);
+		keyProcess();
+		gameMsgProcess(msg);
 
 		break;
 	default:
@@ -204,6 +192,44 @@ Success GamerInteracting::process()
 	mpConn->send(msg.c_str(), msg.size());
 
 	return Pending;
+}
+
+void GamerInteracting::keyProcess()
+{
+	uint8_t key;
+
+	key = keyGet(mpConn, mKeyLastGotMs);
+
+	if (!key)
+		return;
+
+	if (!keyIsCommon(key))
+		return;
+
+	Value msgKey;
+	GamerInteracting *pGamer = this;
+
+	msgKey["type"] = "key";
+	msgKey["key"] = key;
+	msgKey["gamerId"] = pGamer;
+
+	out.commit(msgKey);
+}
+
+void GamerInteracting::gameMsgProcess(std::string &msg)
+{
+	PipeEntry<Value> msgGameEntry;
+
+	if (!in.get(msgGameEntry))
+		return;
+
+	Value msgGame = msgGameEntry.particle;
+	string type = msgGame["type"].asString();
+
+	if (type != "frame")
+		return;
+
+	msg = msgGame["data"].asString();
 }
 
 void GamerInteracting::msgWelcome(string &msg)

@@ -1,12 +1,12 @@
 [
 	{
-		"type" : "frame",
-		"users" :
+		"gamers" :
 		[
 			"<id1>",
 			"<id2>",
 			"<id3>"
 		],
+		"type" : "frame",
 		"data" : "<frame>"
 	}
 ]
