@@ -25,6 +25,11 @@
 
 #include "ConnectFourLobbying.h"
 
+#if 1
+#define dGenCflStateString(s) #s,
+dProcessStateStr(CflState);
+#endif
+
 using namespace std;
 
 #define LOG_LVL	0
@@ -34,6 +39,7 @@ ConnectFourLobbying::ConnectFourLobbying()
 	, pIn(NULL)
 	, pOut(NULL)
 	, pGs(NULL)
+	, mState(CflStart)
 {}
 
 /* member functions */
@@ -44,6 +50,18 @@ Success ConnectFourLobbying::initialize()
 
 Success ConnectFourLobbying::process()
 {
+	switch (mState)
+	{
+	case CflStart:
+
+		break;
+	case CflTemp:
+
+		break;
+	default:
+		break;
+	}
+
 	return Pending;
 }
 
@@ -54,8 +72,9 @@ Success ConnectFourLobbying::shutdown()
 
 void ConnectFourLobbying::processInfo(char *pBuf, char *pBufEnd)
 {
-	(void)pBuf;
-	(void)pBufEnd;
+#if 1
+	dInfo("State\t\t\t%s\n", CflStateString[mState]);
+#endif
 }
 
 /* static functions */

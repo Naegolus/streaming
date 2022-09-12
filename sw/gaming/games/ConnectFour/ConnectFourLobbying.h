@@ -31,6 +31,13 @@
 #include "Processing.h"
 #include "Pipe.h"
 
+#define dForEach_CflState(gen) \
+		gen(CflStart) \
+		gen(CflTemp) \
+
+#define dGenCflStateEnum(s) s,
+dProcessStateEnum(CflState);
+
 class ConnectFourLobbying : public Processing
 {
 
@@ -67,6 +74,7 @@ private:
 	void processInfo(char *pBuf, char *pBufEnd);
 
 	/* member variables */
+	enum CflState mState;
 
 	/* static functions */
 
