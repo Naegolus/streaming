@@ -52,22 +52,13 @@ Success ConnectFourGaming::initialize()
 
 Success ConnectFourGaming::gameProcess()
 {
-	gamerMsgProcess();
-
 	switch (mState)
 	{
 	case CfStart:
 
+		mGameState["gameName"] = mGameName;
+
 		mState = CfLobbyStart;
-
-		break;
-	case CfTemp:
-
-		if (!mGameStateChanged)
-			break;
-		mGameStateChanged = false;
-
-		gameStateSend();
 
 		break;
 	case CfLobbyStart:
@@ -104,72 +95,6 @@ Success ConnectFourGaming::gameProcess()
 	}
 
 	return Pending;
-}
-
-void ConnectFourGaming::gamerMsgProcess()
-{
-	PipeEntry<Value> msg;
-
-	while (in.get(msg))
-		gamerMsgInterpret(msg.particle);
-}
-
-void ConnectFourGaming::gamerMsgInterpret(const Value &msg)
-{
-	FastWriter fastWriter;
-	string str = fastWriter.write(msg);
-	procInfLog("%s", str.c_str());
-
-	string type = msg["type"].asString();
-	Value tmp;
-
-	if (type == "connect")
-	{
-		tmp["gamerId"] = msg["gamerId"];
-		tmp["gamerName"] = msg["gamerName"];
-
-		mGameState["gamers"].append(tmp);
-
-		mGameStateChanged = true;
-		return;
-	}
-}
-
-void ConnectFourGaming::gameStateSend()
-{
-	string frame;
-	Value msg;
-
-	msgWelcome(frame);
-
-	msg["type"] = "frame";
-	msg["data"] = frame;
-
-	for (Value::ArrayIndex i = 0; i < mGameState["gamers"].size(); ++i)
-		msg["gamers"].append(mGameState["gamers"][i]["gamerId"].asUInt64());
-
-	out.commit(msg);
-}
-
-void ConnectFourGaming::msgWelcome(string &str)
-{
-	str = "\033[2J\033[H";
-	str += "\r\n";
-	str += "Welcome to " + mGameName + "!";
-	str += "\r\n";
-	str += "\r\n";
-	str += "Connected gamers";
-	str += "\r\n";
-	for (Value::ArrayIndex i = 0; i < mGameState["gamers"].size(); ++i)
-	{
-		str += mGameState["gamers"][i]["gamerName"].asString();
-		str += "\r\n";
-	}
-	str += "\r\n";
-	str += "[enter]\tContinue";
-	str += "\r\n";
-	str += "[esc]\tExit";
-	str += "\r\n";
 }
 
 void ConnectFourGaming::processInfo(char *pBuf, char *pBufEnd)

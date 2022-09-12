@@ -41,6 +41,7 @@ ConnectFourLobbying::ConnectFourLobbying()
 	, pOut(NULL)
 	, pGs(NULL)
 	, mState(CflStart)
+	, mStructureDone(false)
 	, mGameStateChanged(false)
 {}
 
@@ -54,6 +55,8 @@ Success ConnectFourLobbying::process()
 {
 	Value &gs = *pGs;
 
+	gamerMsgProcess();
+
 	switch (mState)
 	{
 	case CflStart:
@@ -65,6 +68,7 @@ Success ConnectFourLobbying::process()
 
 		gs["config"]["gamers"] = arrayValue;;
 
+		mStructureDone = true;
 		mState = CflIdle;
 
 		break;
@@ -78,9 +82,81 @@ Success ConnectFourLobbying::process()
 	return Pending;
 }
 
-Success ConnectFourLobbying::shutdown()
+void ConnectFourLobbying::gamerMsgProcess()
 {
-	return Positive;
+	if (!mStructureDone)
+		return;
+
+	PipeEntry<Value> msg;
+
+	while ((*pIn).get(msg))
+		gamerMsgInterpret(msg.particle);
+}
+
+void ConnectFourLobbying::gamerMsgInterpret(const Value &msg)
+{
+	FastWriter fastWriter;
+	string str = fastWriter.write(msg);
+	procInfLog("%s", str.c_str());
+
+	string type = msg["type"].asString();
+	Value tmp;
+
+	if (type == "connect")
+	{
+		tmp["gamerId"] = msg["gamerId"];
+		tmp["gamerName"] = msg["gamerName"];
+
+		(*pGs)["config"]["gamers"].append(tmp);
+
+		mGameStateChanged = true;
+		return;
+	}
+}
+
+void ConnectFourLobbying::framesSend()
+{
+	if (!mGameStateChanged)
+		return;
+
+	mGameStateChanged = false;
+
+	Value &gs = *pGs;
+	Value msg;
+	string frame;
+
+	msgWelcome(frame);
+
+	msg["type"] = "frame";
+	msg["data"] = frame;
+
+	for (Value::ArrayIndex i = 0; i < gs["gamers"].size(); ++i)
+		msg["gamers"].append(gs["gamers"][i]["gamerId"].asUInt64());
+
+	(*pOut).commit(msg);
+}
+
+void ConnectFourLobbying::msgWelcome(string &str)
+{
+	Value &gs = *pGs;
+
+	str = "\033[2J\033[H";
+	str += "\r\n";
+	str += "Welcome to " + gs["gameName"].asString() + "!";
+	str += "\r\n";
+	str += "\r\n";
+	str += "Connected gamers";
+	str += "\r\n";
+	for (Value::ArrayIndex i = 0; i < gs["gamers"].size(); ++i)
+	{
+		str += gs["gamers"][i]["gamerName"].asString();
+		str += "\r\n";
+	}
+	str += "\r\n";
+	str += "[enter]\tContinue";
+	str += "\r\n";
+	str += "[esc]\tExit";
+	str += "\r\n";
 }
 
 void ConnectFourLobbying::processInfo(char *pBuf, char *pBufEnd)

@@ -225,6 +225,7 @@ void GameServing::gamerAdd()
 		peerFd = peerFdEntry.particle;
 
 		pGamer = GamerInteracting::create(peerFd);
+		pGamer->procTreeDisplaySet(false);
 		start(pGamer);
 
 		procDbgLog(LOG_LVL, "adding gamer. process: %p", pGamer);

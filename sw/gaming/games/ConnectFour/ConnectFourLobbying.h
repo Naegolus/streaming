@@ -71,11 +71,17 @@ private:
 	/* member functions */
 	Success initialize();
 	Success process();
-	Success shutdown();
 	void processInfo(char *pBuf, char *pBufEnd);
+
+	void gamerMsgProcess();
+	void gamerMsgInterpret(const Json::Value &msg);
+
+	void framesSend();
+	void msgWelcome(std::string &msg);
 
 	/* member variables */
 	enum CflState mState;
+	bool mStructureDone;
 	bool mGameStateChanged;
 
 	/* static functions */

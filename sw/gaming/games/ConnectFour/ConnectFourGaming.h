@@ -32,7 +32,6 @@
 
 #define dForEach_CfState(gen) \
 		gen(CfStart) \
-		gen(CfTemp) \
 		gen(CfLobbyStart) \
 		gen(CfLobbyDoneWait) \
 		gen(CfMatchStart) \
@@ -72,12 +71,6 @@ private:
 	Success initialize();
 	Success gameProcess();
 	void processInfo(char *pBuf, char *pBufEnd);
-
-	void gamerMsgProcess();
-	void gamerMsgInterpret(const Json::Value &msg);
-
-	void gameStateSend();
-	void msgWelcome(std::string &msg);
 
 	/* member variables */
 	enum CfState mState;
