@@ -33,7 +33,8 @@
 
 #define dForEach_CflState(gen) \
 		gen(CflStart) \
-		gen(CflTemp) \
+		gen(CflStructureInit) \
+		gen(CflIdle) \
 
 #define dGenCflStateEnum(s) s,
 dProcessStateEnum(CflState);
@@ -75,6 +76,7 @@ private:
 
 	/* member variables */
 	enum CflState mState;
+	bool mGameStateChanged;
 
 	/* static functions */
 

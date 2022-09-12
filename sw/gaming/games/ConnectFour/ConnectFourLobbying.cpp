@@ -31,6 +31,7 @@ dProcessStateStr(CflState);
 #endif
 
 using namespace std;
+using namespace Json;
 
 #define LOG_LVL	0
 
@@ -40,6 +41,7 @@ ConnectFourLobbying::ConnectFourLobbying()
 	, pOut(NULL)
 	, pGs(NULL)
 	, mState(CflStart)
+	, mGameStateChanged(false)
 {}
 
 /* member functions */
@@ -50,12 +52,23 @@ Success ConnectFourLobbying::initialize()
 
 Success ConnectFourLobbying::process()
 {
+	Value &gs = *pGs;
+
 	switch (mState)
 	{
 	case CflStart:
 
+		mState = CflStructureInit;
+
 		break;
-	case CflTemp:
+	case CflStructureInit:
+
+		gs["config"]["gamers"] = arrayValue;;
+
+		mState = CflIdle;
+
+		break;
+	case CflIdle:
 
 		break;
 	default:
