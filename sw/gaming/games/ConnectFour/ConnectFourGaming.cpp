@@ -178,6 +178,8 @@ void ConnectFourGaming::processInfo(char *pBuf, char *pBufEnd)
 #if 1
 	dInfo("State\t\t\t%s\n", CfStateString[mState]);
 #endif
+	string gsStr = mGameState.toStyledString();
+	dInfo("%s", gsStr.c_str());
 }
 
 /* static functions */
