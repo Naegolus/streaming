@@ -56,6 +56,7 @@ Success ConnectFourLobbying::process()
 	Value &gs = *pGs;
 
 	gamerMsgProcess();
+	framesSend();
 
 	switch (mState)
 	{
@@ -130,8 +131,8 @@ void ConnectFourLobbying::framesSend()
 	msg["type"] = "frame";
 	msg["data"] = frame;
 
-	for (Value::ArrayIndex i = 0; i < gs["gamers"].size(); ++i)
-		msg["gamers"].append(gs["gamers"][i]["gamerId"].asUInt64());
+	for (Value::ArrayIndex i = 0; i < gs["config"]["gamers"].size(); ++i)
+		msg["gamers"].append(gs["config"]["gamers"][i]["gamerId"].asUInt64());
 
 	(*pOut).commit(msg);
 }
@@ -147,9 +148,9 @@ void ConnectFourLobbying::msgWelcome(string &str)
 	str += "\r\n";
 	str += "Connected gamers";
 	str += "\r\n";
-	for (Value::ArrayIndex i = 0; i < gs["gamers"].size(); ++i)
+	for (Value::ArrayIndex i = 0; i < gs["config"]["gamers"].size(); ++i)
 	{
-		str += gs["gamers"][i]["gamerName"].asString();
+		str += gs["config"]["gamers"][i]["gamerName"].asString();
 		str += "\r\n";
 	}
 	str += "\r\n";
