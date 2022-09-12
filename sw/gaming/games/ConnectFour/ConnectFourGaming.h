@@ -28,6 +28,7 @@
 
 #include "Processing.h"
 #include "Gaming.h"
+#include "ConnectFourLobbying.h"
 
 #define dForEach_CfState(gen) \
 		gen(CfStart) \
@@ -82,6 +83,7 @@ private:
 	enum CfState mState;
 	bool mGameStateChanged;
 	Json::Value mGameState;
+	ConnectFourLobbying *mpLobby;
 
 	/* static functions */
 

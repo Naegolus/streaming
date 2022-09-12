@@ -41,6 +41,7 @@ ConnectFourGaming::ConnectFourGaming()
 	: Gaming("ConnectFourGaming")
 	, mState(CfStart)
 	, mGameStateChanged(false)
+	, mpLobby(NULL)
 {}
 
 /* member functions */
@@ -57,7 +58,7 @@ Success ConnectFourGaming::gameProcess()
 	{
 	case CfStart:
 
-		mState = CfTemp;
+		mState = CfLobbyStart;
 
 		break;
 	case CfTemp:
@@ -71,10 +72,19 @@ Success ConnectFourGaming::gameProcess()
 		break;
 	case CfLobbyStart:
 
+		mpLobby = ConnectFourLobbying::create();
+		mpLobby->pIn = &in;
+		mpLobby->pOut = &out;
+		mpLobby->pGs = &mGameState;
+		start(mpLobby);
+
 		mState = CfLobbyDoneWait;
 
 		break;
 	case CfLobbyDoneWait:
+
+		if (mpLobby->success() == Pending)
+			break;
 
 		mState = CfMatchStart;
 
