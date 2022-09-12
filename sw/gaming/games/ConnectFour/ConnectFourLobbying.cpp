@@ -31,6 +31,9 @@ using namespace std;
 
 ConnectFourLobbying::ConnectFourLobbying()
 	: Processing("ConnectFourLobbying")
+	, pIn(NULL)
+	, pOut(NULL)
+	, pGs(NULL)
 {}
 
 /* member functions */

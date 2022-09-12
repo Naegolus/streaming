@@ -26,7 +26,10 @@
 #ifndef CONNECT_FOUR_LOBBYING_H
 #define CONNECT_FOUR_LOBBYING_H
 
+#include <jsoncpp/json/json.h>
+
 #include "Processing.h"
+#include "Pipe.h"
 
 class ConnectFourLobbying : public Processing
 {
@@ -37,6 +40,10 @@ public:
 	{
 		return new (std::nothrow) ConnectFourLobbying;
 	}
+
+	Pipe<Json::Value> *pIn;
+	Pipe<Json::Value> *pOut;
+	Json::Value *pGs;
 
 protected:
 

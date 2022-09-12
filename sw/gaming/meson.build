@@ -25,6 +25,8 @@ srcsSpecific = [
 	'GameSelecting.cpp',
 	'games/TicTacToe/TicTacToeGaming.cpp',
 	'games/ConnectFour/ConnectFourGaming.cpp',
+	'games/ConnectFour/ConnectFourLobbying.cpp',
+	'games/ConnectFour/ConnectFourMatching.cpp',
 ]
 
 srcs = [srcsSpecific]
