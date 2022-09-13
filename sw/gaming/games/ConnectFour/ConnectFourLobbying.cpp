@@ -42,8 +42,6 @@ ConnectFourLobbying::ConnectFourLobbying()
 	, pOut(NULL)
 	, pGs(NULL)
 	, mState(CflStart)
-	, mStructureDone(false)
-	, mGameStateChanged(false)
 {}
 
 /* member functions */
@@ -67,15 +65,15 @@ Success ConnectFourLobbying::process()
 
 		gs["gamers"] = objectValue;
 		gs["teams"] = objectValue;
+		gs["dirty"] = false;
 
-		mStructureDone = true;
 		mState = CflConfigSetup;
 
 		break;
 	case CflConfigSetup:
 
 		msgProcess();
-		framesSend();
+		framesCreate();
 
 		break;
 	case CflSetupDone:
@@ -92,9 +90,6 @@ Success ConnectFourLobbying::process()
 
 void ConnectFourLobbying::msgProcess()
 {
-	if (!mStructureDone)
-		return;
-
 	PipeEntry<Value> msg;
 
 	while ((*pIn).get(msg))
@@ -119,9 +114,11 @@ void ConnectFourLobbying::msgInterpret(const Value &msg)
 			gs["admin"] = id;
 
 		tmp["name"] = msg["gamerName"];
-		gs["gamers"][id] = tmp;
+		tmp["team"] = 0;
 
-		mGameStateChanged = true;
+		gs["gamers"][id] = tmp;
+		gs["dirty"] = true;
+
 		return;
 	}
 
@@ -147,6 +144,8 @@ void ConnectFourLobbying::gamerMsgInterpret(const Value &msg)
 	if (keyIsNum(key))
 	{
 		gs["gamers"][id]["team"] = key - '0';
+		gs["dirty"] = true;
+
 		return;
 	}
 
@@ -159,6 +158,8 @@ void ConnectFourLobbying::gamerMsgInterpret(const Value &msg)
 		(*pOut).commit(msg);
 
 		gs["gamers"].removeMember(id);
+		gs["dirty"] = true;
+
 		return;
 	}
 }
@@ -175,14 +176,15 @@ void ConnectFourLobbying::adminMsgInterpret(const Value &msg)
 	uint8_t key = msg["key"].asUInt();
 }
 
-void ConnectFourLobbying::framesSend()
+void ConnectFourLobbying::framesCreate()
 {
-	if (!mGameStateChanged)
+	Value &gs = *pGs;
+
+	if (!gs["dirty"].asBool())
 		return;
 
-	mGameStateChanged = false;
+	gs["dirty"] = false;
 
-	Value &gs = *pGs;
 	Value msg;
 	string frame;
 
@@ -209,13 +211,22 @@ void ConnectFourLobbying::msgWelcome(string &str)
 	str += "Welcome to " + gs["name"].asString() + "!";
 	str += "\r\n";
 	str += "\r\n";
-	str += "Connected gamers";
+	str += "Team\tGamer";
 	str += "\r\n";
-	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+	str += "---------------------";
+	str += "\r\n";
+
+	for (Value::iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
 	{
-		str += (*iter)["name"].asString();
+		Value &g = *iter;
+
+		str += g["team"].asString();
+		str += "\t";
+		str += g["name"].asString();
 		str += "\r\n";
 	}
+	str += "---------------------";
+	str += "\r\n";
 	str += "\r\n";
 	str += "[esc]\tExit";
 	str += "\r\n";

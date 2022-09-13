@@ -79,13 +79,11 @@ private:
 	void adminMsgInterpret(const Json::Value &msg);
 	void gamerMsgInterpret(const Json::Value &msg);
 
-	void framesSend();
+	void framesCreate();
 	void msgWelcome(std::string &msg);
 
 	/* member variables */
 	enum CflState mState;
-	bool mStructureDone;
-	bool mGameStateChanged;
 
 	/* static functions */
 
