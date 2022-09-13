@@ -208,7 +208,7 @@ void ConnectFourLobbying::msgWelcome(string &str)
 
 	str = "\033[2J\033[H";
 	str += "\r\n";
-	str += "Welcome to " + gs["name"].asString() + "!";
+	str += "Welcome to the lobby of " + gs["name"].asString() + "!";
 	str += "\r\n";
 	str += "\r\n";
 	str += "Team\tGamer";
