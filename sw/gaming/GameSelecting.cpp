@@ -142,6 +142,9 @@ Success GameSelecting::process()
 		if (key != keyEnter)
 			break;
 
+		if (!mGamesList.size())
+			break;
+
 		res["type"] = "connect";
 		res["gameId"] = (UInt64)mGamesList[mOffGamesCursor + mOffGames].id;
 
