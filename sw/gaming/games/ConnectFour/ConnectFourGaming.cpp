@@ -77,6 +77,9 @@ Success ConnectFourGaming::gameProcess()
 		if (mpLobby->success() == Pending)
 			break;
 
+		repel(mpLobby);
+		mpLobby = NULL;
+
 		mState = CfMatchStart;
 
 		break;
