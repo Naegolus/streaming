@@ -144,10 +144,23 @@ void ConnectFourLobbying::gamerMsgInterpret(const Value &msg)
 	string id = msg["gamerId"].asString();
 	uint8_t key = msg["key"].asUInt();
 
-	if (!keyIsNum(key))
+	if (keyIsNum(key))
+	{
+		gs["gamers"][id]["team"] = key - '0';
 		return;
+	}
 
-	gs["gamers"][id]["team"] = key - '0';
+	if (key == keyEsc)
+	{
+		Value msg;
+
+		msg["type"] = "disconnect";
+		msg["gamerId"] = stol(id);
+		(*pOut).commit(msg);
+
+		gs["gamers"].removeMember(id);
+		return;
+	}
 }
 
 void ConnectFourLobbying::adminMsgInterpret(const Value &msg)
