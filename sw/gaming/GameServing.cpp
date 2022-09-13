@@ -168,6 +168,23 @@ void GameServing::gameMsgInterpret(Gaming *pGame, Value &msg)
 
 	string type = msg["type"].asString();
 
+	if (type == "frame")
+	{
+		frameDispatch(msg);
+		return;
+	}
+
+	if (type == "disconnect")
+	{
+		GamerInteracting *pGamer = NULL;
+		pGamer = (GamerInteracting *)msg["gamerId"].asUInt64();
+		pGamer->in.commit(msg);
+		return;
+	}
+}
+
+void GameServing::frameDispatch(Value &msg)
+{
 	if (!msg.isMember("gamers"))
 		return;
 
