@@ -37,6 +37,7 @@ const uint8_t cNameSizeMax = 16;
 
 uint8_t keyGet(TcpTransfering *pConn, uint32_t lastGotMs);
 bool keyIsAlphaNum(uint8_t key);
+bool keyIsNum(uint8_t key);
 bool keyIsCommon(uint8_t key);
 
 #endif

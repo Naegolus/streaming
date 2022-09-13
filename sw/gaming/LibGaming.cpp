@@ -71,6 +71,14 @@ bool keyIsAlphaNum(uint8_t key)
 	if (key >= 'A' and key <= 'Z')
 		return true;
 
+	if (keyIsNum(key))
+		return true;
+
+	return false;
+}
+
+bool keyIsNum(uint8_t key)
+{
 	if (key >= '0' and key <= '9')
 		return true;
 
