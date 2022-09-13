@@ -230,10 +230,17 @@ void GamerInteracting::gameMsgProcess(std::string &msg)
 	Value msgGame = msgGameEntry.particle;
 	string type = msgGame["type"].asString();
 
-	if (type != "frame")
+	if (type == "frame")
+	{
+		msg = msgGame["data"].asString();
 		return;
+	}
 
-	msg = msgGame["data"].asString();
+	if (type == "disconnect")
+	{
+		mState = GiSelectionStart;
+		return;
+	}
 }
 
 void GamerInteracting::msgWelcome(string &msg)
