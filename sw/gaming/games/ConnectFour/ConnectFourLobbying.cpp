@@ -174,6 +174,12 @@ void ConnectFourLobbying::adminMsgInterpret(const Value &msg)
 	Value &gs = *pGs;
 	string id = msg["gamerId"].asString();
 	uint8_t key = msg["key"].asUInt();
+
+	if (key == keyEnter)
+	{
+		mState = CflSetupDone;
+		return;
+	}
 }
 
 void ConnectFourLobbying::framesCreate()
