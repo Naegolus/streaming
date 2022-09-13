@@ -85,7 +85,7 @@ Success ConnectFourGaming::gameProcess()
 		break;
 	case CfMatchStart:
 
-		mState = CfMatchDoneWait;
+		// mState = CfMatchDoneWait;
 
 		break;
 	case CfMatchDoneWait:
