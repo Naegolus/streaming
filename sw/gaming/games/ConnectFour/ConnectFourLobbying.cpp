@@ -55,9 +55,6 @@ Success ConnectFourLobbying::process()
 {
 	Value &gs = *pGs;
 
-	gamerMsgProcess();
-	framesSend();
-
 	switch (mState)
 	{
 	case CflStart:
@@ -67,13 +64,22 @@ Success ConnectFourLobbying::process()
 		break;
 	case CflStructureInit:
 
-		gs["config"]["gamers"] = arrayValue;;
+		gs["gamers"] = objectValue;
+		gs["teams"] = arrayValue;
 
 		mStructureDone = true;
-		mState = CflIdle;
+		mState = CflConfigSetup;
 
 		break;
-	case CflIdle:
+	case CflConfigSetup:
+
+		gamerMsgProcess();
+		framesSend();
+
+		break;
+	case CflSetupDone:
+
+		return Positive;
 
 		break;
 	default:
@@ -101,14 +107,14 @@ void ConnectFourLobbying::gamerMsgInterpret(const Value &msg)
 	procInfLog("%s", str.c_str());
 
 	string type = msg["type"].asString();
+	string id = msg["gamerId"].asString();
 	Value tmp;
 
 	if (type == "connect")
 	{
-		tmp["gamerId"] = msg["gamerId"];
 		tmp["gamerName"] = msg["gamerName"];
 
-		(*pGs)["config"]["gamers"].append(tmp);
+		(*pGs)["gamers"][id] = tmp;
 
 		mGameStateChanged = true;
 		return;
@@ -131,8 +137,11 @@ void ConnectFourLobbying::framesSend()
 	msg["type"] = "frame";
 	msg["data"] = frame;
 
-	for (Value::ArrayIndex i = 0; i < gs["config"]["gamers"].size(); ++i)
-		msg["gamers"].append(gs["config"]["gamers"][i]["gamerId"].asUInt64());
+	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+	{
+		UInt64 id = stol(iter.key().asString());
+		msg["gamers"].append(id);
+	}
 
 	(*pOut).commit(msg);
 }
@@ -148,13 +157,11 @@ void ConnectFourLobbying::msgWelcome(string &str)
 	str += "\r\n";
 	str += "Connected gamers";
 	str += "\r\n";
-	for (Value::ArrayIndex i = 0; i < gs["config"]["gamers"].size(); ++i)
+	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
 	{
-		str += gs["config"]["gamers"][i]["gamerName"].asString();
+		str += (*iter)["gamerName"].asString();
 		str += "\r\n";
 	}
-	str += "\r\n";
-	str += "[enter]\tContinue";
 	str += "\r\n";
 	str += "[esc]\tExit";
 	str += "\r\n";

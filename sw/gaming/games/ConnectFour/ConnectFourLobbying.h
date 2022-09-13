@@ -34,7 +34,8 @@
 #define dForEach_CflState(gen) \
 		gen(CflStart) \
 		gen(CflStructureInit) \
-		gen(CflIdle) \
+		gen(CflConfigSetup) \
+		gen(CflSetupDone) \
 
 #define dGenCflStateEnum(s) s,
 dProcessStateEnum(CflState);
