@@ -207,7 +207,7 @@ void GamerInteracting::keyProcess()
 	if (!key)
 		return;
 
-	if (!keyIsCommon(key))
+	if (!(keyIsCommon(key) or keyIsCtrl(key)))
 		return;
 
 	Value msgKey;
