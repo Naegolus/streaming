@@ -39,6 +39,7 @@ uint8_t keyGet(TcpTransfering *pConn, uint32_t lastGotMs);
 bool keyIsAlphaNum(uint8_t key);
 bool keyIsNum(uint8_t key);
 bool keyIsCommon(uint8_t key);
+bool keyIsCtrl(uint8_t key);
 
 #endif
 

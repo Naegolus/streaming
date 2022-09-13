@@ -96,3 +96,11 @@ bool keyIsCommon(uint8_t key)
 	return false;
 }
 
+bool keyIsCtrl(uint8_t key)
+{
+	if (key == keyEnter or key == keyEsc)
+		return true;
+
+	return false;
+}
+
