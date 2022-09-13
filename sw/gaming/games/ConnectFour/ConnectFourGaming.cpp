@@ -56,7 +56,7 @@ Success ConnectFourGaming::gameProcess()
 	{
 	case CfStart:
 
-		mGameState["gameName"] = mGameName;
+		mGameState["name"] = mGameName;
 
 		mState = CfLobbyStart;
 
@@ -99,7 +99,7 @@ Success ConnectFourGaming::gameProcess()
 
 void ConnectFourGaming::processInfo(char *pBuf, char *pBufEnd)
 {
-	dInfo("Name\t\t\t%s\n", mGameName.c_str());
+	//dInfo("Name\t\t\t%s\n", mGameName.c_str());
 #if 1
 	dInfo("State\t\t\t%s\n", CfStateString[mState]);
 #endif

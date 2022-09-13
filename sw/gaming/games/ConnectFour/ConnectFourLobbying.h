@@ -74,7 +74,9 @@ private:
 	Success process();
 	void processInfo(char *pBuf, char *pBufEnd);
 
-	void gamerMsgProcess();
+	void msgProcess();
+	void msgInterpret(const Json::Value &msg);
+	void adminMsgInterpret(const Json::Value &msg);
 	void gamerMsgInterpret(const Json::Value &msg);
 
 	void framesSend();

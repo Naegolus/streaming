@@ -24,6 +24,7 @@
 */
 
 #include "ConnectFourLobbying.h"
+#include "LibGaming.h"
 
 #if 1
 #define dGenCflStateString(s) #s,
@@ -65,7 +66,7 @@ Success ConnectFourLobbying::process()
 	case CflStructureInit:
 
 		gs["gamers"] = objectValue;
-		gs["teams"] = arrayValue;
+		gs["teams"] = objectValue;
 
 		mStructureDone = true;
 		mState = CflConfigSetup;
@@ -73,7 +74,7 @@ Success ConnectFourLobbying::process()
 		break;
 	case CflConfigSetup:
 
-		gamerMsgProcess();
+		msgProcess();
 		framesSend();
 
 		break;
@@ -89,7 +90,7 @@ Success ConnectFourLobbying::process()
 	return Pending;
 }
 
-void ConnectFourLobbying::gamerMsgProcess()
+void ConnectFourLobbying::msgProcess()
 {
 	if (!mStructureDone)
 		return;
@@ -97,28 +98,68 @@ void ConnectFourLobbying::gamerMsgProcess()
 	PipeEntry<Value> msg;
 
 	while ((*pIn).get(msg))
-		gamerMsgInterpret(msg.particle);
+		msgInterpret(msg.particle);
 }
 
-void ConnectFourLobbying::gamerMsgInterpret(const Value &msg)
+void ConnectFourLobbying::msgInterpret(const Value &msg)
 {
 	FastWriter fastWriter;
 	string str = fastWriter.write(msg);
 	procInfLog("%s", str.c_str());
 
+	Value &gs = *pGs;
 	string type = msg["type"].asString();
 	string id = msg["gamerId"].asString();
-	Value tmp;
 
 	if (type == "connect")
 	{
-		tmp["gamerName"] = msg["gamerName"];
+		Value tmp;
 
-		(*pGs)["gamers"][id] = tmp;
+		if (!gs.isMember("admin"))
+			gs["admin"] = id;
+
+		tmp["name"] = msg["gamerName"];
+		gs["gamers"][id] = tmp;
 
 		mGameStateChanged = true;
 		return;
 	}
+
+	gamerMsgInterpret(msg);
+
+	if (id != gs["admin"].asString())
+		return;
+
+	adminMsgInterpret(msg);
+}
+
+void ConnectFourLobbying::gamerMsgInterpret(const Value &msg)
+{
+	string type = msg["type"].asString();
+
+	if (type != "key")
+		return;
+
+	Value &gs = *pGs;
+	string id = msg["gamerId"].asString();
+	uint8_t key = msg["key"].asUInt();
+
+	if (!keyIsNum(key))
+		return;
+
+	gs["gamers"][id]["team"] = key - '0';
+}
+
+void ConnectFourLobbying::adminMsgInterpret(const Value &msg)
+{
+	string type = msg["type"].asString();
+
+	if (type != "key")
+		return;
+
+	Value &gs = *pGs;
+	string id = msg["gamerId"].asString();
+	uint8_t key = msg["key"].asUInt();
 }
 
 void ConnectFourLobbying::framesSend()
@@ -152,14 +193,14 @@ void ConnectFourLobbying::msgWelcome(string &str)
 
 	str = "\033[2J\033[H";
 	str += "\r\n";
-	str += "Welcome to " + gs["gameName"].asString() + "!";
+	str += "Welcome to " + gs["name"].asString() + "!";
 	str += "\r\n";
 	str += "\r\n";
 	str += "Connected gamers";
 	str += "\r\n";
 	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
 	{
-		str += (*iter)["gamerName"].asString();
+		str += (*iter)["name"].asString();
 		str += "\r\n";
 	}
 	str += "\r\n";
