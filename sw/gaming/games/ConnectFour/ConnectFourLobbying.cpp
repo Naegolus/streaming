@@ -65,7 +65,7 @@ Success ConnectFourLobbying::process()
 
 		gs["gamers"] = objectValue;
 		gs["teams"] = objectValue;
-		gs["dirty"] = false;
+		gs["dirty"] = true;
 
 		mState = CflConfigSetup;
 
