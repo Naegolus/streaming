@@ -256,8 +256,10 @@ void GameSelecting::msgGamesList(string &msg)
 
 	msg = "\033[2J\033[H";
 	msg += "\r\n";
+
 	msg += "Games " + to_string(mNumGames) + ", Gamers " + to_string(mNumGamers) + "\r\n";
 	msg += "\r\n";
+
 	str = "  Name";
 	str.insert(str.size(), dNameColSize - str.size(), ' ');
 	msg += str + "Type\r\n";
