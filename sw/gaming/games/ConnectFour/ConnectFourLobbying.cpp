@@ -226,6 +226,7 @@ void ConnectFourLobbying::msgWelcome(string &str)
 		str += g["name"].asString();
 		str += "\r\n";
 	}
+
 	str += "---------------------";
 	str += "\r\n";
 	str += "\r\n";
