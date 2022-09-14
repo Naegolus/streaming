@@ -123,7 +123,6 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 		gameMsg["gamerName"] = pGamer->mGamerName;
 
 		pGame->in.commit(gameMsg);
-
 		return;
 	}
 
@@ -135,6 +134,7 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 
 		pGamer->mpGame = pGame;
 		pGame->in.commit(msg);
+		return;
 	}
 
 	if (type == "disconnect")
