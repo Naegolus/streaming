@@ -105,6 +105,7 @@ void ConnectFourGaming::processInfo(char *pBuf, char *pBufEnd)
 #if 1
 	dInfo("State\t\t\t%s\n", CfStateString[mState]);
 #endif
+	//dInfo("Size\t\t\t%d\n", mGameState["gamers"].size());
 	string gsStr = mGameState.toStyledString();
 	dInfo("%s", gsStr.c_str());
 }
