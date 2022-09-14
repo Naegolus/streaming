@@ -46,6 +46,7 @@ Success GameServing::initialize()
 {
 	dGameRegister(ConnectFour);
 	dGameRegister(TicTacToe);
+#if 0
 	dGameRegister(TicTacToe);
 	dGameRegister(ConnectFour);
 	dGameRegister(ConnectFour);
@@ -56,6 +57,7 @@ Success GameServing::initialize()
 	dGameRegister(TicTacToe);
 	dGameRegister(TicTacToe);
 	dGameRegister(ConnectFour);
+#endif
 	// dGameRegister(Battleship);
 
 	mpLst = TcpListening::create();
