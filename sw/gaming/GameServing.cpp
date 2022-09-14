@@ -142,6 +142,13 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 		pGamer->mpGame->in.commit(msg);
 		return;
 	}
+
+	if (type == "disconnect")
+	{
+		pGamer->mpGame->in.commit(msg);
+		pGamer->mpGame = NULL;
+		return;
+	}
 }
 
 void GameServing::gameMsgProcess()
