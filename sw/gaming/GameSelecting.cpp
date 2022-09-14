@@ -129,6 +129,29 @@ Success GameSelecting::process()
 			return Positive;
 		}
 
+		if (key == 'j' and mOffGamesCursor < dGameRowSize - 1 and mOffGamesCursor < mNumGames - 1)
+		{
+			if ((mOffGamesCursor == dGameRowSize / 2) and
+				(mOffGames + dGameRowSize < mNumGames))
+				++mOffGames;
+			else
+				++mOffGamesCursor;
+
+			msgGamesList(msg);
+			break;
+		}
+
+		if (key == 'k' and mOffGamesCursor)
+		{
+			if ((mOffGamesCursor == dGameRowSize / 2) and mOffGames)
+				--mOffGames;
+			else
+				--mOffGamesCursor;
+
+			msgGamesList(msg);
+			break;
+		}
+
 		if (key == 'c')
 		{
 			msgTypesList(msg);
