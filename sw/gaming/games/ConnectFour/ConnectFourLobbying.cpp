@@ -115,6 +115,7 @@ void ConnectFourLobbying::msgInterpret(const Value &msg)
 
 		tmp["name"] = msg["gamerName"];
 		tmp["team"] = 0;
+		tmp["dirty"] = false;
 
 		gs["gamers"][id] = tmp;
 		gs["dirty"] = true;
