@@ -107,6 +107,9 @@ Success GameSelecting::process()
 			}
 		}
 
+		mOffGamesCursor = 0;
+		mOffGames = 0;
+
 		procInfLog("Got server list");
 
 		msgGamesList(msg);
@@ -129,6 +132,10 @@ Success GameSelecting::process()
 		if (key == 'c')
 		{
 			msgTypesList(msg);
+
+			mOffTypesCursor = 0;
+			mOffTypes = 0;
+
 			mState = GsTypesList;
 			break;
 		}
@@ -208,6 +215,10 @@ Success GameSelecting::process()
 		if (key == keyEsc)
 		{
 			msgTypesList(msg);
+
+			mOffTypesCursor = 0;
+			mOffTypes = 0;
+
 			mState = GsTypesList;
 			break;
 		}
