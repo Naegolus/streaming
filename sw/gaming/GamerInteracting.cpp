@@ -36,6 +36,7 @@ using namespace Json;
 
 #define LOG_LVL	0
 
+mutex GamerInteracting::mtxGamerList;
 list<GamerInteracting *> GamerInteracting::gamerList;
 
 GamerInteracting::GamerInteracting(int fd)

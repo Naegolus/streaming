@@ -24,6 +24,7 @@
 */
 
 #include "GameSelecting.h"
+#include "GamerInteracting.h"
 #include "Gaming.h"
 #include "LibGaming.h"
 
@@ -105,6 +106,11 @@ Success GameSelecting::process()
 
 				mGamesList.push_back(game);
 			}
+		}
+
+		{
+			lock_guard<mutex> lock(GamerInteracting::mtxGamerList);
+			mNumGamers = GamerInteracting::gamerList.size();
 		}
 
 		mOffGamesCursor = 0;

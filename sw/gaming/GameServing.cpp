@@ -233,7 +233,10 @@ void GameServing::gamerRemove()
 		procDbgLog(LOG_LVL, "removing gamer. process: %p", pGamer);
 		repel(pGamer);
 
-		iter = GamerInteracting::gamerList.erase(iter);
+		{
+			lock_guard<mutex> lock(GamerInteracting::mtxGamerList);
+			iter = GamerInteracting::gamerList.erase(iter);
+		}
 	}
 }
 
@@ -256,7 +259,10 @@ void GameServing::gamerAdd()
 
 		procDbgLog(LOG_LVL, "adding gamer. process: %p", pGamer);
 
-		GamerInteracting::gamerList.push_back(pGamer);
+		{
+			lock_guard<mutex> lock(GamerInteracting::mtxGamerList);
+			GamerInteracting::gamerList.push_back(pGamer);
+		}
 	}
 }
 

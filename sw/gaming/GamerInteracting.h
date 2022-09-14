@@ -65,6 +65,7 @@ public:
 
 	Gaming *mpGame;
 
+	static std::mutex mtxGamerList;
 	static std::list<GamerInteracting *> gamerList;
 
 protected:
