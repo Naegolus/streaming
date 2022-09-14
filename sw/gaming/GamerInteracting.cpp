@@ -207,17 +207,27 @@ void GamerInteracting::keyProcess()
 	if (!key)
 		return;
 
+	Value msg;
+	GamerInteracting *pGamer = this;
+
+	if (key == keyEsc)
+	{
+		msg["type"] = "disconnect";
+		msg["gamerId"] = (UInt64)pGamer;
+		out.commit(msg);
+
+		mState = GiSelectionStart;
+		return;
+	}
+
 	if (!(keyIsCommon(key) or keyIsCtrl(key)))
 		return;
 
-	Value msgKey;
-	GamerInteracting *pGamer = this;
+	msg["type"] = "key";
+	msg["key"] = key;
+	msg["gamerId"] = (UInt64)pGamer;
 
-	msgKey["type"] = "key";
-	msgKey["key"] = key;
-	msgKey["gamerId"] = (UInt64)pGamer;
-
-	out.commit(msgKey);
+	out.commit(msg);
 }
 
 void GamerInteracting::gameMsgProcess(std::string &msg)
