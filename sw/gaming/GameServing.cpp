@@ -137,16 +137,16 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 		pGame->in.commit(msg);
 	}
 
-	if (type == "key")
-	{
-		pGamer->mpGame->in.commit(msg);
-		return;
-	}
-
 	if (type == "disconnect")
 	{
 		pGamer->mpGame->in.commit(msg);
 		pGamer->mpGame = NULL;
+		return;
+	}
+
+	if (type == "key")
+	{
+		pGamer->mpGame->in.commit(msg);
 		return;
 	}
 }
