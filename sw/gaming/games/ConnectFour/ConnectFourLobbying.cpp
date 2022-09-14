@@ -122,6 +122,14 @@ void ConnectFourLobbying::msgInterpret(const Value &msg)
 		return;
 	}
 
+	if (type == "disconnect")
+	{
+		gs["gamers"].removeMember(id);
+		gs["dirty"] = true;
+
+		return;
+	}
+
 	gamerMsgInterpret(msg);
 
 	if (id != gs["admin"].asString())
@@ -144,20 +152,6 @@ void ConnectFourLobbying::gamerMsgInterpret(const Value &msg)
 	if (keyIsNum(key))
 	{
 		gs["gamers"][id]["team"] = key - '0';
-		gs["dirty"] = true;
-
-		return;
-	}
-
-	if (key == keyEsc)
-	{
-		Value msg;
-
-		msg["type"] = "disconnect";
-		msg["gamerId"] = stol(id);
-		(*pOut).commit(msg);
-
-		gs["gamers"].removeMember(id);
 		gs["dirty"] = true;
 
 		return;
