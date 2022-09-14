@@ -69,13 +69,11 @@ private:
 
 	/* member functions */
 	Success initialize();
-	Success gameProcess();
+	Success process();
 	void processInfo(char *pBuf, char *pBufEnd);
 
 	/* member variables */
 	enum CfState mState;
-	bool mGameStateChanged;
-	Json::Value mGameState;
 	ConnectFourLobbying *mpLobby;
 
 	/* static functions */

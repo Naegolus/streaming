@@ -34,33 +34,6 @@ list<Gaming *> Gaming::gamesList;
 vector<struct TypeListElem> Gaming::typesList;
 
 /* member functions */
-Success Gaming::initialize()
-{
-	return Positive;
-}
-
-Success Gaming::process()
-{
-	try
-	{
-		return gameProcess();
-	}
-	catch (...)
-	{
-		return procErrLog(-1, "Unhandled gaming exception");
-	}
-}
-
-Success Gaming::shutdown()
-{
-	return Positive;
-}
-
-void Gaming::processInfo(char *pBuf, char *pBufEnd)
-{
-	(void)pBuf;
-	(void)pBufEnd;
-}
 
 /* static functions */
 

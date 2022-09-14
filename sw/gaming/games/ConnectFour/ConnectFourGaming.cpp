@@ -40,7 +40,6 @@ string ConnectFourGaming::author = "Johannes Natter";
 ConnectFourGaming::ConnectFourGaming()
 	: Gaming("ConnectFourGaming")
 	, mState(CfStart)
-	, mGameStateChanged(false)
 	, mpLobby(NULL)
 {}
 
@@ -50,7 +49,7 @@ Success ConnectFourGaming::initialize()
 	return Positive;
 }
 
-Success ConnectFourGaming::gameProcess()
+Success ConnectFourGaming::process()
 {
 	switch (mState)
 	{

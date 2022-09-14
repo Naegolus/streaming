@@ -63,6 +63,7 @@ public:
 	std::string mGameName;
 	std::string mType;
 	std::string mFlags;
+	Json::Value mGameState;
 
 	static std::mutex mtxGamesList;
 	static std::list<Gaming *> gamesList;
@@ -93,12 +94,6 @@ private:
 	 */
 
 	/* member functions */
-	Success initialize();
-	Success process();
-	Success shutdown();
-	void processInfo(char *pBuf, char *pBufEnd);
-
-	virtual Success gameProcess() = 0;
 
 	/* member variables */
 
