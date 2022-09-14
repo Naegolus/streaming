@@ -267,6 +267,13 @@ void GameSelecting::msgGamesList(string &msg)
 
 	for (i = 0; i < dGameRowSize; ++i, ++u)
 	{
+		if ((!i and mOffGames) or
+			(i == dGameRowSize - 1 and mOffGames + dGameRowSize < mNumGames))
+		{
+			msg += "  ---\r\n";
+			continue;
+		}
+
 		if (u >= mGamesList.size())
 		{
 			msg += "\r\n";
