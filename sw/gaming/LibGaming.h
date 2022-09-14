@@ -31,6 +31,8 @@
 const uint8_t keyBackspace = 0x7F;
 const uint8_t keyEnter = 0x0D;
 const uint8_t keyEsc = 0x1B;
+const uint8_t keyAbort = 0x03;
+const uint8_t keyEnd = 0x04;
 
 const uint8_t cNameSizeMin = 2;
 const uint8_t cNameSizeMax = 16;
