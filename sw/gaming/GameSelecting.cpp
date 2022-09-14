@@ -165,7 +165,7 @@ Success GameSelecting::process()
 			break;
 		}
 
-		if (key == 'j' and mOffTypesCursor < dTypeRowSize - 1)
+		if (key == 'j' and mOffTypesCursor < dTypeRowSize - 1 and mOffTypesCursor < mNumTypes - 1)
 		{
 			if ((mOffTypesCursor == dTypeRowSize / 2) and
 				(mOffTypes + dTypeRowSize < mNumTypes))
