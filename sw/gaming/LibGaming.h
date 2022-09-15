@@ -43,5 +43,7 @@ bool keyIsNum(uint8_t key);
 bool keyIsCommon(uint8_t key);
 bool keyIsCtrl(uint8_t key);
 
+uint32_t millis();
+
 #endif
 

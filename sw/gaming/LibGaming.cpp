@@ -23,9 +23,12 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <chrono>
+
 #include "LibGaming.h"
 
 using namespace std;
+using namespace chrono;
 
 uint8_t keyGet(TcpTransfering *pConn, uint32_t lastGotMs)
 {
@@ -102,5 +105,12 @@ bool keyIsCtrl(uint8_t key)
 		return true;
 
 	return false;
+}
+
+uint32_t millis()
+{
+	auto now = steady_clock::now();
+	auto nowMs = time_point_cast<milliseconds>(now);
+	return nowMs.time_since_epoch().count();
 }
 
