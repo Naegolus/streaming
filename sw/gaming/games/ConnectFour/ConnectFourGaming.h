@@ -29,9 +29,10 @@
 #include "Processing.h"
 #include "Gaming.h"
 #include "ConnectFourLobbying.h"
+#include "ConnectFourMatching.h"
 
 #define dForEach_CfState(gen) \
-		gen(CfStart) \
+		gen(CfInit) \
 		gen(CfLobbyStart) \
 		gen(CfLobbyDoneWait) \
 		gen(CfMatchStart) \
@@ -75,6 +76,7 @@ private:
 	/* member variables */
 	enum CfState mState;
 	ConnectFourLobbying *mpLobby;
+	ConnectFourMatching *mpMatch;
 
 	/* static functions */
 

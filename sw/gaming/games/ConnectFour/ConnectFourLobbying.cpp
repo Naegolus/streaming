@@ -41,7 +41,7 @@ ConnectFourLobbying::ConnectFourLobbying()
 	, pIn(NULL)
 	, pOut(NULL)
 	, pGs(NULL)
-	, mState(CflStart)
+	, mState(CflInit)
 {}
 
 /* member functions */
@@ -56,7 +56,7 @@ Success ConnectFourLobbying::process()
 
 	switch (mState)
 	{
-	case CflStart:
+	case CflInit:
 
 		mState = CflStructureInit;
 
@@ -166,7 +166,7 @@ void ConnectFourLobbying::adminMsgInterpret(const Value &msg)
 	if (type != "key")
 		return;
 
-	Value &gs = *pGs;
+	//Value &gs = *pGs;
 	string id = msg["gamerId"].asString();
 	uint8_t key = msg["key"].asUInt();
 

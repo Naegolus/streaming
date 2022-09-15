@@ -32,7 +32,7 @@
 #include "Pipe.h"
 
 #define dForEach_CflState(gen) \
-		gen(CflStart) \
+		gen(CflInit) \
 		gen(CflStructureInit) \
 		gen(CflConfigSetup) \
 		gen(CflSetupDone) \

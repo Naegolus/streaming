@@ -25,12 +25,19 @@
 
 #include "ConnectFourMatching.h"
 
+#if 1
+#define dGenCfMatchStateString(s) #s,
+dProcessStateStr(CfMatchState);
+#endif
+
 using namespace std;
+using namespace Json;
 
 #define LOG_LVL	0
 
 ConnectFourMatching::ConnectFourMatching()
 	: Processing("ConnectFourMatching")
+	, mState(CfMatchInit)
 {}
 
 /* member functions */
@@ -41,6 +48,29 @@ Success ConnectFourMatching::initialize()
 
 Success ConnectFourMatching::process()
 {
+	//Value &gs = *pGs;
+
+	switch (mState)
+	{
+	case CfMatchInit:
+
+		break;
+	case CfMatchBeginShow:
+
+		break;
+	case CfMatchRoundStart:
+
+		break;
+	case CfMatchRoundDoneWait:
+
+		break;
+	case CfMatchStatsShow:
+
+		break;
+	default:
+		break;
+	}
+
 	return Pending;
 }
 
@@ -51,8 +81,9 @@ Success ConnectFourMatching::shutdown()
 
 void ConnectFourMatching::processInfo(char *pBuf, char *pBufEnd)
 {
-	(void)pBuf;
-	(void)pBufEnd;
+#if 1
+	dInfo("State\t\t\t%s\n", CfMatchStateString[mState]);
+#endif
 }
 
 /* static functions */

@@ -39,8 +39,9 @@ string ConnectFourGaming::author = "Johannes Natter";
 
 ConnectFourGaming::ConnectFourGaming()
 	: Gaming("ConnectFourGaming")
-	, mState(CfStart)
+	, mState(CfInit)
 	, mpLobby(NULL)
+	, mpMatch(NULL)
 {}
 
 /* member functions */
@@ -53,7 +54,7 @@ Success ConnectFourGaming::process()
 {
 	switch (mState)
 	{
-	case CfStart:
+	case CfInit:
 
 		mGameState["name"] = mGameName;
 
@@ -84,10 +85,22 @@ Success ConnectFourGaming::process()
 		break;
 	case CfMatchStart:
 
-		// mState = CfMatchDoneWait;
+		mpMatch = ConnectFourMatching::create();
+		mpMatch->pIn = &in;
+		mpMatch->pOut = &out;
+		mpMatch->pGs = &mGameState;
+		start(mpMatch);
+
+		mState = CfMatchDoneWait;
 
 		break;
 	case CfMatchDoneWait:
+
+		if (mpMatch->success() == Pending)
+			break;
+
+		repel(mpMatch);
+		mpMatch = NULL;
 
 		mState = CfLobbyStart;
 

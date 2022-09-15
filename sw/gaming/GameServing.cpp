@@ -46,7 +46,7 @@ Success GameServing::initialize()
 {
 	dGameRegister(ConnectFour);
 	dGameRegister(TicTacToe);
-#if 1
+#if 0
 	dGameRegister(TicTacToe);
 	dGameRegister(ConnectFour);
 	dGameRegister(ConnectFour);

@@ -26,7 +26,20 @@
 #ifndef CONNECT_FOUR_MATCHING_H
 #define CONNECT_FOUR_MATCHING_H
 
+#include <jsoncpp/json/json.h>
+
 #include "Processing.h"
+#include "Pipe.h"
+
+#define dForEach_CfMatchState(gen) \
+		gen(CfMatchInit) \
+		gen(CfMatchBeginShow) \
+		gen(CfMatchRoundStart) \
+		gen(CfMatchRoundDoneWait) \
+		gen(CfMatchStatsShow) \
+
+#define dGenCfMatchStateEnum(s) s,
+dProcessStateEnum(CfMatchState);
 
 class ConnectFourMatching : public Processing
 {
@@ -37,6 +50,10 @@ public:
 	{
 		return new (std::nothrow) ConnectFourMatching;
 	}
+
+	Pipe<Json::Value> *pIn;
+	Pipe<Json::Value> *pOut;
+	Json::Value *pGs;
 
 protected:
 
@@ -60,6 +77,7 @@ private:
 	void processInfo(char *pBuf, char *pBufEnd);
 
 	/* member variables */
+	enum CfMatchState mState;
 
 	/* static functions */
 
