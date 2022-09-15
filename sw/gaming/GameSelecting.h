@@ -31,6 +31,7 @@
 
 #include "Processing.h"
 #include "LibGaming.h"
+#include "ListIdx.h"
 
 #define dForEach_GsState(gen) \
 		gen(GsStart) \
@@ -92,15 +93,10 @@ private:
 	std::vector<struct GameListElem> mGamesList;
 	TcpTransfering *mpConn;
 	uint32_t mKeyLastGotMs;
-	uint32_t mNumGames;
-	uint32_t mNumTypes;
 	uint32_t mNumGamers;
 
-	uint32_t mOffGamesCursor;
-	uint32_t mOffGames;
-
-	uint32_t mOffTypesCursor;
-	uint32_t mOffTypes;
+	ListIdx mIdxGames;
+	ListIdx mIdxTypes;
 
 	std::string mGameName;
 

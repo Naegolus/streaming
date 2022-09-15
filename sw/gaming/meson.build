@@ -23,6 +23,7 @@ srcsSpecific = [
 	'Gaming.cpp',
 	'GamerInteracting.cpp',
 	'GameSelecting.cpp',
+	'ListIdx.cpp',
 	'games/TicTacToe/TicTacToeGaming.cpp',
 	'games/ConnectFour/ConnectFourGaming.cpp',
 	'games/ConnectFour/ConnectFourLobbying.cpp',
