@@ -76,8 +76,8 @@ private:
 
 	void msgProcess();
 	void msgInterpret(const Json::Value &msg);
-	void adminMsgInterpret(const Json::Value &msg);
 	void gamerMsgInterpret(const Json::Value &msg);
+	void adminMsgInterpret(const Json::Value &msg);
 
 	void framesCreate();
 	void msgWelcome(std::string &msg);

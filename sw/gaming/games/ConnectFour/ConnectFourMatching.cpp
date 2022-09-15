@@ -24,6 +24,7 @@
 */
 
 #include "ConnectFourMatching.h"
+#include "LibGaming.h"
 
 #if 1
 #define dGenCfMatchStateString(s) #s,
@@ -38,6 +39,8 @@ using namespace Json;
 ConnectFourMatching::ConnectFourMatching()
 	: Processing("ConnectFourMatching")
 	, mState(CfMatchInit)
+	, mStart(0)
+	, mCntSec(0)
 {}
 
 /* member functions */
@@ -48,20 +51,79 @@ Success ConnectFourMatching::initialize()
 
 Success ConnectFourMatching::process()
 {
-	//Value &gs = *pGs;
+	Value &gs = *pGs;
+	uint32_t diff = millis() - mStart;
 
 	switch (mState)
 	{
 	case CfMatchInit:
 
+		matchInit();
+		gamersInit();
+
+		mState = CfMatchBeginStart;
+
 		break;
-	case CfMatchBeginShow:
+	case CfMatchBeginStart:
+
+		mCntSec = 5;
+		frameBeginCreate();
+
+		mStart = millis();
+		mState = CfMatchBeginCntWait;
+
+		break;
+	case CfMatchBeginCntWait:
+
+		if (diff < 1000)
+			break;
+		mStart = millis();
+
+		--mCntSec;
+
+		if (mCntSec)
+		{
+			frameBeginCreate();
+			break;
+		}
+
+		mState = CfMatchRoundStart;
 
 		break;
 	case CfMatchRoundStart:
 
+		mCntSec = 5;
+
+		if (gs["match"]["teamCurrent"] == 1)
+			gs["match"]["teamCurrent"] = 2;
+		else
+			gs["match"]["teamCurrent"] = 1;
+
+		mStart = millis();
+		mState = CfMatchRoundDoneWait;
+
 		break;
 	case CfMatchRoundDoneWait:
+
+		if (diff < 1000)
+			break;
+		mStart = millis();
+
+		--mCntSec;
+
+		if (mCntSec)
+		{
+			gs["match"]["dirty"] = true;
+			break;
+		}
+
+		if (matchFinished())
+		{
+			mState = CfMatchStatsShow;
+			break;
+		}
+
+		mState = CfMatchRoundStart;
 
 		break;
 	case CfMatchStatsShow:
@@ -74,9 +136,74 @@ Success ConnectFourMatching::process()
 	return Pending;
 }
 
-Success ConnectFourMatching::shutdown()
+void ConnectFourMatching::matchInit()
 {
-	return Positive;
+	Value &gs = *pGs;
+
+	gs["match"]["teamCurrent"] = 2;
+	gs["match"]["dirty"] = true;
+}
+
+void ConnectFourMatching::gamersInit()
+{
+	Value &gs = *pGs;
+
+	for (Value::iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+	{
+		Value &g = *iter;
+
+		g["cursor"] = 0;
+	}
+}
+
+void ConnectFourMatching::frameBeginCreate()
+{
+	Value &gs = *pGs;
+
+	Value msg;
+	string frame;
+
+	msgBegin(frame);
+
+	msg["type"] = "frame";
+	msg["data"] = frame;
+
+	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+	{
+		UInt64 id = stol(iter.key().asString());
+		msg["gamers"].append(id);
+	}
+
+	(*pOut).commit(msg);
+}
+
+void ConnectFourMatching::msgBegin(string &str)
+{
+	str = "\033[2J\033[H";
+	str += "\r\n";
+	str += "The game starts in " + to_string(mCntSec) + "s!";
+	str += "\r\n";
+}
+
+void ConnectFourMatching::msgProcess()
+{
+	PipeEntry<Value> msg;
+
+	while ((*pIn).get(msg))
+		msgInterpret(msg.particle);
+}
+
+void ConnectFourMatching::msgInterpret(const Value &msg)
+{
+}
+
+void ConnectFourMatching::framesRoundCreate()
+{
+}
+
+bool ConnectFourMatching::matchFinished()
+{
+	return false;
 }
 
 void ConnectFourMatching::processInfo(char *pBuf, char *pBufEnd)

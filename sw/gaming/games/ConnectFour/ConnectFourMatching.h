@@ -33,7 +33,8 @@
 
 #define dForEach_CfMatchState(gen) \
 		gen(CfMatchInit) \
-		gen(CfMatchBeginShow) \
+		gen(CfMatchBeginStart) \
+		gen(CfMatchBeginCntWait) \
 		gen(CfMatchRoundStart) \
 		gen(CfMatchRoundDoneWait) \
 		gen(CfMatchStatsShow) \
@@ -73,11 +74,24 @@ private:
 	/* member functions */
 	Success initialize();
 	Success process();
-	Success shutdown();
 	void processInfo(char *pBuf, char *pBufEnd);
+
+	void matchInit();
+	void gamersInit();
+
+	void frameBeginCreate();
+	void msgBegin(std::string &str);
+
+	void msgProcess();
+	void msgInterpret(const Json::Value &msg);
+
+	void framesRoundCreate();
+	bool matchFinished();
 
 	/* member variables */
 	enum CfMatchState mState;
+	uint32_t mStart;
+	uint8_t mCntSec;
 
 	/* static functions */
 
