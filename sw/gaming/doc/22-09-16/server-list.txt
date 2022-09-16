@@ -1,0 +1,23 @@
+
+Welcome to twitch.tv/Naegolus!
+Games 6, Gamers 1
+
+  Name                            Type
+  -------------------------------------------
+> Joe                             ConnectFour
+  Joe2                            ConnectFour
+  Joe44                           TicTacToe
+  foo1                            ConnectFour
+  foo1                            ConnectFour
+  foo1                            ConnectFour
+  foo1                            ConnectFour
+  foo1                            ConnectFour
+  foo1                            ConnectFour
+  foo1                            ConnectFour
+  foo1                            ConnectFour
+  foo1                            ConnectFour
+  foo1                            ConnectFour
+  -------------------------------------------
+
+Gamer: Joe                           [?] Help
+Account type: Visitor
