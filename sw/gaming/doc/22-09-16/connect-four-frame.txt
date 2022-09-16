@@ -19,6 +19,6 @@ Gamers: 10
   |  o  |  x  |  o  |  x  |  x  |     |     |
   \-----------------------------------------/
 
-Turn: You/They                       [?] Help
+Current team: You/They               [?] Help
 Round time left: 5s
 
