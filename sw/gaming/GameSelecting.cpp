@@ -44,7 +44,7 @@ using namespace Json;
 #define dTypeRowSize		7
 #define dNameSizeMax		16
 
-GameSelecting::GameSelecting(TcpTransfering *pConn)
+GameSelecting::GameSelecting(Transfering *pConn)
 	: Processing("GameSelecting")
 	, aborted(false)
 	, mState(GsStart)

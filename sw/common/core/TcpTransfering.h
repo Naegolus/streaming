@@ -33,9 +33,9 @@
 
 #include <string>
 
-#include "Processing.h"
+#include "Transfering.h"
 
-class TcpTransfering : public Processing
+class TcpTransfering : public Transfering
 {
 
 public:
@@ -57,14 +57,14 @@ public:
 
 protected:
 
-	TcpTransfering() : Processing("TcpTransfering") {}
 	TcpTransfering(int fd);
 	TcpTransfering(const std::string &addr);
 	virtual ~TcpTransfering() {}
 
 private:
 
-	TcpTransfering(const TcpTransfering &) : Processing("") {}
+	TcpTransfering() : Transfering("") {}
+	TcpTransfering(const TcpTransfering &) : Transfering("") {}
 	TcpTransfering &operator=(const TcpTransfering &)
 	{
 		return *this;

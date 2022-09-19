@@ -30,7 +30,7 @@
 using namespace std;
 using namespace chrono;
 
-uint8_t keyGet(TcpTransfering *pConn, uint32_t lastGotMs)
+uint8_t keyGet(Transfering *pConn, uint32_t lastGotMs)
 {
 	ssize_t numBytesRead;
 	char buf[8];

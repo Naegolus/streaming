@@ -5,7 +5,7 @@
   Author(s):
       - Johannes Natter, office@dsp-crowd.com
 
-  File created on 22.08.2022
+  File created on 16.09.2022
 
   Copyright (C) 2022-now Authors and www.dsp-crowd.com
 
@@ -23,27 +23,49 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LIB_GAMING_H
-#define LIB_GAMING_H
+#ifndef TRANSFERING_H
+#define TRANSFERING_H
 
-#include "Transfering.h"
+#include "Processing.h"
 
-const uint8_t keyBackspace = 0x7F;
-const uint8_t keyEnter = 0x0D;
-const uint8_t keyEsc = 0x1B;
-const uint8_t keyAbort = 0x03;
-const uint8_t keyEnd = 0x04;
+class Transfering : public Processing
+{
 
-const uint8_t cNameSizeMin = 2;
-const uint8_t cNameSizeMax = 16;
+public:
 
-uint8_t keyGet(Transfering *pConn, uint32_t lastGotMs);
-bool keyIsAlphaNum(uint8_t key);
-bool keyIsNum(uint8_t key);
-bool keyIsCommon(uint8_t key);
-bool keyIsCtrl(uint8_t key);
+	virtual bool usable() { return false; }
+	virtual ssize_t read(void *pBuf, size_t len) = 0;
+	virtual void send(const void *pData, size_t len) = 0;
 
-uint32_t millis();
+protected:
+
+	Transfering(const char *name)
+		: Processing(name)
+	{}
+	virtual ~Transfering() {}
+
+private:
+
+	Transfering() : Processing("") {}
+	Transfering(const Transfering &) : Processing("") {}
+	Transfering &operator=(const Transfering &) { return *this; }
+
+	/*
+	 * Naming of functions:  objectVerb()
+	 * Example:              peerAdd()
+	 */
+
+	/* member functions */
+
+	/* member variables */
+
+	/* static functions */
+
+	/* static variables */
+
+	/* constants */
+
+};
 
 #endif
 

@@ -32,13 +32,13 @@
 #include "Processing.h"
 #include "Pipe.h"
 #include "GameSelecting.h"
+#include "Authorizing.h"
 
 #define dForEach_GiState(gen) \
 		gen(GiStart) \
-		gen(GiTerminalInit) \
-		gen(GiWelcomeSend) \
-		gen(GiContinueWait) \
-		gen(GiNameSet) \
+		gen(GiConnStart) \
+		gen(GiAuthStart) \
+		gen(GiAuthDoneWait) \
 		gen(GiSelectionStart) \
 		gen(GiSelectionDoneWait) \
 		gen(GiDataTransfer) \
@@ -53,12 +53,13 @@ class GamerInteracting : public Processing
 
 public:
 
-	static GamerInteracting *create(int fd)
+	static GamerInteracting *create(int fd, bool secure = false)
 	{
-		return new (std::nothrow) GamerInteracting(fd);
+		return new (std::nothrow) GamerInteracting(fd, secure);
 	}
 
 	std::string mGamerName;
+	bool mSupporter;
 
 	Pipe<Json::Value> in;
 	Pipe<Json::Value> out;
@@ -70,7 +71,7 @@ public:
 
 protected:
 
-	GamerInteracting(int fd);
+	GamerInteracting(int fd, bool secure);
 	virtual ~GamerInteracting() {}
 
 private:
@@ -92,13 +93,12 @@ private:
 	void keyProcess();
 	void gameMsgProcess(std::string &msg);
 
-	void msgWelcome(std::string &msg);
-	void msgName(std::string &msg);
-
 	/* member variables */
 	enum GiState mState;
 	int mSocketFd;
-	TcpTransfering *mpConn;
+	bool mConnSecure;
+	Transfering *mpConn;
+	Authorizing *mpAuth;
 	uint32_t mKeyLastGotMs;
 	GameSelecting *mpSelect;
 
