@@ -55,7 +55,7 @@ class GameSelecting : public Processing
 
 public:
 
-	static GameSelecting *create(TcpTransfering *pConn)
+	static GameSelecting *create(Transfering *pConn)
 	{
 		return new (std::nothrow) GameSelecting(pConn);
 	}
@@ -65,7 +65,7 @@ public:
 
 protected:
 
-	GameSelecting(TcpTransfering *pConn);
+	GameSelecting(Transfering *pConn);
 	virtual ~GameSelecting() {}
 
 private:
@@ -91,7 +91,7 @@ private:
 	/* member variables */
 	enum GsState mState;
 	std::vector<struct GameListElem> mGamesList;
-	TcpTransfering *mpConn;
+	Transfering *mpConn;
 	uint32_t mKeyLastGotMs;
 	uint32_t mNumGamers;
 
