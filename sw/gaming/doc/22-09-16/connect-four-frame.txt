@@ -20,6 +20,5 @@ Gamers 10
   \-----------------------------------------/
 
 Current team: You                    [?] Help
-Current team: They                   [?] Help
 Current team: 3                      [?] Help
 Round time left: 5s
