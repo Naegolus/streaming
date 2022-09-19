@@ -158,6 +158,7 @@ void ConnectFourMatching::matchInit()
 	gs["match"]["teamCurrent"] = 2;
 	gs["match"]["teamCursor"] = 0;
 	gs["dirty"] = true;
+	gs["tCursorCalcReq"] = false;
 
 	memset(mpBoard, 0, sizeof(mpBoard));
 }
@@ -292,7 +293,10 @@ void ConnectFourMatching::gamerMsgInterpret(const Value &msg)
 	{
 		g["cursorSet"] = cursor;
 		g["dirty"] = true;
+		gs["tCursorCalcReq"] = true;
 	}
+
+	teamCursorCalc();
 }
 
 void ConnectFourMatching::adminMsgInterpret(const Value &msg)
@@ -307,6 +311,52 @@ void ConnectFourMatching::adminMsgInterpret(const Value &msg)
 	string id = msg["gamerId"].asString();
 	uint8_t key = msg["key"].asUInt();
 #endif
+}
+
+void ConnectFourMatching::teamCursorCalc()
+{
+	Value &gs = *pGs;
+
+	if (!gs["tCursorCalcReq"].asBool())
+		return;
+	gs["tCursorCalcReq"] = false;
+
+	uint8_t cursor = 0;
+	uint32_t votes[cCfBoardCols];
+	memset(votes, 0, sizeof(votes));
+
+	uint8_t teamCurrent = gs["match"]["teamCurrent"].asUInt();
+	uint8_t team = 0;
+
+	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+	{
+		const Value &g = *iter;
+
+		team = g["team"].asUInt();
+		if (team != teamCurrent)
+			continue;
+
+		cursor = g["cursorSet"].asUInt();
+		++votes[cursor];
+	}
+
+	uint32_t votesMax = 0;
+	uint8_t votesMaxCursor = 0;
+
+	for (uint8_t i = 0; i < cCfBoardCols; ++i)
+	{
+		if (votes[i] <= votesMax)
+			continue;
+
+		votesMax = votes[i];
+		votesMaxCursor = i;
+	}
+
+	if (votesMaxCursor != gs["match"]["teamCursor"].asUInt())
+	{
+		gs["match"]["teamCursor"] = votesMaxCursor;
+		gs["dirty"] = true;
+	}
 }
 
 void ConnectFourMatching::framesRoundCreate()

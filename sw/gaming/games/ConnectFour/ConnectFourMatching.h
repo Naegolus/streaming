@@ -89,6 +89,7 @@ private:
 	void msgInterpret(const Json::Value &msg);
 	void gamerMsgInterpret(const Json::Value &msg);
 	void adminMsgInterpret(const Json::Value &msg);
+	void teamCursorCalc();
 
 	void framesRoundCreate();
 	void frmSpecCreate();
