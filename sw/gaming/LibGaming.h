@@ -26,7 +26,7 @@
 #ifndef LIB_GAMING_H
 #define LIB_GAMING_H
 
-#include "TcpTransfering.h"
+#include "Transfering.h"
 
 const uint8_t keyBackspace = 0x7F;
 const uint8_t keyEnter = 0x0D;
@@ -37,7 +37,7 @@ const uint8_t keyEnd = 0x04;
 const uint8_t cNameSizeMin = 2;
 const uint8_t cNameSizeMax = 16;
 
-uint8_t keyGet(TcpTransfering *pConn, uint32_t lastGotMs);
+uint8_t keyGet(Transfering *pConn, uint32_t lastGotMs);
 bool keyIsAlphaNum(uint8_t key);
 bool keyIsNum(uint8_t key);
 bool keyIsCommon(uint8_t key);
