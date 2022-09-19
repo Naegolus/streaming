@@ -6,13 +6,16 @@ project(
 	default_options : ['cpp_std=c++11'],
 )
 
-srcsCommon = [
+srcsCore = [
 	'Processing.cpp',
 	'Log.cpp',
 	'TcpListening.cpp',
 	'TcpTransfering.cpp',
 	'SystemDebugging.cpp',
 	'SystemCommanding.cpp',
+]
+
+srcsCommon = [
 ]
 
 srcsSpecific = [
@@ -24,6 +27,7 @@ srcsSpecific = [
 	'GamerInteracting.cpp',
 	'GameSelecting.cpp',
 	'ListIdx.cpp',
+	'TelnetAuthorizing.cpp',
 	'games/TicTacToe/TicTacToeGaming.cpp',
 	'games/ConnectFour/ConnectFourGaming.cpp',
 	'games/ConnectFour/ConnectFourLobbying.cpp',
@@ -31,8 +35,12 @@ srcsSpecific = [
 ]
 
 srcs = [srcsSpecific]
-foreach file : srcsCommon
+foreach file : srcsCore
 	srcs += join_paths('../common/core', file)
+endforeach
+
+foreach file : srcsCommon
+	srcs += join_paths('../common', file)
 endforeach
 
 cxx = meson.get_compiler('cpp')
@@ -43,6 +51,7 @@ deps += dependency('jsoncpp')
 
 incs = []
 incs += '../common/core'
+incs += '../common'
 incs += 'games/TicTacToe'
 incs += 'games/ConnectFour'
 
