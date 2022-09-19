@@ -324,6 +324,56 @@ void ConnectFourMatching::frmTeamOthersCreate()
 
 void ConnectFourMatching::msgBoard(string &str)
 {
+	Value &gs = *pGs;
+	uint8_t cell = 0;
+
+	str = "\033[2J\033[H";
+	str += "\r\n";
+	str += "Welcome to " + gs["name"].asString() + " Gaming()!";
+	str += "\r\n";
+	str += "Gamers " + to_string(gs["gamers"].size());
+	str += "\r\n";
+	str += "\r\n";
+	str += "\r\n";
+	str += "\r\n";
+	str += "\r\n";
+	str += "  /-----------------------------------------\\";
+	str += "\r\n";
+
+	for (size_t r = 0; r < cCfBoardRows; ++r)
+	{
+		str += "  |";
+
+		for (size_t c = 0; c < cCfBoardCols; ++c)
+		{
+			str += "  ";
+
+			cell = mpBoard[c][cCfBoardRows - 1 - r];
+
+			if (cell == 1)
+				str += "x";
+			else
+			if (cell == 2)
+				str += "o";
+			else
+				str += " ";
+
+			str += "  |";
+		}
+
+		str += "\r\n";
+
+		if (r < cCfBoardRows - 1)
+			str += "  |-----+-----+-----+-----+-----+-----+-----|\r\n";
+		else
+			str += "  \\-----------------------------------------/\r\n";
+	}
+
+	str += "\r\n";
+	str += "Current team: You/They               [?] Help";
+	str += "\r\n";
+	str += "Round time left: " + to_string(mCntSec) + "s";
+	str += "\r\n";
 }
 
 bool ConnectFourMatching::matchFinished()
