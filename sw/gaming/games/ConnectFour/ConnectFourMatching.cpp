@@ -105,6 +105,9 @@ Success ConnectFourMatching::process()
 		break;
 	case CfMatchRoundDoneWait:
 
+		msgProcess();
+		framesRoundCreate();
+
 		if (diff < 1000)
 			break;
 		mStart = millis();
@@ -142,6 +145,8 @@ void ConnectFourMatching::matchInit()
 
 	gs["match"]["teamCurrent"] = 2;
 	gs["match"]["dirty"] = true;
+
+	memset(mpBoard, 0, sizeof(mpBoard));
 }
 
 void ConnectFourMatching::gamersInit()
@@ -195,9 +200,129 @@ void ConnectFourMatching::msgProcess()
 
 void ConnectFourMatching::msgInterpret(const Value &msg)
 {
+	FastWriter fastWriter;
+	string str = fastWriter.write(msg);
+	procInfLog("%s", str.c_str());
+
+	Value &gs = *pGs;
+	string type = msg["type"].asString();
+	string id = msg["gamerId"].asString();
+
+	if (type == "connect")
+	{
+		Value tmp;
+
+		tmp["name"] = msg["gamerName"];
+		tmp["team"] = 0;
+		tmp["dirty"] = false;
+
+		gs["gamers"][id] = tmp;
+		gs["dirty"] = true;
+
+		return;
+	}
+
+	if (type == "disconnect")
+	{
+		gs["gamers"].removeMember(id);
+		gs["dirty"] = true;
+
+		return;
+	}
+
+	gamerMsgInterpret(msg);
+
+	if (id != gs["admin"].asString())
+		return;
+
+	adminMsgInterpret(msg);
+}
+
+void ConnectFourMatching::gamerMsgInterpret(const Value &msg)
+{
+	string type = msg["type"].asString();
+
+	if (type != "key")
+		return;
+
+#if 0
+	Value &gs = *pGs;
+	string id = msg["gamerId"].asString();
+	uint8_t key = msg["key"].asUInt();
+#endif
+}
+
+void ConnectFourMatching::adminMsgInterpret(const Value &msg)
+{
+	string type = msg["type"].asString();
+
+	if (type != "key")
+		return;
+
+#if 0
+	//Value &gs = *pGs;
+	string id = msg["gamerId"].asString();
+	uint8_t key = msg["key"].asUInt();
+#endif
 }
 
 void ConnectFourMatching::framesRoundCreate()
+{
+	Value &gs = *pGs;
+
+	frmSpecCreate();
+	frmTeamCurrentCreate();
+	frmTeamOthersCreate();
+
+	gs["dirty"] = false;
+}
+
+void ConnectFourMatching::frmSpecCreate()
+{
+	Value &gs = *pGs;
+
+	if (!gs["dirty"].asBool())
+		return;
+
+	Value msg;
+	string frame;
+
+	msgBoard(frame);
+
+	msg["type"] = "frame";
+	msg["data"] = frame;
+
+	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+	{
+		const Value &g = *iter;
+
+		if (g["team"])
+			continue;
+
+		UInt64 id = stol(iter.key().asString());
+		msg["gamers"].append(id);
+	}
+
+	(*pOut).commit(msg);
+}
+
+void ConnectFourMatching::frmTeamCurrentCreate()
+{
+	Value &gs = *pGs;
+
+	if (!gs["dirty"].asBool())
+		return;
+}
+
+void ConnectFourMatching::frmTeamOthersCreate()
+{
+	Value &gs = *pGs;
+
+	if (!gs["dirty"].asBool())
+		return;
+}
+
+void ConnectFourMatching::msgBoard(string &msg)
 {
 }
 

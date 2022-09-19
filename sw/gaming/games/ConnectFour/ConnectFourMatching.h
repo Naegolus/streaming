@@ -84,14 +84,23 @@ private:
 
 	void msgProcess();
 	void msgInterpret(const Json::Value &msg);
+	void gamerMsgInterpret(const Json::Value &msg);
+	void adminMsgInterpret(const Json::Value &msg);
 
 	void framesRoundCreate();
+	void frmSpecCreate();
+	void frmTeamCurrentCreate();
+	void frmTeamOthersCreate();
+
+	void msgBoard(std::string &msg);
+
 	bool matchFinished();
 
 	/* member variables */
 	enum CfMatchState mState;
 	uint32_t mStart;
 	uint8_t mCntSec;
+	uint8_t mpBoard[7][6];
 
 	/* static functions */
 
