@@ -38,7 +38,8 @@ typedef list<Gaming *>::iterator GameIter;
 
 GameServing::GameServing()
 	: Processing("GameServing")
-	, mpLst(NULL)
+	, mpTelnet(NULL)
+	, mpSsh(NULL)
 {}
 
 /* member functions */
@@ -60,10 +61,17 @@ Success GameServing::initialize()
 #endif
 	// dGameRegister(Battleship);
 
-	mpLst = TcpListening::create();
-	mpLst->portSet(4000);
-	mpLst->procTreeDisplaySet(false);
-	start(mpLst);
+	mpTelnet = TcpListening::create();
+	mpTelnet->portSet(4000);
+	mpTelnet->procTreeDisplaySet(false);
+	start(mpTelnet);
+
+#if 0
+	mpSsh = TcpListening::create();
+	mpSsh->portSet(4001);
+	mpSsh->procTreeDisplaySet(false);
+	start(mpSsh);
+#endif
 
 	return Positive;
 }
@@ -211,7 +219,8 @@ void GameServing::frameDispatch(Value &msg)
 void GameServing::gamerListUpdate()
 {
 	gamerRemove();
-	gamerAdd();
+	gamerAdd(mpTelnet);
+	gamerAdd(mpSsh);
 }
 
 void GameServing::gamerRemove()
@@ -240,24 +249,28 @@ void GameServing::gamerRemove()
 	}
 }
 
-void GameServing::gamerAdd()
+void GameServing::gamerAdd(TcpListening *pLst)
 {
+	if (!pLst)
+		return;
+
 	PipeEntry<int> peerFdEntry;
 	int peerFd;
 	GamerInteracting *pGamer = NULL;
+	bool sec = pLst == mpSsh;
 
 	while (1)
 	{
-		if (!mpLst->ppPeerFd.get(peerFdEntry))
+		if (!pLst->ppPeerFd.get(peerFdEntry))
 			break;
 
 		peerFd = peerFdEntry.particle;
 
-		pGamer = GamerInteracting::create(peerFd);
+		pGamer = GamerInteracting::create(peerFd, sec);
 		pGamer->procTreeDisplaySet(false);
 		start(pGamer);
 
-		procDbgLog(LOG_LVL, "adding gamer. process: %p", pGamer);
+		procDbgLog(LOG_LVL, "adding %s. process: %p", sec ? "supporter" : "visitor" , pGamer);
 
 		{
 			lock_guard<mutex> lock(GamerInteracting::mtxGamerList);

@@ -68,10 +68,11 @@ private:
 
 	void gamerListUpdate();
 	void gamerRemove();
-	void gamerAdd();
+	void gamerAdd(TcpListening *pLst);
 
 	/* member variables */
-	TcpListening *mpLst;
+	TcpListening *mpTelnet;
+	TcpListening *mpSsh;
 
 	/* static functions */
 
