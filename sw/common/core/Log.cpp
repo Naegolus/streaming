@@ -51,9 +51,9 @@ static mutex mtxPrint;
 
 static system_clock::time_point tOld;
 
-const string red("\033[0;31m");
-const string yellow("\033[0;33m");
-const string reset("\033[0m");
+const string red("\e[0;31m");
+const string yellow("\e[0;33m");
+const string reset("\e[0m");
 
 Pipe<Value> ppGlobLogEntries;
 

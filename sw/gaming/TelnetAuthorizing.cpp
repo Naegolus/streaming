@@ -158,7 +158,7 @@ Success TelnetAuthorizing::process()
 
 void TelnetAuthorizing::msgWelcome(string &msg)
 {
-	msg = "\033[2J\033[H";
+	msg = "\e[2J\e[H";
 	msg += "\r\n";
 	msg += "Welcome!";
 	msg += "\r\n";
@@ -171,7 +171,7 @@ void TelnetAuthorizing::msgWelcome(string &msg)
 
 void TelnetAuthorizing::msgName(string &msg)
 {
-	msg = "\033[2J\033[H";
+	msg = "\e[2J\e[H";
 	msg += "\r\n";
 	msg += "Set your name warrior!";
 	msg += "\r\n";

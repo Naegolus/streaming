@@ -234,7 +234,7 @@ void SystemDebugging::processTreeSend()
 	//procDbgLog(LOG_LVL, "process tree changed");
 	//procDbgLog(LOG_LVL, "\n%s", procTree.c_str());
 
-	string msg("\033[2J\033[H");
+	string msg("\e[2J\e[H");
 
 	msg += procTree;
 
@@ -317,7 +317,7 @@ void SystemDebugging::environmentSend()
 	if (environment == mEnvironment)
 		return;
 
-	string msg("\033[2J\033[H");
+	string msg("\e[2J\e[H");
 
 	msg += environment;
 

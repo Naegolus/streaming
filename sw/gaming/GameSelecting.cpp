@@ -261,7 +261,7 @@ void GameSelecting::msgGamesList(string &msg)
 	size_t i = 0;
 	string str;
 
-	msg = "\033[2J\033[H";
+	msg = "\e[2J\e[H";
 	msg += "\r\n";
 
 	msg += "Games " + to_string(mIdxGames.size()) + ", Gamers " + to_string(mNumGamers) + "\r\n";
@@ -320,7 +320,7 @@ void GameSelecting::msgTypesList(string &msg)
 	size_t i = 0;
 	string str;
 
-	msg = "\033[2J\033[H";
+	msg = "\e[2J\e[H";
 	msg += "\r\n";
 
 	msg += "Available Games\r\n";
@@ -364,7 +364,7 @@ void GameSelecting::msgTypesList(string &msg)
 
 void GameSelecting::msgName(std::string &msg)
 {
-	msg = "\033[2J\033[H";
+	msg = "\e[2J\e[H";
 	msg += "\r\n";
 	msg += "Set game name!";
 	msg += "\r\n";

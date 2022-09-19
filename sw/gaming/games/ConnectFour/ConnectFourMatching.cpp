@@ -184,7 +184,7 @@ void ConnectFourMatching::frameBeginCreate()
 
 void ConnectFourMatching::msgBegin(string &str)
 {
-	str = "\033[2J\033[H";
+	str = "\e[2J\e[H";
 	str += "\r\n";
 	str += "The game starts in " + to_string(mCntSec) + "s!";
 	str += "\r\n";
@@ -327,7 +327,7 @@ void ConnectFourMatching::msgBoard(string &str)
 	Value &gs = *pGs;
 	uint8_t cell = 0;
 
-	str = "\033[2J\033[H";
+	str = "\e[2J\e[H";
 	str += "\r\n";
 	str += "Welcome to " + gs["name"].asString() + " Gaming()!";
 	str += "\r\n";

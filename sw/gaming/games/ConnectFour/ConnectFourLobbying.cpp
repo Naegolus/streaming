@@ -207,7 +207,7 @@ void ConnectFourLobbying::msgWelcome(string &str)
 {
 	Value &gs = *pGs;
 
-	str = "\033[2J\033[H";
+	str = "\e[2J\e[H";
 	str += "\r\n";
 	str += "Welcome to the lobby of " + gs["name"].asString() + "!";
 	str += "\r\n";
