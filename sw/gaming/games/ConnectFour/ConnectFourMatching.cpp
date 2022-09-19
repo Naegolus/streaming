@@ -172,6 +172,9 @@ void ConnectFourMatching::gamersInit()
 
 		g["cursor"] = 0;
 		g["cursorSet"] = 0;
+
+		if (g["team"].asUInt() > 2)
+			g["team"] = 2;
 	}
 }
 
