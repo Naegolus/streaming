@@ -25,6 +25,12 @@
 
 #include "GamerInteracting.h"
 #include "LibGaming.h"
+#include "TcpTransfering.h"
+#if 0
+#include "SshTransfering.h"
+#include "SshAuthorizing.h"
+#endif
+#include "TelnetAuthorizing.h"
 
 #if 0
 #define dGenGiStateString(s) #s,
@@ -39,13 +45,16 @@ using namespace Json;
 mutex GamerInteracting::mtxGamerList;
 list<GamerInteracting *> GamerInteracting::gamerList;
 
-GamerInteracting::GamerInteracting(int fd)
+GamerInteracting::GamerInteracting(int fd, bool secure)
 	: Processing("GamerInteracting")
 	, mGamerName("")
+	, mSupporter(false)
 	, mpGame(NULL)
 	, mState(GiStart)
 	, mSocketFd(fd)
+	, mConnSecure(secure)
 	, mpConn(NULL)
+	, mpAuth(NULL)
 	, mKeyLastGotMs(0)
 	, mpSelect(NULL)
 {}
@@ -53,20 +62,15 @@ GamerInteracting::GamerInteracting(int fd)
 /* member functions */
 Success GamerInteracting::initialize()
 {
-	mpConn = TcpTransfering::create(mSocketFd);
-	mpConn->procTreeDisplaySet(false);
-	start(mpConn);
-
 	return Positive;
 }
 
 Success GamerInteracting::process()
 {
-	if (mpConn->success() != Pending)
+	if (mpConn and mpConn->success() != Pending)
 		return Positive;
 
 	string msg = "";
-	uint8_t key;
 	Value msgGame;
 	GamerInteracting *pGamer = this;
 
@@ -74,81 +78,54 @@ Success GamerInteracting::process()
 	{
 	case GiStart:
 
-		mState = GiTerminalInit;
+		mState = GiConnStart;
 
 		break;
-	case GiTerminalInit:
+	case GiConnStart:
 
-		// IAC WILL ECHO
-		msg += "\xFF\xFB\x01";
+		mpConn = TcpTransfering::create(mSocketFd);
+		mpConn->procTreeDisplaySet(false);
+		start(mpConn);
 
-		// IAC WILL SUPPRESS_GO_AHEAD
-		msg += "\xFF\xFB\x03";
-
-		// IAC WONT LINEMODE
-		msg += "\xFF\xFC\x22";
-
-		// Hide cursor
-		msg += "\e[?25l";
-
-		// Set terminal title
-		msg += "\e]2;twitch.tv/Naegolus\a";
-
-		mState = GiWelcomeSend;
+		mState = GiAuthStart;
 
 		break;
-	case GiWelcomeSend:
+	case GiAuthStart:
 
-		msgWelcome(msg);
-		mState = GiContinueWait;
+#if 0
+		if (mConnSecure)
+			mpAuth = SshAuthorizing::create(mpConn);
+		else
+#endif
+			mpAuth = TelnetAuthorizing::create(mpConn);
+
+		mpAuth->procTreeDisplaySet(false);
+		start(mpAuth);
+
+		mState = GiAuthDoneWait;
 
 		break;
-	case GiContinueWait:
+	case GiAuthDoneWait:
 
-		key = keyGet(mpConn, mKeyLastGotMs);
-
-		if (!key)
+		if (mpAuth->success() == Pending)
 			break;
 
-		if (key == keyEsc)
+		if (mpAuth->mAborted)
 			return Positive;
 
-		if (key != keyEnter)
-			break;
+		if (mpAuth->success() != Positive)
+			return procErrLog(-1, "Could not authorize gamer");
 
-		msgName(msg);
-		mState = GiNameSet;
+		mGamerName = mpAuth->mGamerName;
+		mSupporter = mpAuth->mSupporter;
 
-		break;
-	case GiNameSet:
+		repel(mpAuth);
+		mpAuth = NULL;
 
-		key = keyGet(mpConn, mKeyLastGotMs);
-
-		if (!key)
-			break;
-
-		if (key == keyEsc)
-			return Positive;
-
-		if (keyIsCommon(key) and mGamerName.size() < cNameSizeMax - 1)
-		{
-			mGamerName.push_back(key);
-			msgName(msg);
-			break;
-		}
-
-		if (key == keyBackspace and mGamerName.size())
-		{
-			mGamerName.pop_back();
-			msgName(msg);
-			break;
-		}
-
-		if (key != keyEnter)
-			break;
-
-		if (mGamerName.size() < cNameSizeMin or mGamerName.size() > cNameSizeMax)
-			break;
+#if 0
+		if (mConnSecure)
+			mpConn = SshTransfering::create(mpConn);
+#endif
 
 		procInfLog("Continuing to server selection");
 		mState = GiSelectionStart;
@@ -157,7 +134,7 @@ Success GamerInteracting::process()
 	case GiSelectionStart:
 
 		mpSelect = GameSelecting::create(mpConn);
-		//mpSelect->procTreeDisplaySet(false);
+		mpSelect->procTreeDisplaySet(false);
 		start(mpSelect);
 
 		mState = GiSelectionDoneWait;
@@ -254,42 +231,10 @@ void GamerInteracting::gameMsgProcess(std::string &msg)
 	}
 }
 
-void GamerInteracting::msgWelcome(string &msg)
-{
-	msg = "\033[2J\033[H";
-	msg += "\r\n";
-	msg += "Welcome!";
-	msg += "\r\n";
-	msg += "\r\n";
-	msg += "[enter]\tContinue";
-	msg += "\r\n";
-	msg += "[esc]\tQuit";
-	msg += "\r\n";
-}
-
-void GamerInteracting::msgName(string &msg)
-{
-	msg = "\033[2J\033[H";
-	msg += "\r\n";
-	msg += "Set your name warrior!";
-	msg += "\r\n";
-	msg += "\r\n";
-	msg += "Name: ";
-	msg += mGamerName;
-	msg += "\r\n";
-	msg += "\r\n";
-	msg += "[enter]\tContinue";
-	msg += "\r\n";
-	msg += "[esc]\tQuit";
-	msg += "\r\n";
-	msg += "\r\n";
-	msg += "Requirements: 1 < len < 16";
-	msg += "\r\n";
-}
-
 void GamerInteracting::processInfo(char *pBuf, char *pBufEnd)
 {
 	dInfo("Name\t\t\t%s\n", mGamerName.c_str());
+	dInfo("Conn\t\t\t%s\n", mConnSecure ? "Secure" : "Unsecure");
 #if 0
 	dInfo("State\t\t\t%s\n", GiStateString[mState]);
 #endif
