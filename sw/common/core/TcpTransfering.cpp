@@ -58,7 +58,7 @@ using namespace std;
  * - https://stackoverflow.com/questions/28027937/cross-platform-sockets
  */
 TcpTransfering::TcpTransfering(int fd)
-	: Processing("TcpTransfering")
+	: Transfering("TcpTransfering")
 	, mSocketFd(fd)
 	, mErrno(0)
 	, mUsable(false)
@@ -68,7 +68,7 @@ TcpTransfering::TcpTransfering(int fd)
 }
 
 TcpTransfering::TcpTransfering(const string &addr)
-	: Processing("TcpTransfering")
+	: Transfering("TcpTransfering")
 	, mSocketFd(-1)
 	, mErrno(0)
 	, mUsable(false)
