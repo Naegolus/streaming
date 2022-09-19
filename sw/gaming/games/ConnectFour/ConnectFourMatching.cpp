@@ -376,6 +376,7 @@ void ConnectFourMatching::frmTeamCurrentCreate()
 
 		msgBoard(frame, &g);
 
+		msg = objectValue;
 		msg["type"] = "frame";
 		msg["data"] = frame;
 
