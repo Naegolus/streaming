@@ -272,8 +272,8 @@ void ConnectFourMatching::gamerMsgInterpret(const Value &msg)
 
 	Value &gs = *pGs;
 	string id = msg["gamerId"].asString();
-	uint8_t key = msg["key"].asUInt();
 	Value &g = gs["gamers"][id];
+	uint8_t key = msg["key"].asUInt();
 	uint8_t cursor = g["cursor"].asUInt();
 
 	if (key == 'h' and cursor > 0)
