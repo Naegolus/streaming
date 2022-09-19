@@ -270,7 +270,6 @@ void ConnectFourMatching::framesRoundCreate()
 
 	frmSpecCreate();
 	frmTeamCurrentCreate();
-	frmTeamOthersCreate();
 
 	gs["dirty"] = false;
 }
@@ -284,6 +283,7 @@ void ConnectFourMatching::frmSpecCreate()
 
 	Value msg;
 	string frame;
+	uint8_t teamCurrent = gs["match"]["teamCurrent"].asUInt();
 	uint8_t team = 0;
 
 	msgBoard(frame);
@@ -296,8 +296,7 @@ void ConnectFourMatching::frmSpecCreate()
 		const Value &g = *iter;
 
 		team = g["team"].asUInt();
-
-		if (team)
+		if (team == teamCurrent)
 			continue;
 
 		UInt64 id = stol(iter.key().asString());
@@ -330,7 +329,7 @@ void ConnectFourMatching::frmTeamCurrentCreate()
 		if (team != teamCurrent)
 			continue;
 
-		msgBoard(frame, 0, &g);
+		msgBoard(frame, &g);
 
 		msg["type"] = "frame";
 		msg["data"] = frame;
@@ -342,44 +341,12 @@ void ConnectFourMatching::frmTeamCurrentCreate()
 	}
 }
 
-void ConnectFourMatching::frmTeamOthersCreate()
-{
-	Value &gs = *pGs;
-
-	if (!gs["dirty"].asBool())
-		return;
-
-	Value msg;
-	string frame;
-	uint8_t teamCurrent = gs["match"]["teamCurrent"].asUInt();
-	uint8_t team = 0;
-
-	msgBoard(frame, teamCurrent + 1);
-
-	msg["type"] = "frame";
-	msg["data"] = frame;
-
-	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
-	{
-		const Value &g = *iter;
-
-		team = g["team"].asUInt();
-
-		if (!team or team == teamCurrent)
-			continue;
-
-		UInt64 id = stol(iter.key().asString());
-		msg["gamers"].append(id);
-	}
-
-	(*pOut).commit(msg);
-}
-
-void ConnectFourMatching::msgBoard(string &str, uint8_t team, const Value *pGamer)
+void ConnectFourMatching::msgBoard(string &str, const Value *pGamer)
 {
 	Value &gs = *pGs;
 	uint8_t cell = 0;
 	uint8_t teamCurrent = gs["match"]["teamCurrent"].asUInt();
+	uint8_t team = 0;
 
 	if (pGamer)
 		team = (*pGamer)["team"].asUInt();
@@ -446,18 +413,17 @@ void ConnectFourMatching::msgBoard(string &str, uint8_t team, const Value *pGame
 	str += "\r\n";
 	str += "Current team: ";
 
-	if (team == 0)
-	{
-		str += to_string(teamCurrent);
-		str += "   ";
-	} else
 	if (team == teamCurrent)
 	{
-		str += "\e[1mYou\e[0m ";
-	} else
-		str += "They";
+		str += "\e[1mYou\e[0m";
+	}
+	else
+	{
+		str += to_string(teamCurrent);
+		str += "  ";
+	}
 
-	str += "                   [?] Help";
+	str += "                    [?] Help";
 
 	str += "\r\n";
 	str += "Round time left: " + to_string(mCntSec) + "s";
