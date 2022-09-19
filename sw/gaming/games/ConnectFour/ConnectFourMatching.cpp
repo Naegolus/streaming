@@ -113,12 +113,10 @@ Success ConnectFourMatching::process()
 		mStart = millis();
 
 		--mCntSec;
+		gs["dirty"] = true;
 
 		if (mCntSec)
-		{
-			gs["dirty"] = true;
 			break;
-		}
 
 		if (matchFinished())
 		{
@@ -286,6 +284,7 @@ void ConnectFourMatching::frmSpecCreate()
 
 	Value msg;
 	string frame;
+	uint8_t team = 0;
 
 	msgBoard(frame);
 
@@ -296,7 +295,9 @@ void ConnectFourMatching::frmSpecCreate()
 	{
 		const Value &g = *iter;
 
-		if (g["team"].asUInt())
+		team = g["team"].asUInt();
+
+		if (team)
 			continue;
 
 		UInt64 id = stol(iter.key().asString());
@@ -310,8 +311,35 @@ void ConnectFourMatching::frmTeamCurrentCreate()
 {
 	Value &gs = *pGs;
 
-	if (!gs["dirty"].asBool())
-		return;
+	Value msg;
+	string frame;
+	uint8_t teamCurrent = gs["match"]["teamCurrent"].asUInt();
+	uint8_t team = 0;
+	bool needFrame = false;
+
+	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+	{
+		const Value &g = *iter;
+
+		needFrame = gs["dirty"].asBool() or g["dirty"].asBool();
+		if (!needFrame)
+			return;
+
+		team = g["team"].asUInt();
+
+		if (team != teamCurrent)
+			continue;
+
+		msgBoard(frame, 0, &g);
+
+		msg["type"] = "frame";
+		msg["data"] = frame;
+
+		UInt64 id = stol(iter.key().asString());
+		msg["gamers"].append(id);
+
+		(*pOut).commit(msg);
+	}
 }
 
 void ConnectFourMatching::frmTeamOthersCreate()
@@ -320,12 +348,41 @@ void ConnectFourMatching::frmTeamOthersCreate()
 
 	if (!gs["dirty"].asBool())
 		return;
+
+	Value msg;
+	string frame;
+	uint8_t teamCurrent = gs["match"]["teamCurrent"].asUInt();
+	uint8_t team = 0;
+
+	msgBoard(frame, teamCurrent + 1);
+
+	msg["type"] = "frame";
+	msg["data"] = frame;
+
+	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+	{
+		const Value &g = *iter;
+
+		team = g["team"].asUInt();
+
+		if (!team or team == teamCurrent)
+			continue;
+
+		UInt64 id = stol(iter.key().asString());
+		msg["gamers"].append(id);
+	}
+
+	(*pOut).commit(msg);
 }
 
-void ConnectFourMatching::msgBoard(string &str)
+void ConnectFourMatching::msgBoard(string &str, uint8_t team, const Value *pGamer)
 {
 	Value &gs = *pGs;
 	uint8_t cell = 0;
+	uint8_t teamCurrent = gs["match"]["teamCurrent"].asUInt();
+
+	if (pGamer)
+		team = (*pGamer)["team"].asUInt();
 
 	str = "\e[2J\e[H";
 	str += "\r\n";
@@ -334,8 +391,20 @@ void ConnectFourMatching::msgBoard(string &str)
 	str += "Gamers " + to_string(gs["gamers"].size());
 	str += "\r\n";
 	str += "\r\n";
+	if (pGamer)
+	{
+		str += "                                         V";
+	}
 	str += "\r\n";
+	if (pGamer)
+	{
+		str += "                                         Y";
+	}
 	str += "\r\n";
+	//if (!team or team == teamCurrent)
+	//{
+		str += "                                         T";
+	//}
 	str += "\r\n";
 	str += "  /-----------------------------------------\\";
 	str += "\r\n";
@@ -370,7 +439,21 @@ void ConnectFourMatching::msgBoard(string &str)
 	}
 
 	str += "\r\n";
-	str += "Current team: You/They               [?] Help";
+	str += "Current team: ";
+
+	if (team == 0)
+	{
+		str += to_string(teamCurrent);
+		str += "   ";
+	} else
+	if (team == teamCurrent)
+	{
+		str += "\e[1mYou\e[0m ";
+	} else
+		str += "They";
+
+	str += "                   [?] Help";
+
 	str += "\r\n";
 	str += "Round time left: " + to_string(mCntSec) + "s";
 	str += "\r\n";

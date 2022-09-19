@@ -95,7 +95,7 @@ private:
 	void frmTeamCurrentCreate();
 	void frmTeamOthersCreate();
 
-	void msgBoard(std::string &str);
+	void msgBoard(std::string &str, uint8_t team = 0, const Json::Value *pGamer = NULL);
 
 	bool matchFinished();
 
