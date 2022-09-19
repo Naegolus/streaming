@@ -116,7 +116,7 @@ Success ConnectFourMatching::process()
 
 		if (mCntSec)
 		{
-			gs["match"]["dirty"] = true;
+			gs["dirty"] = true;
 			break;
 		}
 
@@ -144,7 +144,7 @@ void ConnectFourMatching::matchInit()
 	Value &gs = *pGs;
 
 	gs["match"]["teamCurrent"] = 2;
-	gs["match"]["dirty"] = true;
+	gs["dirty"] = true;
 
 	memset(mpBoard, 0, sizeof(mpBoard));
 }
