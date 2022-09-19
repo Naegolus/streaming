@@ -92,7 +92,7 @@ private:
 	void frmTeamCurrentCreate();
 	void frmTeamOthersCreate();
 
-	void msgBoard(std::string &msg);
+	void msgBoard(std::string &str);
 
 	bool matchFinished();
 

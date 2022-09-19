@@ -322,7 +322,7 @@ void ConnectFourMatching::frmTeamOthersCreate()
 		return;
 }
 
-void ConnectFourMatching::msgBoard(string &msg)
+void ConnectFourMatching::msgBoard(string &str)
 {
 }
 
