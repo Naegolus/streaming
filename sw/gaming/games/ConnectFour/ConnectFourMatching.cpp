@@ -371,7 +371,7 @@ void ConnectFourMatching::frmTeamCurrentCreate()
 
 		needFrame = gs["dirty"].asBool() or g["dirty"].asBool();
 		if (!needFrame)
-			return;
+			continue;
 		g["dirty"] = false;
 
 		msgBoard(frame, &g);
