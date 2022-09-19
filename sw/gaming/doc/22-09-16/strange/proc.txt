@@ -1,0 +1,21 @@
+
+- GameSupervising()
+  - GameServing()
+    Gamers			2
+    - GamerInteracting()
+      Name			
+      Conn			Secure
+      - TcpTransfering()
+        10.0.0.200:4001 <--> 35.91.235.136:59776
+        Bytes received		127
+      - SshAuthorizing()
+        State			SaServerInfoSend
+    - GamerInteracting()
+      Name			
+      Conn			Secure
+      - TcpTransfering()
+        127.0.0.1:4001 <--> 127.0.0.1:48840
+        Bytes received		35
+      - SshAuthorizing()
+        State			SaServerInfoSend
+
