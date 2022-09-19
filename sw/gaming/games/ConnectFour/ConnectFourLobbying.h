@@ -80,7 +80,7 @@ private:
 	void adminMsgInterpret(const Json::Value &msg);
 
 	void framesCreate();
-	void msgWelcome(std::string &msg);
+	void msgWelcome(std::string &str);
 
 	/* member variables */
 	enum CflState mState;
