@@ -42,6 +42,9 @@
 #define dGenCfMatchStateEnum(s) s,
 dProcessStateEnum(CfMatchState);
 
+const uint8_t cCfBoardRows = 6;
+const uint8_t cCfBoardCols = 7;
+
 class ConnectFourMatching : public Processing
 {
 
@@ -100,7 +103,7 @@ private:
 	enum CfMatchState mState;
 	uint32_t mStart;
 	uint8_t mCntSec;
-	uint8_t mpBoard[7][6];
+	uint8_t mpBoard[cCfBoardCols][cCfBoardRows];
 
 	/* static functions */
 
