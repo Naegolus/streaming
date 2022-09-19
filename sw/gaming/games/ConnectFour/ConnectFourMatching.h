@@ -94,6 +94,7 @@ private:
 	void frmSpecCreate();
 	void frmTeamCurrentCreate();
 
+	void cursorPrint(std::string &str, uint8_t cursor, uint8_t sign);
 	void msgBoard(std::string &str, const Json::Value *pGamer = NULL);
 
 	bool matchFinished();

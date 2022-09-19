@@ -66,7 +66,7 @@ Success ConnectFourMatching::process()
 		break;
 	case CfMatchBeginStart:
 
-		mCntSec = 5;
+		mCntSec = 1;
 		frameBeginCreate();
 
 		mStart = millis();
@@ -92,12 +92,26 @@ Success ConnectFourMatching::process()
 		break;
 	case CfMatchRoundStart:
 
-		mCntSec = 5;
+		mCntSec = 15;
 
 		if (gs["match"]["teamCurrent"] == 1)
 			gs["match"]["teamCurrent"] = 2;
 		else
 			gs["match"]["teamCurrent"] = 1;
+
+		gs["match"]["teamCursor"] = 0;
+
+		for (Value::iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+		{
+			Value &g = *iter;
+
+			uint8_t team = g["team"].asUInt();
+			if (!team)
+				continue;
+
+			g["cursor"] = 0;
+			g["cursorSet"] = 0;
+		}
 
 		mStart = millis();
 		mState = CfMatchRoundDoneWait;
@@ -142,6 +156,7 @@ void ConnectFourMatching::matchInit()
 	Value &gs = *pGs;
 
 	gs["match"]["teamCurrent"] = 2;
+	gs["match"]["teamCursor"] = 0;
 	gs["dirty"] = true;
 
 	memset(mpBoard, 0, sizeof(mpBoard));
@@ -156,6 +171,7 @@ void ConnectFourMatching::gamersInit()
 		Value &g = *iter;
 
 		g["cursor"] = 0;
+		g["cursorSet"] = 0;
 	}
 }
 
@@ -198,9 +214,11 @@ void ConnectFourMatching::msgProcess()
 
 void ConnectFourMatching::msgInterpret(const Value &msg)
 {
+#if 0
 	FastWriter fastWriter;
 	string str = fastWriter.write(msg);
 	procInfLog("%s", str.c_str());
+#endif
 
 	Value &gs = *pGs;
 	string type = msg["type"].asString();
@@ -212,7 +230,6 @@ void ConnectFourMatching::msgInterpret(const Value &msg)
 
 		tmp["name"] = msg["gamerName"];
 		tmp["team"] = 0;
-		tmp["dirty"] = false;
 
 		gs["gamers"][id] = tmp;
 		gs["dirty"] = true;
@@ -227,6 +244,13 @@ void ConnectFourMatching::msgInterpret(const Value &msg)
 
 		return;
 	}
+
+	Value &g = gs["gamers"][id];
+	uint8_t team = g["team"].asUInt();
+	uint8_t teamCurrent = gs["match"]["teamCurrent"].asUInt();
+
+	if (team != teamCurrent)
+		return;
 
 	gamerMsgInterpret(msg);
 
@@ -243,11 +267,29 @@ void ConnectFourMatching::gamerMsgInterpret(const Value &msg)
 	if (type != "key")
 		return;
 
-#if 0
 	Value &gs = *pGs;
 	string id = msg["gamerId"].asString();
 	uint8_t key = msg["key"].asUInt();
-#endif
+	Value &g = gs["gamers"][id];
+	uint8_t cursor = g["cursor"].asUInt();
+
+	if (key == 'h' and cursor > 0)
+	{
+		g["cursor"] = cursor - 1;
+		g["dirty"] = true;
+	}
+
+	if (key == 'l' and cursor < cCfBoardCols - 1)
+	{
+		g["cursor"] = cursor + 1;
+		g["dirty"] = true;
+	}
+
+	if (key == 'j')
+	{
+		g["cursorSet"] = cursor;
+		g["dirty"] = true;
+	}
 }
 
 void ConnectFourMatching::adminMsgInterpret(const Value &msg)
@@ -316,18 +358,18 @@ void ConnectFourMatching::frmTeamCurrentCreate()
 	uint8_t team = 0;
 	bool needFrame = false;
 
-	for (Value::const_iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+	for (Value::iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
 	{
-		const Value &g = *iter;
+		Value &g = *iter;
+
+		team = g["team"].asUInt();
+		if (team != teamCurrent)
+			continue;
 
 		needFrame = gs["dirty"].asBool() or g["dirty"].asBool();
 		if (!needFrame)
 			return;
-
-		team = g["team"].asUInt();
-
-		if (team != teamCurrent)
-			continue;
+		g["dirty"] = false;
 
 		msgBoard(frame, &g);
 
@@ -339,6 +381,14 @@ void ConnectFourMatching::frmTeamCurrentCreate()
 
 		(*pOut).commit(msg);
 	}
+}
+
+void ConnectFourMatching::cursorPrint(string &str, uint8_t cursor, uint8_t sign)
+{
+	str += "     ";
+	for (uint8_t i = 0; i < cursor; ++i)
+		str += "      ";
+	str.push_back(sign);
 }
 
 void ConnectFourMatching::msgBoard(string &str, const Value *pGamer)
@@ -359,24 +409,12 @@ void ConnectFourMatching::msgBoard(string &str, const Value *pGamer)
 	str += "\r\n";
 	str += "\r\n";
 	if (pGamer)
-	{
-		uint8_t cursor = (*pGamer)["cursor"].asUInt();
-
-		str += "     ";
-		for (uint8_t i = 0; i < cursor; ++i)
-			str += "      ";
-		str += "V";
-	}
+		cursorPrint(str, (*pGamer)["cursor"].asUInt(), 'V');
 	str += "\r\n";
 	if (pGamer)
-	{
-		str += "                                         Y";
-	}
+		cursorPrint(str, (*pGamer)["cursorSet"].asUInt(), 'Y');
 	str += "\r\n";
-	//if (!team or team == teamCurrent)
-	//{
-		str += "                                         T";
-	//}
+	cursorPrint(str, gs["match"]["teamCursor"].asUInt(), 'T');
 	str += "\r\n";
 	str += "  /-----------------------------------------\\";
 	str += "\r\n";

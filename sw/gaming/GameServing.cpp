@@ -104,9 +104,11 @@ void GameServing::gamerMsgProcess()
 
 void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 {
+#if 0
 	FastWriter fastWriter;
 	string str = fastWriter.write(msg);
 	procInfLog("%s", str.c_str());
+#endif
 
 	string type = msg["type"].asString();
 	Gaming *pGame = NULL;
@@ -179,9 +181,11 @@ void GameServing::gameMsgProcess()
 
 void GameServing::gameMsgInterpret(Gaming *pGame, Value &msg)
 {
+#if 0
 	FastWriter fastWriter;
 	string str = fastWriter.write(msg);
 	procInfLog("%s", str.c_str());
+#endif
 
 	string type = msg["type"].asString();
 

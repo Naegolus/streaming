@@ -61,7 +61,9 @@ uint8_t keyGet(Transfering *pConn, uint32_t lastGotMs)
 
 	key = buf[0];
 
+#if 0
 	infLog("key received: 0x%02X '%c'", key, key);
+#endif
 
 	return key;
 }

@@ -98,9 +98,11 @@ void ConnectFourLobbying::msgProcess()
 
 void ConnectFourLobbying::msgInterpret(const Value &msg)
 {
+#if 0
 	FastWriter fastWriter;
 	string str = fastWriter.write(msg);
 	procInfLog("%s", str.c_str());
+#endif
 
 	Value &gs = *pGs;
 	string type = msg["type"].asString();
