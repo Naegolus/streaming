@@ -296,7 +296,7 @@ void ConnectFourMatching::frmSpecCreate()
 	{
 		const Value &g = *iter;
 
-		if (g["team"])
+		if (g["team"].asUInt())
 			continue;
 
 		UInt64 id = stol(iter.key().asString());
