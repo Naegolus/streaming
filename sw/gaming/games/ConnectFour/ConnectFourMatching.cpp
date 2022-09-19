@@ -393,7 +393,12 @@ void ConnectFourMatching::msgBoard(string &str, uint8_t team, const Value *pGame
 	str += "\r\n";
 	if (pGamer)
 	{
-		str += "                                         V";
+		uint8_t cursor = (*pGamer)["cursor"].asUInt();
+
+		str += "     ";
+		for (uint8_t i = 0; i < cursor; ++i)
+			str += "      ";
+		str += "V";
 	}
 	str += "\r\n";
 	if (pGamer)
