@@ -63,7 +63,9 @@ Success ConnectFourLobbying::process()
 		break;
 	case CflStructureInit:
 
-		gs["gamers"] = objectValue;
+		if (!gs["gamers"])
+			gs["gamers"] = objectValue;
+
 		gs["teams"] = objectValue;
 		gs["dirty"] = true;
 
