@@ -15,7 +15,9 @@ srcsSpecific = [
 	'Greeting.cpp',
 ]
 
-srcs = [srcsSpecific]
+srcs = []
+srcs += [srcsSpecific]
+
 foreach file : srcsCommon
 	srcs += join_paths('../common/core', file)
 endforeach
@@ -25,11 +27,14 @@ cxx = meson.get_compiler('cpp')
 deps = []
 deps += dependency('threads')
 
+incs = []
+incs += '../common/core'
+
 myApp = executable(
 	'greeting',
 	srcs,
 	include_directories : include_directories([
-		'../common/core',
+		incs,
 	]),
 	dependencies : [
 		deps,

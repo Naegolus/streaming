@@ -34,7 +34,9 @@ srcsSpecific = [
 	'games/ConnectFour/ConnectFourMatching.cpp',
 ]
 
-srcs = [srcsSpecific]
+srcs = []
+srcs += [srcsSpecific]
+
 foreach file : srcsCore
 	srcs += join_paths('../common/core', file)
 endforeach
