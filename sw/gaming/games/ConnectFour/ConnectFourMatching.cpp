@@ -36,6 +36,9 @@ using namespace Json;
 
 #define LOG_LVL	0
 
+#define dColorTeam1		"92"
+#define dColorTeam2		"96"
+
 ConnectFourMatching::ConnectFourMatching()
 	: Processing("ConnectFourMatching")
 	, mState(CfMatchInit)
@@ -53,6 +56,7 @@ Success ConnectFourMatching::process()
 {
 	Value &gs = *pGs;
 	uint32_t diff = millis() - mStart;
+	bool res = false;
 
 	switch (mState)
 	{
@@ -99,19 +103,7 @@ Success ConnectFourMatching::process()
 		else
 			gs["match"]["teamCurrent"] = 1;
 
-		gs["match"]["teamCursor"] = 0;
-
-		for (Value::iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
-		{
-			Value &g = *iter;
-
-			uint8_t team = g["team"].asUInt();
-			if (!team)
-				continue;
-
-			g["cursor"] = 0;
-			g["cursorSet"] = 0;
-		}
+		cursorsReset();
 
 		mStart = millis();
 		mState = CfMatchRoundDoneWait;
@@ -132,13 +124,17 @@ Success ConnectFourMatching::process()
 		if (mCntSec)
 			break;
 
-		if (matchFinished())
+		// Round finished
+		roundResultAccept();
+
+		res = matchFinished();
+		if (!res)
 		{
-			mState = CfMatchStatsShow;
+			mState = CfMatchRoundStart;
 			break;
 		}
 
-		mState = CfMatchRoundStart;
+		mState = CfMatchStatsShow;
 
 		break;
 	case CfMatchStatsShow:
@@ -484,14 +480,22 @@ void ConnectFourMatching::msgBoard(string &str, const Value *pGamer)
 			cell = mpBoard[c][cCfBoardRows - 1 - r];
 
 			if (cell == 1)
-				str += "x";
+			{
+				str += "\e[1;";
+				str += dColorTeam1;
+				str += "mx";
+			}
 			else
 			if (cell == 2)
-				str += "o";
+			{
+				str += "\e[1;";
+				str += dColorTeam2;
+				str += "mo";
+			}
 			else
 				str += " ";
 
-			str += "  |";
+			str += "\e[0m  |";
 		}
 
 		str += "\r\n";
@@ -503,23 +507,62 @@ void ConnectFourMatching::msgBoard(string &str, const Value *pGamer)
 	}
 
 	str += "\r\n";
-	str += "Current team: ";
+	str += "Current team: " + to_string(teamCurrent);
 
 	if (team == teamCurrent)
 	{
-		str += "\e[1mYou\e[0m";
-	}
-	else
-	{
-		str += to_string(teamCurrent);
-		str += "  ";
-	}
+		str += ", \e[";
 
-	str += "                    [?] Help";
+		if (team == 1)
+			str += dColorTeam1;
+		else
+			str += dColorTeam2;
+
+		str += ";1mYou\e[0m";
+	} else
+		str += "     ";
+
+	str += "                 [?] Help";
 
 	str += "\r\n";
 	str += "Round time left: " + to_string(mCntSec) + "s";
 	str += "\r\n";
+}
+
+void ConnectFourMatching::cursorsReset()
+{
+	Value &gs = *pGs;
+
+	gs["match"]["teamCursor"] = 0;
+
+	for (Value::iterator iter = gs["gamers"].begin(); iter != gs["gamers"].end(); ++iter)
+	{
+		Value &g = *iter;
+
+		uint8_t team = g["team"].asUInt();
+		if (!team)
+			continue;
+
+		g["cursor"] = 0;
+		g["cursorSet"] = 0;
+	}
+}
+
+void ConnectFourMatching::roundResultAccept()
+{
+	Value &gs = *pGs;
+	uint8_t team = gs["match"]["teamCurrent"].asUInt();
+	uint8_t cursor = gs["match"]["teamCursor"].asUInt();
+	uint8_t *pCol = &mpBoard[cursor][0];
+
+	for (uint8_t i = 0; i < cCfBoardRows; ++i, ++pCol)
+	{
+		if (*pCol)
+			continue;
+
+		*pCol = team;
+		break;
+	}
 }
 
 bool ConnectFourMatching::matchFinished()

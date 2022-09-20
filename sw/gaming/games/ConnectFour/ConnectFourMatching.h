@@ -98,6 +98,8 @@ private:
 	void cursorPrint(std::string &str, uint8_t cursor, uint8_t sign);
 	void msgBoard(std::string &str, const Json::Value *pGamer = NULL);
 
+	void cursorsReset();
+	void roundResultAccept();
 	bool matchFinished();
 
 	/* member variables */
