@@ -64,6 +64,9 @@ Success GameSelecting::initialize()
 
 Success GameSelecting::process()
 {
+	if (mpConn and mpConn->success() != Pending)
+		return Positive;
+
 	string msg = "";
 	uint8_t key;
 

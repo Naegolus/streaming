@@ -1,0 +1,7 @@
+
+200922 22:47:53.000 +0.000  172   5  treeTick                 0x55957a231280 TelnetAuthorizing                  initializing()
+200922 22:47:53.000 +0.001  199   5  treeTick                 0x55957a231280 TelnetAuthorizing                  initializing(): done
+200922 22:47:53.000 +0.000  202   5  treeTick                 0x55957a231280 TelnetAuthorizing                  processing()
+200922 22:47:53.000 +0.003   58   2  keyGet                   data received, 7: 0xFF 0xFB 0x1F 0xFF 0xFB 0x20 0xFF
+200922 22:47:53.000 +0.001   58   2  keyGet                   data received, 7: 0xFB 0x18 0xFF 0xFB 0x27 0xFF 0xFD
+200922 22:47:53.000 +0.001   58   2  keyGet                   data received, 7: 0x01 0xFF 0xFB 0x03 0xFF 0xFD 0x03

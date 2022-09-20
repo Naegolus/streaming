@@ -1,0 +1,267 @@
+
+200922 22:40:45.000 +0.000  596   5  start                    0x560e7a1fe1c0 GamerInteracting                   adding GameSelecting to child list
+200922 22:40:45.000 +0.000  599   5  start                    0x560e7a1fe1c0 GamerInteracting                   Locking mChildListMtx
+200922 22:40:45.000 +0.000  601   5  start                    0x560e7a1fe1c0 GamerInteracting                   Locking mChildListMtx: done
+200922 22:40:45.000 +0.000  610   5  start                    0x560e7a1fe1c0 GamerInteracting                   adding GameSelecting to child list: done
+200922 22:40:45.000 +0.000  635   5  start                    0x560e7a1fe1c0 GamerInteracting                   using parent as driver for GameSelecting
+200922 22:40:45.000 +0.000  637   5  start                    0x560e7a1fe1c0 GamerInteracting                   starting GameSelecting: done
+200922 22:40:45.000 +0.001  239   5  treeTick                 0x560e7a1fd280 TelnetAuthorizing                  marking children as unused
+200922 22:40:45.000 +0.000  253   5  treeTick                 0x560e7a1fd280 TelnetAuthorizing                  marking children as unused: done
+200922 22:40:45.000 +0.000  172   5  treeTick                 0x560e7a1fdd20 GameSelecting                      initializing()
+200922 22:40:45.000 +0.001  260   5  treeTick                 0x560e7a1fd280 TelnetAuthorizing                  preparing finish
+200922 22:40:45.000 +0.000  268   5  treeTick                 0x560e7a1fd280 TelnetAuthorizing                  preparing finish: done -> finished
+200922 22:40:45.000 +0.000  121   5  treeTick                 0x560e7a1fe1c0 GamerInteracting                   removing TelnetAuthorizing from child list
+200922 22:40:45.000 +0.000  124   5  treeTick                 0x560e7a1fe1c0 GamerInteracting                   Locking mChildListMtx
+200922 22:40:45.000 +0.000  126   5  treeTick                 0x560e7a1fe1c0 GamerInteracting                   Locking mChildListMtx: done
+200922 22:40:45.000 +0.000  135   5  treeTick                 0x560e7a1fe1c0 GamerInteracting                   removing TelnetAuthorizing from child list: done
+200922 22:40:45.000 +0.000  456   5  destroy                  child TelnetAuthorizing destroy()
+200922 22:40:45.000 +0.000  486   5  destroy                  child TelnetAuthorizing delete()
+200922 22:40:45.000 +0.000  564   5  ~Processing              0x560e7a1fd280 TelnetAuthorizing                  ~Processing()
+200922 22:40:45.000 +0.000  566   5  ~Processing              0x560e7a1fd280 TelnetAuthorizing                  mpThread = 0x00000000
+200922 22:40:45.000 +0.000  488   5  destroy                  child TelnetAuthorizing delete(): done
+200922 22:40:45.000 +0.000  490   5  destroy                  child TelnetAuthorizing destroy(): done
+200922 22:40:45.000 +0.000  199   5  treeTick                 0x560e7a1fdd20 GameSelecting                      initializing(): done
+200922 22:40:45.000 +0.000  202   5  treeTick                 0x560e7a1fdd20 GameSelecting                      processing()
+200922 22:40:45.000 +0.001   81   3  process                  0x560e7a1fdd20 GameSelecting                      Getting server list
+200922 22:40:45.000 +0.000  112   3  process                  0x560e7a1fdd20 GameSelecting                      Got server list
+200922 22:40:59.000 +1.420  221   5  treeTick                 0x560e7a1fdd20 GameSelecting                      processing(): done. success = 1
+200922 22:40:59.000 +0.000  222   5  treeTick                 0x560e7a1fdd20 GameSelecting                      downShutting()
+200922 22:40:59.000 +0.000  659   5  repel                    0x560e7a1fe1c0 GamerInteracting                   repelling GameSelecting
+200922 22:40:59.000 +0.000  661   5  repel                    0x560e7a1fe1c0 GamerInteracting                   repelling GameSelecting: done
+200922 22:40:59.000 +0.000  545   5  Processing               0x560e7a1fe7c0 ConnectFourGaming                  Processing()
+200922 22:40:59.000 +0.000  589   5  start                    0x560e7a1f6ef0 GameServing                        starting ConnectFourGaming
+200922 22:40:59.000 +0.000  596   5  start                    0x560e7a1f6ef0 GameServing                        adding ConnectFourGaming to child list
+200922 22:40:59.000 +0.000  599   5  start                    0x560e7a1f6ef0 GameServing                        Locking mChildListMtx
+200922 22:40:59.000 +0.000  601   5  start                    0x560e7a1f6ef0 GameServing                        Locking mChildListMtx: done
+200922 22:40:59.000 +0.000  610   5  start                    0x560e7a1f6ef0 GameServing                        adding ConnectFourGaming to child list: done
+200922 22:40:59.000 +0.000  635   5  start                    0x560e7a1f6ef0 GameServing                        using parent as driver for ConnectFourGaming
+200922 22:40:59.000 +0.000  637   5  start                    0x560e7a1f6ef0 GameServing                        starting ConnectFourGaming: done
+200922 22:40:59.000 +0.001  692   5  shutdown                 0x560e7a1fdd20 GameSelecting                      shutdown() not used
+200922 22:40:59.000 +0.000  233   5  treeTick                 0x560e7a1fdd20 GameSelecting                      downShutting(): done
+200922 22:40:59.000 +0.000  172   5  treeTick                 0x560e7a1fe7c0 ConnectFourGaming                  initializing()
+200922 22:40:59.000 +0.001  239   5  treeTick                 0x560e7a1fdd20 GameSelecting                      marking children as unused
+200922 22:40:59.000 +0.000  253   5  treeTick                 0x560e7a1fdd20 GameSelecting                      marking children as unused: done
+200922 22:40:59.000 +0.000  199   5  treeTick                 0x560e7a1fe7c0 ConnectFourGaming                  initializing(): done
+200922 22:40:59.000 +0.000  202   5  treeTick                 0x560e7a1fe7c0 ConnectFourGaming                  processing()
+200922 22:40:59.000 +0.001  260   5  treeTick                 0x560e7a1fdd20 GameSelecting                      preparing finish
+200922 22:40:59.000 +0.000  268   5  treeTick                 0x560e7a1fdd20 GameSelecting                      preparing finish: done -> finished
+200922 22:40:59.000 +0.000  121   5  treeTick                 0x560e7a1fe1c0 GamerInteracting                   removing GameSelecting from child list
+200922 22:40:59.000 +0.000  124   5  treeTick                 0x560e7a1fe1c0 GamerInteracting                   Locking mChildListMtx
+200922 22:40:59.000 +0.000  126   5  treeTick                 0x560e7a1fe1c0 GamerInteracting                   Locking mChildListMtx: done
+200922 22:40:59.000 +0.000  135   5  treeTick                 0x560e7a1fe1c0 GamerInteracting                   removing GameSelecting from child list: done
+200922 22:40:59.000 +0.000  456   5  destroy                  child GameSelecting destroy()
+200922 22:40:59.000 +0.000  486   5  destroy                  child GameSelecting delete()
+200922 22:40:59.000 +0.000  564   5  ~Processing              0x560e7a1fdd20 GameSelecting                      ~Processing()
+200922 22:40:59.000 +0.000  566   5  ~Processing              0x560e7a1fdd20 GameSelecting                      mpThread = 0x00000000
+200922 22:40:59.000 +0.000  488   5  destroy                  child GameSelecting delete(): done
+200922 22:40:59.000 +0.000  490   5  destroy                  child GameSelecting destroy(): done
+200922 22:40:59.000 +0.001  545   5  Processing               0x560e7a1fd9f0 ConnectFourLobbying                Processing()
+200922 22:40:59.000 +0.000  589   5  start                    0x560e7a1fe7c0 ConnectFourGaming                  starting ConnectFourLobbying
+200922 22:40:59.000 +0.000  596   5  start                    0x560e7a1fe7c0 ConnectFourGaming                  adding ConnectFourLobbying to child list
+200922 22:40:59.000 +0.000  599   5  start                    0x560e7a1fe7c0 ConnectFourGaming                  Locking mChildListMtx
+200922 22:40:59.000 +0.000  601   5  start                    0x560e7a1fe7c0 ConnectFourGaming                  Locking mChildListMtx: done
+200922 22:40:59.000 +0.000  610   5  start                    0x560e7a1fe7c0 ConnectFourGaming                  adding ConnectFourLobbying to child list: done
+200922 22:40:59.000 +0.000  635   5  start                    0x560e7a1fe7c0 ConnectFourGaming                  using parent as driver for ConnectFourLobbying
+200922 22:40:59.000 +0.000  637   5  start                    0x560e7a1fe7c0 ConnectFourGaming                  starting ConnectFourLobbying: done
+200922 22:40:59.000 +0.001  172   5  treeTick                 0x560e7a1fd9f0 ConnectFourLobbying                initializing()
+200922 22:40:59.000 +0.001  199   5  treeTick                 0x560e7a1fd9f0 ConnectFourLobbying                initializing(): done
+200922 22:40:59.000 +0.000  202   5  treeTick                 0x560e7a1fd9f0 ConnectFourLobbying                processing()
+200922 22:41:05.000 +0.561  184   4  process                  0x560e7a1fc500 TcpListening                       listening socket has data
+200922 22:41:05.000 +0.000  197   4  process                  0x560e7a1fc500 TcpListening                       got socket fd -> 9
+200922 22:41:05.000 +0.000  545   5  Processing               0x560e7a1ff360 GamerInteracting                   Processing()
+200922 22:41:05.000 +0.000  589   5  start                    0x560e7a1f6ef0 GameServing                        starting GamerInteracting
+200922 22:41:05.000 +0.000  596   5  start                    0x560e7a1f6ef0 GameServing                        adding GamerInteracting to child list
+200922 22:41:05.000 +0.000  599   5  start                    0x560e7a1f6ef0 GameServing                        Locking mChildListMtx
+200922 22:41:05.000 +0.000  601   5  start                    0x560e7a1f6ef0 GameServing                        Locking mChildListMtx: done
+200922 22:41:05.000 +0.000  610   5  start                    0x560e7a1f6ef0 GameServing                        adding GamerInteracting to child list: done
+200922 22:41:05.000 +0.000  635   5  start                    0x560e7a1f6ef0 GameServing                        using parent as driver for GamerInteracting
+200922 22:41:05.000 +0.000  637   5  start                    0x560e7a1f6ef0 GameServing                        starting GamerInteracting: done
+200922 22:41:05.000 +0.000  277   4  gamerAdd                 0x560e7a1f6ef0 GameServing                        adding visitor. process: 0x560e7a1ff360
+200922 22:41:05.000 +0.001  172   5  treeTick                 0x560e7a1ff360 GamerInteracting                   initializing()
+200922 22:41:05.000 +0.001  199   5  treeTick                 0x560e7a1ff360 GamerInteracting                   initializing(): done
+200922 22:41:05.000 +0.000  202   5  treeTick                 0x560e7a1ff360 GamerInteracting                   processing()
+200922 22:41:05.000 +0.001  545   5  Processing               0x560e7a1f6530 TcpTransfering                     Processing()
+200922 22:41:05.000 +0.000  589   5  start                    0x560e7a1ff360 GamerInteracting                   starting TcpTransfering
+200922 22:41:05.000 +0.000  596   5  start                    0x560e7a1ff360 GamerInteracting                   adding TcpTransfering to child list
+200922 22:41:05.000 +0.000  599   5  start                    0x560e7a1ff360 GamerInteracting                   Locking mChildListMtx
+200922 22:41:05.000 +0.000  601   5  start                    0x560e7a1ff360 GamerInteracting                   Locking mChildListMtx: done
+200922 22:41:05.000 +0.000  610   5  start                    0x560e7a1ff360 GamerInteracting                   adding TcpTransfering to child list: done
+200922 22:41:05.000 +0.000  635   5  start                    0x560e7a1ff360 GamerInteracting                   using parent as driver for TcpTransfering
+200922 22:41:05.000 +0.000  637   5  start                    0x560e7a1ff360 GamerInteracting                   starting TcpTransfering: done
+200922 22:41:05.000 +0.001  172   5  treeTick                 0x560e7a1f6530 TcpTransfering                     initializing()
+200922 22:41:05.000 +0.000  545   5  Processing               0x560e7a1fafd0 TelnetAuthorizing                  Processing()
+200922 22:41:05.000 +0.000  589   5  start                    0x560e7a1ff360 GamerInteracting                   starting TelnetAuthorizing
+200922 22:41:05.000 +0.000  596   5  start                    0x560e7a1ff360 GamerInteracting                   adding TelnetAuthorizing to child list
+200922 22:41:05.000 +0.000  599   5  start                    0x560e7a1ff360 GamerInteracting                   Locking mChildListMtx
+200922 22:41:05.000 +0.000  601   5  start                    0x560e7a1ff360 GamerInteracting                   Locking mChildListMtx: done
+200922 22:41:05.000 +0.000  610   5  start                    0x560e7a1ff360 GamerInteracting                   adding TelnetAuthorizing to child list: done
+200922 22:41:05.000 +0.000  635   5  start                    0x560e7a1ff360 GamerInteracting                   using parent as driver for TelnetAuthorizing
+200922 22:41:05.000 +0.000  637   5  start                    0x560e7a1ff360 GamerInteracting                   starting TelnetAuthorizing: done
+200922 22:41:05.000 +0.001  199   5  treeTick                 0x560e7a1f6530 TcpTransfering                     initializing(): done
+200922 22:41:05.000 +0.000  202   5  treeTick                 0x560e7a1f6530 TcpTransfering                     processing()
+200922 22:41:05.000 +0.000  172   5  treeTick                 0x560e7a1fafd0 TelnetAuthorizing                  initializing()
+200922 22:41:05.000 +0.001  199   5  treeTick                 0x560e7a1fafd0 TelnetAuthorizing                  initializing(): done
+200922 22:41:05.000 +0.000  202   5  treeTick                 0x560e7a1fafd0 TelnetAuthorizing                  processing()
+200922 22:41:05.000 +0.003   58   2  keyGet                   data received, 6: 0xFF 0xFD 0x01 0xFF 0xFD 0x03
+200922 22:41:08.000 +0.371  221   5  treeTick                 0x560e7a1fafd0 TelnetAuthorizing                  processing(): done. success = 1
+200922 22:41:08.000 +0.000  222   5  treeTick                 0x560e7a1fafd0 TelnetAuthorizing                  downShutting()
+200922 22:41:08.000 +0.000  659   5  repel                    0x560e7a1ff360 GamerInteracting                   repelling TelnetAuthorizing
+200922 22:41:08.000 +0.000  661   5  repel                    0x560e7a1ff360 GamerInteracting                   repelling TelnetAuthorizing: done
+200922 22:41:08.000 +0.000  130   3  process                  0x560e7a1ff360 GamerInteracting                   Continuing to server selection
+200922 22:41:08.000 +0.001  692   5  shutdown                 0x560e7a1fafd0 TelnetAuthorizing                  shutdown() not used
+200922 22:41:08.000 +0.000  233   5  treeTick                 0x560e7a1fafd0 TelnetAuthorizing                  downShutting(): done
+200922 22:41:08.000 +0.000  545   5  Processing               0x560e7a1fdd20 GameSelecting                      Processing()
+200922 22:41:08.000 +0.000  589   5  start                    0x560e7a1ff360 GamerInteracting                   starting GameSelecting
+200922 22:41:08.000 +0.000  596   5  start                    0x560e7a1ff360 GamerInteracting                   adding GameSelecting to child list
+200922 22:41:08.000 +0.000  599   5  start                    0x560e7a1ff360 GamerInteracting                   Locking mChildListMtx
+200922 22:41:08.000 +0.000  601   5  start                    0x560e7a1ff360 GamerInteracting                   Locking mChildListMtx: done
+200922 22:41:08.000 +0.000  610   5  start                    0x560e7a1ff360 GamerInteracting                   adding GameSelecting to child list: done
+200922 22:41:08.000 +0.000  635   5  start                    0x560e7a1ff360 GamerInteracting                   using parent as driver for GameSelecting
+200922 22:41:08.000 +0.000  637   5  start                    0x560e7a1ff360 GamerInteracting                   starting GameSelecting: done
+200922 22:41:08.000 +0.001  239   5  treeTick                 0x560e7a1fafd0 TelnetAuthorizing                  marking children as unused
+200922 22:41:08.000 +0.000  253   5  treeTick                 0x560e7a1fafd0 TelnetAuthorizing                  marking children as unused: done
+200922 22:41:08.000 +0.000  172   5  treeTick                 0x560e7a1fdd20 GameSelecting                      initializing()
+200922 22:41:08.000 +0.001  260   5  treeTick                 0x560e7a1fafd0 TelnetAuthorizing                  preparing finish
+200922 22:41:08.000 +0.000  268   5  treeTick                 0x560e7a1fafd0 TelnetAuthorizing                  preparing finish: done -> finished
+200922 22:41:08.000 +0.000  121   5  treeTick                 0x560e7a1ff360 GamerInteracting                   removing TelnetAuthorizing from child list
+200922 22:41:08.000 +0.000  124   5  treeTick                 0x560e7a1ff360 GamerInteracting                   Locking mChildListMtx
+200922 22:41:08.000 +0.000  126   5  treeTick                 0x560e7a1ff360 GamerInteracting                   Locking mChildListMtx: done
+200922 22:41:08.000 +0.000  135   5  treeTick                 0x560e7a1ff360 GamerInteracting                   removing TelnetAuthorizing from child list: done
+200922 22:41:08.000 +0.000  456   5  destroy                  child TelnetAuthorizing destroy()
+200922 22:41:08.000 +0.000  486   5  destroy                  child TelnetAuthorizing delete()
+200922 22:41:08.000 +0.000  564   5  ~Processing              0x560e7a1fafd0 TelnetAuthorizing                  ~Processing()
+200922 22:41:08.000 +0.000  566   5  ~Processing              0x560e7a1fafd0 TelnetAuthorizing                  mpThread = 0x00000000
+200922 22:41:08.000 +0.000  488   5  destroy                  child TelnetAuthorizing delete(): done
+200922 22:41:08.000 +0.000  490   5  destroy                  child TelnetAuthorizing destroy(): done
+200922 22:41:08.000 +0.000  199   5  treeTick                 0x560e7a1fdd20 GameSelecting                      initializing(): done
+200922 22:41:08.000 +0.000  202   5  treeTick                 0x560e7a1fdd20 GameSelecting                      processing()
+200922 22:41:08.000 +0.001   81   3  process                  0x560e7a1fdd20 GameSelecting                      Getting server list
+200922 22:41:08.000 +0.000  112   3  process                  0x560e7a1fdd20 GameSelecting                      Got server list
+200922 22:41:11.000 +0.260  221   5  treeTick                 0x560e7a1fdd20 GameSelecting                      processing(): done. success = 1
+200922 22:41:11.000 +0.000  222   5  treeTick                 0x560e7a1fdd20 GameSelecting                      downShutting()
+200922 22:41:11.000 +0.000  659   5  repel                    0x560e7a1ff360 GamerInteracting                   repelling GameSelecting
+200922 22:41:11.000 +0.000  661   5  repel                    0x560e7a1ff360 GamerInteracting                   repelling GameSelecting: done
+200922 22:41:11.000 +0.001  692   5  shutdown                 0x560e7a1fdd20 GameSelecting                      shutdown() not used
+200922 22:41:11.000 +0.000  233   5  treeTick                 0x560e7a1fdd20 GameSelecting                      downShutting(): done
+200922 22:41:11.000 +0.001  239   5  treeTick                 0x560e7a1fdd20 GameSelecting                      marking children as unused
+200922 22:41:11.000 +0.000  253   5  treeTick                 0x560e7a1fdd20 GameSelecting                      marking children as unused: done
+200922 22:41:11.000 +0.001  260   5  treeTick                 0x560e7a1fdd20 GameSelecting                      preparing finish
+200922 22:41:11.000 +0.000  268   5  treeTick                 0x560e7a1fdd20 GameSelecting                      preparing finish: done -> finished
+200922 22:41:11.000 +0.000  121   5  treeTick                 0x560e7a1ff360 GamerInteracting                   removing GameSelecting from child list
+200922 22:41:11.000 +0.000  124   5  treeTick                 0x560e7a1ff360 GamerInteracting                   Locking mChildListMtx
+200922 22:41:11.000 +0.000  126   5  treeTick                 0x560e7a1ff360 GamerInteracting                   Locking mChildListMtx: done
+200922 22:41:11.000 +0.000  135   5  treeTick                 0x560e7a1ff360 GamerInteracting                   removing GameSelecting from child list: done
+200922 22:41:11.000 +0.000  456   5  destroy                  child GameSelecting destroy()
+200922 22:41:11.000 +0.000  486   5  destroy                  child GameSelecting delete()
+200922 22:41:11.000 +0.000  564   5  ~Processing              0x560e7a1fdd20 GameSelecting                      ~Processing()
+200922 22:41:11.000 +0.000  566   5  ~Processing              0x560e7a1fdd20 GameSelecting                      mpThread = 0x00000000
+200922 22:41:11.000 +0.000  488   5  destroy                  child GameSelecting delete(): done
+200922 22:41:11.000 +0.000  490   5  destroy                  child GameSelecting destroy(): done
+200922 22:41:13.000 +0.229  184   4  process                  0x560e7a1fc500 TcpListening                       listening socket has data
+200922 22:41:13.000 +0.000  197   4  process                  0x560e7a1fc500 TcpListening                       got socket fd -> 10
+200922 22:41:13.000 +0.000  545   5  Processing               0x560e7a200680 GamerInteracting                   Processing()
+200922 22:41:13.000 +0.000  589   5  start                    0x560e7a1f6ef0 GameServing                        starting GamerInteracting
+200922 22:41:13.000 +0.000  596   5  start                    0x560e7a1f6ef0 GameServing                        adding GamerInteracting to child list
+200922 22:41:13.000 +0.000  599   5  start                    0x560e7a1f6ef0 GameServing                        Locking mChildListMtx
+200922 22:41:13.000 +0.000  601   5  start                    0x560e7a1f6ef0 GameServing                        Locking mChildListMtx: done
+200922 22:41:13.000 +0.000  610   5  start                    0x560e7a1f6ef0 GameServing                        adding GamerInteracting to child list: done
+200922 22:41:13.000 +0.000  635   5  start                    0x560e7a1f6ef0 GameServing                        using parent as driver for GamerInteracting
+200922 22:41:13.000 +0.000  637   5  start                    0x560e7a1f6ef0 GameServing                        starting GamerInteracting: done
+200922 22:41:13.000 +0.000  277   4  gamerAdd                 0x560e7a1f6ef0 GameServing                        adding visitor. process: 0x560e7a200680
+200922 22:41:13.000 +0.001  172   5  treeTick                 0x560e7a200680 GamerInteracting                   initializing()
+200922 22:41:13.000 +0.001  199   5  treeTick                 0x560e7a200680 GamerInteracting                   initializing(): done
+200922 22:41:13.000 +0.000  202   5  treeTick                 0x560e7a200680 GamerInteracting                   processing()
+200922 22:41:13.000 +0.001  545   5  Processing               0x560e7a1f7890 TcpTransfering                     Processing()
+200922 22:41:13.000 +0.000  589   5  start                    0x560e7a200680 GamerInteracting                   starting TcpTransfering
+200922 22:41:13.000 +0.000  596   5  start                    0x560e7a200680 GamerInteracting                   adding TcpTransfering to child list
+200922 22:41:13.000 +0.000  599   5  start                    0x560e7a200680 GamerInteracting                   Locking mChildListMtx
+200922 22:41:13.000 +0.000  601   5  start                    0x560e7a200680 GamerInteracting                   Locking mChildListMtx: done
+200922 22:41:13.000 +0.000  610   5  start                    0x560e7a200680 GamerInteracting                   adding TcpTransfering to child list: done
+200922 22:41:13.000 +0.000  635   5  start                    0x560e7a200680 GamerInteracting                   using parent as driver for TcpTransfering
+200922 22:41:13.000 +0.000  637   5  start                    0x560e7a200680 GamerInteracting                   starting TcpTransfering: done
+200922 22:41:13.000 +0.001  172   5  treeTick                 0x560e7a1f7890 TcpTransfering                     initializing()
+200922 22:41:13.000 +0.000  545   5  Processing               0x560e7a1f6980 TelnetAuthorizing                  Processing()
+200922 22:41:13.000 +0.000  589   5  start                    0x560e7a200680 GamerInteracting                   starting TelnetAuthorizing
+200922 22:41:13.000 +0.000  596   5  start                    0x560e7a200680 GamerInteracting                   adding TelnetAuthorizing to child list
+200922 22:41:13.000 +0.000  599   5  start                    0x560e7a200680 GamerInteracting                   Locking mChildListMtx
+200922 22:41:13.000 +0.000  601   5  start                    0x560e7a200680 GamerInteracting                   Locking mChildListMtx: done
+200922 22:41:13.000 +0.000  610   5  start                    0x560e7a200680 GamerInteracting                   adding TelnetAuthorizing to child list: done
+200922 22:41:13.000 +0.000  635   5  start                    0x560e7a200680 GamerInteracting                   using parent as driver for TelnetAuthorizing
+200922 22:41:13.000 +0.000  637   5  start                    0x560e7a200680 GamerInteracting                   starting TelnetAuthorizing: done
+200922 22:41:13.000 +0.001  199   5  treeTick                 0x560e7a1f7890 TcpTransfering                     initializing(): done
+200922 22:41:13.000 +0.000  202   5  treeTick                 0x560e7a1f7890 TcpTransfering                     processing()
+200922 22:41:13.000 +0.000  172   5  treeTick                 0x560e7a1f6980 TelnetAuthorizing                  initializing()
+200922 22:41:13.000 +0.001  199   5  treeTick                 0x560e7a1f6980 TelnetAuthorizing                  initializing(): done
+200922 22:41:13.000 +0.000  202   5  treeTick                 0x560e7a1f6980 TelnetAuthorizing                  processing()
+200922 22:41:13.000 +0.003   58   2  keyGet                   data received, 7: 0xFF 0xFB 0x1F 0xFF 0xFB 0x20 0xFF
+200922 22:41:13.000 +0.001   58   2  keyGet                   data received, 7: 0xFB 0x18 0xFF 0xFB 0x27 0xFF 0xFD
+200922 22:41:13.000 +0.001   58   2  keyGet                   data received, 7: 0x01 0xFF 0xFB 0x03 0xFF 0xFD 0x03
+200922 22:41:23.000 +0.995  221   5  treeTick                 0x560e7a1f6980 TelnetAuthorizing                  processing(): done. success = 1
+200922 22:41:23.000 +0.000  222   5  treeTick                 0x560e7a1f6980 TelnetAuthorizing                  downShutting()
+200922 22:41:23.000 +0.000  659   5  repel                    0x560e7a200680 GamerInteracting                   repelling TelnetAuthorizing
+200922 22:41:23.000 +0.000  661   5  repel                    0x560e7a200680 GamerInteracting                   repelling TelnetAuthorizing: done
+200922 22:41:23.000 +0.000  130   3  process                  0x560e7a200680 GamerInteracting                   Continuing to server selection
+200922 22:41:23.000 +0.001  692   5  shutdown                 0x560e7a1f6980 TelnetAuthorizing                  shutdown() not used
+200922 22:41:23.000 +0.000  233   5  treeTick                 0x560e7a1f6980 TelnetAuthorizing                  downShutting(): done
+200922 22:41:23.000 +0.000  545   5  Processing               0x560e7a1ffa40 GameSelecting                      Processing()
+200922 22:41:23.000 +0.000  589   5  start                    0x560e7a200680 GamerInteracting                   starting GameSelecting
+200922 22:41:23.000 +0.000  596   5  start                    0x560e7a200680 GamerInteracting                   adding GameSelecting to child list
+200922 22:41:23.000 +0.000  599   5  start                    0x560e7a200680 GamerInteracting                   Locking mChildListMtx
+200922 22:41:23.000 +0.000  601   5  start                    0x560e7a200680 GamerInteracting                   Locking mChildListMtx: done
+200922 22:41:23.000 +0.000  610   5  start                    0x560e7a200680 GamerInteracting                   adding GameSelecting to child list: done
+200922 22:41:23.000 +0.000  635   5  start                    0x560e7a200680 GamerInteracting                   using parent as driver for GameSelecting
+200922 22:41:23.000 +0.000  637   5  start                    0x560e7a200680 GamerInteracting                   starting GameSelecting: done
+200922 22:41:23.000 +0.001  239   5  treeTick                 0x560e7a1f6980 TelnetAuthorizing                  marking children as unused
+200922 22:41:23.000 +0.000  253   5  treeTick                 0x560e7a1f6980 TelnetAuthorizing                  marking children as unused: done
+200922 22:41:23.000 +0.000  172   5  treeTick                 0x560e7a1ffa40 GameSelecting                      initializing()
+200922 22:41:23.000 +0.001  260   5  treeTick                 0x560e7a1f6980 TelnetAuthorizing                  preparing finish
+200922 22:41:23.000 +0.000  268   5  treeTick                 0x560e7a1f6980 TelnetAuthorizing                  preparing finish: done -> finished
+200922 22:41:23.000 +0.000  121   5  treeTick                 0x560e7a200680 GamerInteracting                   removing TelnetAuthorizing from child list
+200922 22:41:23.000 +0.000  124   5  treeTick                 0x560e7a200680 GamerInteracting                   Locking mChildListMtx
+200922 22:41:23.000 +0.000  126   5  treeTick                 0x560e7a200680 GamerInteracting                   Locking mChildListMtx: done
+200922 22:41:23.000 +0.000  135   5  treeTick                 0x560e7a200680 GamerInteracting                   removing TelnetAuthorizing from child list: done
+200922 22:41:23.000 +0.000  456   5  destroy                  child TelnetAuthorizing destroy()
+200922 22:41:23.000 +0.000  486   5  destroy                  child TelnetAuthorizing delete()
+200922 22:41:23.000 +0.000  564   5  ~Processing              0x560e7a1f6980 TelnetAuthorizing                  ~Processing()
+200922 22:41:23.000 +0.000  566   5  ~Processing              0x560e7a1f6980 TelnetAuthorizing                  mpThread = 0x00000000
+200922 22:41:23.000 +0.000  488   5  destroy                  child TelnetAuthorizing delete(): done
+200922 22:41:23.000 +0.000  490   5  destroy                  child TelnetAuthorizing destroy(): done
+200922 22:41:23.000 +0.000  199   5  treeTick                 0x560e7a1ffa40 GameSelecting                      initializing(): done
+200922 22:41:23.000 +0.000  202   5  treeTick                 0x560e7a1ffa40 GameSelecting                      processing()
+200922 22:41:23.000 +0.001   81   3  process                  0x560e7a1ffa40 GameSelecting                      Getting server list
+200922 22:41:23.000 +0.000  112   3  process                  0x560e7a1ffa40 GameSelecting                      Got server list
+200922 22:41:30.000 +0.658  202   4  read                     0x560e7a1f7890 TcpTransfering                     connection reset by peer
+200922 22:41:30.000 +0.000  285   4  disconnect               0x560e7a1f7890 TcpTransfering                     closing socket: 10
+200922 22:41:30.000 +0.000  289   4  disconnect               0x560e7a1f7890 TcpTransfering                     closing socket: -1: done
+200922 22:41:30.000 +0.000  221   5  treeTick                 0x560e7a1f7890 TcpTransfering                     processing(): done. success = 1
+200922 22:41:30.000 +0.000  222   5  treeTick                 0x560e7a1f7890 TcpTransfering                     downShutting()
+200922 22:41:30.000 +0.000  221   5  treeTick                 0x560e7a200680 GamerInteracting                   processing(): done. success = 1
+200922 22:41:30.000 +0.000  222   5  treeTick                 0x560e7a200680 GamerInteracting                   downShutting()
+200922 22:41:30.000 +0.000  246   4  gamerRemove              0x560e7a1f6ef0 GameServing                        removing gamer. process: 0x560e7a200680
+200922 22:41:30.000 +0.000  659   5  repel                    0x560e7a1f6ef0 GameServing                        repelling GamerInteracting
+200922 22:41:30.000 +0.000  661   5  repel                    0x560e7a1f6ef0 GameServing                        repelling GamerInteracting: done
+200922 22:41:30.000 +0.001  129   4  shutdown                 0x560e7a1f7890 TcpTransfering                     shutdown
+200922 22:41:30.000 +0.000  281   4  disconnect               0x560e7a1f7890 TcpTransfering                     socket closed already
+200922 22:41:30.000 +0.000  233   5  treeTick                 0x560e7a1f7890 TcpTransfering                     downShutting(): done
+200922 22:41:30.000 +0.000  692   5  shutdown                 0x560e7a200680 GamerInteracting                   shutdown() not used
+200922 22:41:30.000 +0.000  233   5  treeTick                 0x560e7a200680 GamerInteracting                   downShutting(): done
+200922 22:41:30.000 +0.001  239   5  treeTick                 0x560e7a1f7890 TcpTransfering                     marking children as unused
+200922 22:41:30.000 +0.000  253   5  treeTick                 0x560e7a1f7890 TcpTransfering                     marking children as unused: done
+200922 22:41:30.000 +0.000  239   5  treeTick                 0x560e7a200680 GamerInteracting                   marking children as unused
+200922 22:41:30.000 +0.000  253   5  treeTick                 0x560e7a200680 GamerInteracting                   marking children as unused: done
+200922 22:41:30.000 +0.001  260   5  treeTick                 0x560e7a1f7890 TcpTransfering                     preparing finish
+200922 22:41:30.000 +0.000  268   5  treeTick                 0x560e7a1f7890 TcpTransfering                     preparing finish: done -> finished
+200922 22:41:30.000 +0.000  121   5  treeTick                 0x560e7a200680 GamerInteracting                   removing TcpTransfering from child list
+200922 22:41:30.000 +0.000  124   5  treeTick                 0x560e7a200680 GamerInteracting                   Locking mChildListMtx
+200922 22:41:30.000 +0.000  126   5  treeTick                 0x560e7a200680 GamerInteracting                   Locking mChildListMtx: done
+200922 22:41:30.000 +0.000  135   5  treeTick                 0x560e7a200680 GamerInteracting                   removing TcpTransfering from child list: done
+200922 22:41:30.000 +0.000  456   5  destroy                  child TcpTransfering destroy()
+200922 22:41:30.000 +0.000  486   5  destroy                  child TcpTransfering delete()
+200922 22:41:30.000 +0.000  564   5  ~Processing              0x560e7a1f7890 TcpTransfering                     ~Processing()
+200922 22:41:30.000 +0.000  566   5  ~Processing              0x560e7a1f7890 TcpTransfering                     mpThread = 0x00000000
+200922 22:41:30.000 +0.000  488   5  destroy                  child TcpTransfering delete(): done
+200922 22:41:30.000 +0.000  490   5  destroy                  child TcpTransfering destroy(): done
+200922 22:41:30.000 +0.000  210   5  treeTick                 0x560e7a1ffa40 GameSelecting                      set process as unused during processing
+200922 22:41:30.000 +0.000  211   5  treeTick                 0x560e7a1ffa40 GameSelecting                      downShutting()
+Segmentation fault
+
