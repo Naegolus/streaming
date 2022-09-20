@@ -70,7 +70,7 @@ Success ConnectFourMatching::process()
 		break;
 	case CfMatchBeginStart:
 
-		mCntSec = 1;
+		mCntSec = 5;
 		frameBeginCreate();
 
 		mStart = millis();
