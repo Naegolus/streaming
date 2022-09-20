@@ -104,6 +104,8 @@ Success ConnectFourMatching::process()
 
 		cursorsReset();
 
+		gs["dirty"] = true;
+
 		mStart = millis();
 		mState = CfMatchRoundDoneWait;
 
