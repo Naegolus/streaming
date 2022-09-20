@@ -96,7 +96,7 @@ Success ConnectFourMatching::process()
 		break;
 	case CfMatchRoundStart:
 
-		mCntSec = 15;
+		mCntSec = 5;
 
 		if (gs["match"]["teamCurrent"] == 1)
 			gs["match"]["teamCurrent"] = 2;
@@ -565,8 +565,82 @@ void ConnectFourMatching::roundResultAccept()
 	}
 }
 
+uint8_t ConnectFourMatching::boardLineCheck(uint8_t col, uint8_t row, int8_t dcol, int8_t drow)
+{
+	uint8_t teamStart = mpBoard[col][row];
+
+	for (uint8_t i = 0; i < cCfNumToWin - 1; ++i)
+	{
+		col += dcol;
+		row += drow;
+
+		if (col < 0 or col >= cCfBoardCols)
+			return 0;
+
+		if (row < 0 or row >= cCfBoardRows)
+			return 0;
+
+		if (mpBoard[col][row] != teamStart)
+			return 0;
+	}
+
+	return teamStart;
+}
+
+uint8_t ConnectFourMatching::boardStarCheck(uint8_t col, uint8_t row)
+{
+	uint8_t winner = 0;
+
+	if (row > cCfBoardRows - cCfNumToWin)
+		return 0;
+
+	winner = boardLineCheck(col, row, -1, 1);
+	if (winner)
+		return winner;
+
+	winner = boardLineCheck(col, row,  0, 1);
+	if (winner)
+		return winner;
+
+	winner = boardLineCheck(col, row,  1, 1);
+	if (winner)
+		return winner;
+
+	winner = boardLineCheck(col, row,  1, 0);
+	if (winner)
+		return winner;
+
+	return 0;
+}
+
 bool ConnectFourMatching::matchFinished()
 {
+	Value &gs = *pGs;
+	bool spaceLeft = false;
+	uint8_t winner = 0;
+
+	for (uint8_t col = 0; col < cCfBoardCols; ++col)
+	{
+		for (uint8_t row = 0; row < cCfBoardRows; ++row)
+		{
+			if (!mpBoard[col][row])
+				spaceLeft = true;
+
+			winner = boardStarCheck(col, row);
+			if (!winner)
+				continue;
+
+			gs["winner"] = winner;
+			return true;
+		}
+	}
+
+	if (!spaceLeft)
+	{
+		gs["winner"] = 0;
+		return true;
+	}
+
 	return false;
 }
 

@@ -44,6 +44,7 @@ dProcessStateEnum(CfMatchState);
 
 const uint8_t cCfBoardRows = 6;
 const uint8_t cCfBoardCols = 7;
+const uint8_t cCfNumToWin = 4;
 
 class ConnectFourMatching : public Processing
 {
@@ -100,6 +101,8 @@ private:
 
 	void cursorsReset();
 	void roundResultAccept();
+	uint8_t boardLineCheck(uint8_t col, uint8_t row, int8_t dcol, int8_t drow);
+	uint8_t boardStarCheck(uint8_t col, uint8_t row);
 	bool matchFinished();
 
 	/* member variables */
