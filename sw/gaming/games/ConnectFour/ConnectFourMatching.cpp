@@ -95,7 +95,7 @@ Success ConnectFourMatching::process()
 		break;
 	case CfMatchRoundStart:
 
-		mCntSec = 5;
+		mCntSec = 6;
 
 		if (gs["match"]["teamCurrent"] == 1)
 			gs["match"]["teamCurrent"] = 2;
