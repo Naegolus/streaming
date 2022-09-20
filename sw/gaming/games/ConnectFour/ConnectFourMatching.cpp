@@ -588,9 +588,9 @@ void ConnectFourMatching::msgBoard(string &str, const Value *pGamer)
 
 		str += ";1mYou\e[0m)";
 	} else
-		str += "     ";
+		str += "      ";
 
-	str += "                 [?] Help";
+	str += "                [?] Help";
 
 	str += "\r\n";
 	str += "Round time left: " + to_string(mCntSec) + "s";
