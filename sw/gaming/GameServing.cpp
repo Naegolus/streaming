@@ -161,6 +161,9 @@ void GameServing::gamerMsgInterpret(GamerInteracting *pGamer, const Value &msg)
 
 	if (type == "key")
 	{
+		if (!pGamer->mpGame)
+			return;
+
 		pGamer->mpGame->in.commit(msg);
 		return;
 	}
