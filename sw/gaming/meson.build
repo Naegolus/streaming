@@ -37,12 +37,12 @@ srcsSpecific = [
 srcs = []
 srcs += srcsSpecific
 
-foreach file : srcsCore
-	srcs += join_paths('../common/core', file)
+foreach f : srcsCore
+	srcs += join_paths('../common/core', f)
 endforeach
 
-foreach file : srcsCommon
-	srcs += join_paths('../common', file)
+foreach f : srcsCommon
+	srcs += join_paths('../common', f)
 endforeach
 
 cxx = meson.get_compiler('cpp')
@@ -51,18 +51,26 @@ deps = []
 deps += dependency('threads')
 deps += dependency('jsoncpp')
 
-incs = []
-incs += '../common/core'
-incs += '../common'
-incs += 'games/TicTacToe'
-incs += 'games/ConnectFour'
+incs = [
+	'../common/core',
+	'../common',
+	'games/TicTacToe',
+	'games/ConnectFour',
+]
+
+mr = meson.source_root()
+
+incsAbs = []
+foreach p : incs
+	incsAbs += include_directories(p)
+endforeach
 
 myApp = executable(
 	'gaming',
 	srcs,
-	include_directories : include_directories([
-		incs,
-	]),
+	include_directories : [
+		incsAbs,
+	],
 	dependencies : [
 		deps,
 	],
