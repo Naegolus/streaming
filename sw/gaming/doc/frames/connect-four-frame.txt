@@ -19,6 +19,6 @@ Gamers 10
   |  o  |  x  |  o  |  x  |  x  |     |     |
   \-----------------------------------------/
 
-Current team: You                    [?] Help
-Current team: 3                      [?] Help
+Current team: 1, You                 [?] Help
+Current team: 2                      [?] Help
 Round time left: 5s
