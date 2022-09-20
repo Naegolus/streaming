@@ -150,6 +150,7 @@ void ConnectFourMatching::matchInit()
 {
 	Value &gs = *pGs;
 
+	gs["match"] = objectValue;
 	gs["match"]["teamCurrent"] = 2;
 	gs["match"]["teamCursor"] = 0;
 	gs["dirty"] = true;
