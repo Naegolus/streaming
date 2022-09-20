@@ -112,7 +112,7 @@ void ConnectFourLobbying::msgInterpret(const Value &msg)
 	{
 		Value tmp;
 
-		if (!gs.isMember("admin"))
+		if (!gs["admin"])
 			gs["admin"] = id;
 
 		tmp["name"] = msg["gamerName"];
