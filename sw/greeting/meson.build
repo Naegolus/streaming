@@ -16,7 +16,7 @@ srcsSpecific = [
 ]
 
 srcs = []
-srcs += [srcsSpecific]
+srcs += srcsSpecific
 
 foreach file : srcsCommon
 	srcs += join_paths('../common/core', file)
