@@ -84,7 +84,6 @@ Success ConnectFourMatching::process()
 		mStart = millis();
 
 		--mCntSec;
-
 		if (mCntSec)
 		{
 			frameBeginCreate();
@@ -118,9 +117,9 @@ Success ConnectFourMatching::process()
 			break;
 		mStart = millis();
 
-		--mCntSec;
 		gs["dirty"] = true;
 
+		--mCntSec;
 		if (mCntSec)
 			break;
 
