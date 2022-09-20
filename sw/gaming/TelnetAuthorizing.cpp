@@ -128,7 +128,7 @@ Success TelnetAuthorizing::process()
 			break;
 		}
 
-		if (key == keyBackspace and mGamerName.size())
+		if ((key == keyBackspace or key == keyBackspaceWin) and mGamerName.size())
 		{
 			mGamerName.pop_back();
 			msgName(msg);

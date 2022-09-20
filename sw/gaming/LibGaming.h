@@ -29,6 +29,7 @@
 #include "Transfering.h"
 
 const uint8_t keyBackspace = 0x7F;
+const uint8_t keyBackspaceWin = 0x08;
 const uint8_t keyEnter = 0x0D;
 const uint8_t keyEsc = 0x1B;
 const uint8_t keyAbort = 0x03;
