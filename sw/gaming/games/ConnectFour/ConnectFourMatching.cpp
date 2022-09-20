@@ -135,10 +135,29 @@ Success ConnectFourMatching::process()
 			break;
 		}
 
+		framesRoundCreate();
+
+		mCntSec = 10;
+
+		mStart = millis();
 		mState = CfMatchStatsShow;
 
 		break;
 	case CfMatchStatsShow:
+
+		framesRoundCreate();
+
+		if (diff < 1000)
+			break;
+		mStart = millis();
+
+		gs["dirty"] = true;
+
+		--mCntSec;
+		if (mCntSec)
+			break;
+
+		return Positive;
 
 		break;
 	default:
@@ -155,8 +174,8 @@ void ConnectFourMatching::matchInit()
 	gs["match"] = objectValue;
 	gs["match"]["teamCurrent"] = 2;
 	gs["match"]["teamCursor"] = 0;
+	gs["match"]["tCursorCalcReq"] = false;
 	gs["dirty"] = true;
-	gs["tCursorCalcReq"] = false;
 
 	memset(mpBoard, 0, sizeof(mpBoard));
 }
@@ -291,7 +310,7 @@ void ConnectFourMatching::gamerMsgInterpret(const Value &msg)
 	{
 		g["cursorSet"] = cursor;
 		g["dirty"] = true;
-		gs["tCursorCalcReq"] = true;
+		gs["match"]["tCursorCalcReq"] = true;
 	}
 
 	teamCursorCalc();
@@ -315,9 +334,9 @@ void ConnectFourMatching::teamCursorCalc()
 {
 	Value &gs = *pGs;
 
-	if (!gs["tCursorCalcReq"].asBool())
+	if (!gs["match"]["tCursorCalcReq"].asBool())
 		return;
-	gs["tCursorCalcReq"] = false;
+	gs["match"]["tCursorCalcReq"] = false;
 
 	uint8_t cursor = 0;
 	uint32_t votes[cCfBoardCols];
@@ -449,9 +468,17 @@ void ConnectFourMatching::msgBoard(string &str, const Value *pGamer)
 	uint8_t cell = 0;
 	uint8_t teamCurrent = gs["match"]["teamCurrent"].asUInt();
 	uint8_t team = 0;
+	uint8_t winner = 0;
+	bool haveWinner = false;
 
 	if (pGamer)
 		team = (*pGamer)["team"].asUInt();
+
+	if (gs["match"]["winner"])
+	{
+		winner = gs["match"]["winner"].asUInt();
+		haveWinner = true;
+	}
 
 	str = "\e[2J\e[H";
 	str += "\r\n";
@@ -460,13 +487,33 @@ void ConnectFourMatching::msgBoard(string &str, const Value *pGamer)
 	str += "Gamers " + to_string(gs["gamers"].size());
 	str += "\r\n";
 	str += "\r\n";
-	if (pGamer)
+	if (pGamer and !haveWinner)
 		cursorPrint(str, (*pGamer)["cursor"].asUInt(), 'V');
 	str += "\r\n";
+
+	if (haveWinner and winner == 1)
+	{
+		str += "             Team \e[1;";
+		str += dColorTeam1;
+		str += "mx\e[0m is the winner!";
+	}
+	else
+	if (haveWinner and winner == 2)
+	{
+		str += "             Team \e[1;";
+		str += dColorTeam2;
+		str += "mo\e[0m is the winner!";
+	}
+	else
+	if (haveWinner and !winner)
+		str += "           Spectators are the winner!";
+	else
 	if (pGamer)
 		cursorPrint(str, (*pGamer)["cursorSet"].asUInt(), 'Y');
+
 	str += "\r\n";
-	cursorPrint(str, gs["match"]["teamCursor"].asUInt(), 'T');
+	if (!haveWinner)
+		cursorPrint(str, gs["match"]["teamCursor"].asUInt(), 'T');
 	str += "\r\n";
 	str += "  /-----------------------------------------\\";
 	str += "\r\n";
@@ -508,19 +555,38 @@ void ConnectFourMatching::msgBoard(string &str, const Value *pGamer)
 			str += "  \\-----------------------------------------/\r\n";
 	}
 
+	if (haveWinner)
+		teamCurrent = 0;
+
 	str += "\r\n";
-	str += "Current team: " + to_string(teamCurrent);
+	str += "Current team: ";
+
+	if (teamCurrent == 1)
+	{
+		str += "\e[1;";
+		str += dColorTeam1;
+		str += "mx\e[0m";
+	}
+	else
+	if (teamCurrent == 2)
+	{
+		str += "\e[1;";
+		str += dColorTeam2;
+		str += "mo\e[0m";
+	}
+	else
+		str += "-";
 
 	if (team == teamCurrent)
 	{
-		str += ", \e[";
+		str += " (\e[";
 
 		if (team == 1)
 			str += dColorTeam1;
 		else
 			str += dColorTeam2;
 
-		str += ";1mYou\e[0m";
+		str += ";1mYou\e[0m)";
 	} else
 		str += "     ";
 
@@ -632,14 +698,14 @@ bool ConnectFourMatching::matchFinished()
 			if (!winner)
 				continue;
 
-			gs["winner"] = winner;
+			gs["match"]["winner"] = winner;
 			return true;
 		}
 	}
 
 	if (!spaceLeft)
 	{
-		gs["winner"] = 0;
+		gs["match"]["winner"] = 0;
 		return true;
 	}
 
