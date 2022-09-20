@@ -202,7 +202,9 @@ void GameServing::gameMsgInterpret(Gaming *pGame, Value &msg)
 	{
 		GamerInteracting *pGamer = NULL;
 		pGamer = (GamerInteracting *)msg["gamerId"].asUInt64();
+
 		pGamer->in.commit(msg);
+		pGamer->mpGame = NULL;
 		return;
 	}
 }
