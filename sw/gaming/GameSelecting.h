@@ -90,13 +90,13 @@ private:
 
 	/* member variables */
 	enum GsState mState;
-	std::vector<struct GameListElem> mGamesList;
+	std::vector<struct GameListElem> mListGames;
 	Transfering *mpConn;
 	uint32_t mKeyLastGotMs;
 	uint32_t mNumGamers;
 
-	ListIdx mIdxGames;
 	ListIdx mIdxTypes;
+	ListIdx mIdxGames;
 
 	std::string mGameName;
 

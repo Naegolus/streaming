@@ -51,8 +51,8 @@ GameSelecting::GameSelecting(Transfering *pConn)
 	, mpConn(pConn)
 	, mKeyLastGotMs(0)
 	, mNumGamers(0)
-	, mIdxGames(dGameRowSize)
 	, mIdxTypes(dTypeRowSize)
+	, mIdxGames(dGameRowSize)
 	, mGameName("")
 {}
 
@@ -83,7 +83,7 @@ Success GameSelecting::process()
 
 		procInfLog("Getting server list");
 
-		mGamesList.clear();
+		mListGames.clear();
 
 		{
 			lock_guard<mutex> lock(Gaming::mtxGamesList);
@@ -92,7 +92,7 @@ Success GameSelecting::process()
 			GameListElem game;
 
 			mIdxGames = Gaming::gamesList.size();
-			mGamesList.reserve(mIdxGames.size());
+			mListGames.reserve(mIdxGames.size());
 
 			iter = Gaming::gamesList.begin();
 			for (; iter != Gaming::gamesList.end(); ++iter)
@@ -103,7 +103,7 @@ Success GameSelecting::process()
 				game.name = pGaming->mGameName;
 				game.type = pGaming->mType;
 
-				mGamesList.push_back(game);
+				mListGames.push_back(game);
 			}
 		}
 
@@ -155,11 +155,11 @@ Success GameSelecting::process()
 		if (key != keyEnter)
 			break;
 
-		if (!mGamesList.size())
+		if (!mListGames.size())
 			break;
 
 		res["type"] = "connect";
-		res["gameId"] = (UInt64)mGamesList[mIdxGames.cursorAbs()].id;
+		res["gameId"] = (UInt64)mListGames[mIdxGames.cursorAbs()].id;
 
 		return Positive;
 
@@ -249,7 +249,6 @@ void GameSelecting::msgGamesList(string &msg)
 {
 	struct GameListElem *pElem = NULL;
 	size_t u = mIdxGames.offset();
-	size_t i = 0;
 	string str;
 
 	msg = "\e[2J\e[H";
@@ -263,7 +262,7 @@ void GameSelecting::msgGamesList(string &msg)
 	msg += str + "Type\r\n";
 	msg += "-----------------------------------\r\n";
 
-	for (i = 0; i < mIdxGames.win(); ++i, ++u)
+	for (size_t i = 0; i < mIdxGames.win(); ++i, ++u)
 	{
 		if ((!i and mIdxGames.offset()) or
 			(i == mIdxGames.win() - 1 and !mIdxGames.endReached()))
@@ -272,13 +271,13 @@ void GameSelecting::msgGamesList(string &msg)
 			continue;
 		}
 
-		if (u >= mGamesList.size())
+		if (u >= mListGames.size())
 		{
 			msg += "\r\n";
 			continue;
 		}
 
-		pElem = &mGamesList[u];
+		pElem = &mListGames[u];
 
 		str = "";
 		if (i == mIdxGames.cursor())
@@ -308,7 +307,6 @@ void GameSelecting::msgTypesList(string &msg)
 {
 	struct TypeListElem *pElem = NULL;
 	size_t u = mIdxTypes.offset();
-	size_t i = 0;
 	string str;
 
 	msg = "\e[2J\e[H";
@@ -317,7 +315,7 @@ void GameSelecting::msgTypesList(string &msg)
 	msg += "Available Games\r\n";
 	msg += "\r\n";
 
-	for (i = 0; i < mIdxTypes.win(); ++i, ++u, ++pElem)
+	for (size_t i = 0; i < mIdxTypes.win(); ++i, ++u, ++pElem)
 	{
 		if ((!i and mIdxTypes.offset()) or
 			(i == mIdxTypes.win() - 1 and !mIdxTypes.endReached()))
