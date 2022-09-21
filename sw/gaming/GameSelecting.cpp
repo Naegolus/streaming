@@ -131,13 +131,7 @@ Success GameSelecting::process()
 			return Positive;
 		}
 
-		if (key == 'j' and mIdxGames.inc())
-		{
-			msgGamesList(msg);
-			break;
-		}
-
-		if (key == 'k' and mIdxGames.dec())
+		if (mIdxGames.keyProcess(key))
 		{
 			msgGamesList(msg);
 			break;
@@ -184,13 +178,7 @@ Success GameSelecting::process()
 			break;
 		}
 
-		if (key == 'j' and mIdxTypes.inc())
-		{
-			msgTypesList(msg);
-			break;
-		}
-
-		if (key == 'k' and mIdxTypes.dec())
+		if (mIdxTypes.keyProcess(key))
 		{
 			msgTypesList(msg);
 			break;
