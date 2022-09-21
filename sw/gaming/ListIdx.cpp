@@ -38,6 +38,7 @@ ListIdx::ListIdx()
 ListIdx::ListIdx(uint32_t win)
 	: mWin(win)
 	, mSize(0)
+	, mSizeJump(5)
 	, mCursor(0)
 	, mOffset(0)
 {
@@ -63,6 +64,11 @@ void ListIdx::sizeSet(uint32_t size)
 {
 	mSize = size;
 	reset();
+}
+
+void ListIdx::sizeJumpSet(uint16_t size)
+{
+	mSizeJump = size;
 }
 
 uint32_t ListIdx::win() const

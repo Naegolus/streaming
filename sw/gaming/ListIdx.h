@@ -40,6 +40,7 @@ public:
 
 	void winSet(uint32_t win);
 	void sizeSet(uint32_t size);
+	void sizeJumpSet(uint16_t size);
 
 	uint32_t win() const;
 	uint32_t size() const;
@@ -59,6 +60,7 @@ private:
 
 	uint32_t mWin;
 	uint32_t mSize;
+	uint32_t mSizeJump;
 	uint32_t mCursor;
 	uint32_t mOffset;
 
