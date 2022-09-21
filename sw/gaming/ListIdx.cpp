@@ -81,6 +81,42 @@ uint32_t ListIdx::size() const
 	return mSize;
 }
 
+bool ListIdx::keyProcess(uint8_t key)
+{
+	bool changed = false;
+
+	if (key == 'j' and inc())
+		return true;
+
+	if (key == 'J')
+	{
+		for (uint16_t i = 0; i < mSizeJump; ++i)
+			changed |= inc();
+
+		return changed;
+	}
+
+	if (key == 'k' and dec())
+		return true;
+
+	if (key == 'K')
+	{
+		for (uint16_t i = 0; i < mSizeJump; ++i)
+			changed |= dec();
+
+		return changed;
+	}
+
+	if (key == 'g')
+	{
+		changed = !mCursor;
+		reset();
+		return changed;
+	}
+
+	return false;
+}
+
 bool ListIdx::inc()
 {
 	if (mCursor >= mSize - 1)

@@ -45,6 +45,7 @@ public:
 	uint32_t win() const;
 	uint32_t size() const;
 
+	bool keyProcess(uint8_t key);
 	bool inc();
 	bool dec();
 
