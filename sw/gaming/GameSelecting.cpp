@@ -267,16 +267,11 @@ void GameSelecting::msgGamesList(string &msg)
 		if (mIdxGames.winEndPrint(msg, i, u))
 			continue;
 
+		mIdxGames.cursorPrint(msg, i);
+
 		pElem = &mListGames[u];
-
-		str = "";
-		if (i == mIdxGames.cursor())
-			str += ">";
-		else
-			str += " ";
-		str += " ";
-
 		str += pElem->name;
+
 		if (str.size() < dNameColSize)
 			str.insert(str.size(), dNameColSize - str.size(), ' ');
 
@@ -318,18 +313,15 @@ void GameSelecting::msgTypesList(string &msg)
 			continue;
 		}
 
+		mIdxTypes.cursorPrint(msg, i);
+
 		pElem = &Gaming::typesList[u];
-
-		if (i == mIdxTypes.cursor())
-			msg += ">";
-		else
-			msg += " ";
-
 		str = pElem->name;
+
 		if (str.size() < dNameColSize)
 			str.insert(str.size(), dNameColSize - str.size(), ' ');
 
-		msg += " " + str + " |\r\n";
+		msg += str + " |\r\n";
 	}
 
 	msg += "\r\n";
