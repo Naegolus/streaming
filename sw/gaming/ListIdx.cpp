@@ -171,7 +171,7 @@ bool ListIdx::winEndPrint(string &str, size_t idxRel, size_t idxAbs, uint8_t pad
 {
 	if (idxAbs >= mSize)
 	{
-		str += string(' ', padding);
+		str += string(padding, ' ');
 		str += "\r\n";
 		return true;
 	}
@@ -184,7 +184,7 @@ bool ListIdx::winEndPrint(string &str, size_t idxRel, size_t idxAbs, uint8_t pad
 	if (!indicatorNeeded)
 		return false;
 
-	str += string(' ', padding);
+	str += string(padding, ' ');
 	str += "---";
 
 	return true;
@@ -200,7 +200,7 @@ void ListIdx::cursorPrint(string &str, size_t idxRel, uint8_t padding) const
 	else
 		str += " ";
 
-	str += string(' ', padding - 1);
+	str += string(padding - 1, ' ');
 }
 
 void ListIdx::reset()

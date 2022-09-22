@@ -270,10 +270,10 @@ void GameSelecting::msgGamesList(string &msg)
 		mIdxGames.cursorPrint(msg, i);
 
 		pElem = &mListGames[u];
-		str += pElem->name;
 
+		str = pElem->name;
 		if (str.size() < dNameColSize)
-			str.insert(str.size(), dNameColSize - str.size(), ' ');
+			str.insert(str.size(), dNameColSize - str.size() - 2, ' ');
 
 		msg += str + pElem->type + "\r\n";
 	}
@@ -316,8 +316,8 @@ void GameSelecting::msgTypesList(string &msg)
 		mIdxTypes.cursorPrint(msg, i);
 
 		pElem = &Gaming::typesList[u];
-		str = pElem->name;
 
+		str = pElem->name;
 		if (str.size() < dNameColSize)
 			str.insert(str.size(), dNameColSize - str.size(), ' ');
 
