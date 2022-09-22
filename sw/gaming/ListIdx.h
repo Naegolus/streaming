@@ -53,6 +53,7 @@ public:
 	uint32_t cursorAbs() const;
 	bool endReached() const;
 	bool winEndPrint(std::string &str, size_t idxRel, size_t idxAbs, uint8_t padding = 2) const;
+	void cursorPrint(std::string &str, size_t idxRel, uint8_t padding = 2) const;
 
 	void reset();
 

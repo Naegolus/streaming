@@ -190,6 +190,19 @@ bool ListIdx::winEndPrint(string &str, size_t idxRel, size_t idxAbs, uint8_t pad
 	return true;
 }
 
+void ListIdx::cursorPrint(string &str, size_t idxRel, uint8_t padding) const
+{
+	if (!padding)
+		return;
+
+	if (idxRel == mCursor)
+		str += ">";
+	else
+		str += " ";
+
+	str += string(' ', padding - 1);
+}
+
 void ListIdx::reset()
 {
 	mCursor = 0;
