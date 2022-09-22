@@ -258,9 +258,9 @@ void GameSelecting::msgGamesList(string &msg)
 	msg += "\r\n";
 
 	str = "  Name";
-	str.insert(str.size(), dNameColSize - str.size(), ' ');
+	str.insert(str.size(), dNameColSize - str.size() + 2, ' ');
 	msg += str + "Type\r\n";
-	msg += "-----------------------------------\r\n";
+	msg += "  ---------------------------------\r\n";
 
 	for (size_t i = 0; i < mIdxGames.win(); ++i, ++u)
 	{
@@ -273,12 +273,12 @@ void GameSelecting::msgGamesList(string &msg)
 
 		str = pElem->name;
 		if (str.size() < dNameColSize)
-			str.insert(str.size(), dNameColSize - str.size() - 2, ' ');
+			str.insert(str.size(), dNameColSize - str.size(), ' ');
 
 		msg += str + pElem->type + "\r\n";
 	}
 
-	msg += "-----------------------------------\r\n";
+	msg += "  ---------------------------------\r\n";
 	msg += "\r\n";
 	msg += "[k]\t\tUp\r\n";
 	msg += "[j]\t\tDown\r\n";
@@ -305,11 +305,13 @@ void GameSelecting::msgTypesList(string &msg)
 		str = "";
 		if (mIdxTypes.winEndPrint(str, i, u))
 		{
+			str.pop_back(); // remove \r\n
+			str.pop_back();
+
 			if (str.size() < dNameColSize)
-				str.insert(str.size(), dNameColSize - str.size(), ' ');
+				str.insert(str.size(), dNameColSize - str.size() + 2, ' ');
 
-			str += " |\r\n";
-
+			msg += str + " |\r\n";
 			continue;
 		}
 

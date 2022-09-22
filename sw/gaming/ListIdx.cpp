@@ -38,7 +38,7 @@ ListIdx::ListIdx()
 ListIdx::ListIdx(uint32_t win)
 	: mWin(win)
 	, mSize(0)
-	, mSizeJump(5)
+	, mSizeJump(3)
 	, mCursor(0)
 	, mOffset(0)
 {
@@ -110,7 +110,7 @@ bool ListIdx::keyProcess(uint8_t key)
 
 	if (key == 'g')
 	{
-		changed = !mCursor;
+		changed = mCursor != 0;
 		reset();
 		return changed;
 	}
@@ -185,7 +185,7 @@ bool ListIdx::winEndPrint(string &str, size_t idxRel, size_t idxAbs, uint8_t pad
 		return false;
 
 	str += string(padding, ' ');
-	str += "---";
+	str += "---\r\n";
 
 	return true;
 }
