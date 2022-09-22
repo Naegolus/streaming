@@ -27,6 +27,7 @@
 #define LIST_IDX_H
 
 #include <cstdint>
+#include <string>
 
 class ListIdx
 {
@@ -46,24 +47,38 @@ public:
 	uint32_t size() const;
 
 	bool keyProcess(uint8_t key);
-	bool inc();
-	bool dec();
-
 	uint32_t cursor() const;
 	uint32_t offset() const;
 
 	uint32_t cursorAbs() const;
 	bool endReached() const;
+	bool winEndPrint(std::string &str, size_t idxRel, size_t idxAbs, uint8_t padding = 2) const;
 
 	void reset();
 
 private:
 
+	/*
+	 * Naming of functions:  objectVerb()
+	 * Example:              peerAdd()
+	 */
+
+	/* member functions */
+	bool inc();
+	bool dec();
+
+	/* member variables */
 	uint32_t mWin;
 	uint32_t mSize;
 	uint32_t mSizeJump;
 	uint32_t mCursor;
 	uint32_t mOffset;
+
+	/* static functions */
+
+	/* static variables */
+
+	/* constants */
 
 };
 

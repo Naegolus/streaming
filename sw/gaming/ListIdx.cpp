@@ -48,6 +48,7 @@ ListIdx::~ListIdx()
 {
 }
 
+/* member functions */
 ListIdx &ListIdx::operator=(const uint32_t size)
 {
 	sizeSet(size);
@@ -166,9 +167,34 @@ bool ListIdx::endReached() const
 	return mOffset + mWin >= mSize;
 }
 
+bool ListIdx::winEndPrint(string &str, size_t idxRel, size_t idxAbs, uint8_t padding) const
+{
+	if (idxAbs >= mSize)
+	{
+		str += string(' ', padding);
+		str += "\r\n";
+		return true;
+	}
+
+	bool indicatorNeeded = false;
+
+	indicatorNeeded |= !idxRel and mOffset;
+	indicatorNeeded |= idxRel == mWin - 1 and !endReached();
+
+	if (!indicatorNeeded)
+		return false;
+
+	str += string(' ', padding);
+	str += "---";
+
+	return true;
+}
+
 void ListIdx::reset()
 {
 	mCursor = 0;
 	mOffset = 0;
 }
+
+/* static functions */
 
