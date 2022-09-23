@@ -1,0 +1,18 @@
+
+Project status: Completed
+
+Content:
+First crude open source version of application GameServing()
+as showcase for the Processing() code structure.
+
+Current closed source version can be played at:
+-----------------------------------------------
+
+telnet naegolus-testing.us.to 4000
+-> Development branch during stream
+
+telnet naegolus.us.to
+-> Last official version
+
+-----------------------------------------------
+
