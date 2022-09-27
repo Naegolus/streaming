@@ -717,6 +717,7 @@ Success Processing::childrenSuccess()
 
 	Processing *pChild = NULL;
 	Success success;
+	bool oneIsPending = false;
 
 #if CONFIG_PROC_USE_STD_LISTS
 	ChildIter iter = mChildList.begin();
@@ -738,8 +739,11 @@ Success Processing::childrenSuccess()
 			return success;
 
 		if (success == Pending)
-			return Pending;
+			oneIsPending = true;
 	}
+
+	if (oneIsPending)
+		return Pending;
 
 	return Positive;
 }
