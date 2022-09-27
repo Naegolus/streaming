@@ -91,6 +91,7 @@ void Processing::treeTick()
 
 	Processing *pChild = NULL;
 	Success success;
+	bool childCanBeRemoved;
 
 #if CONFIG_PROC_USE_STD_LISTS
 	ChildIter iter = mChildList.begin();
@@ -105,7 +106,10 @@ void Processing::treeTick()
 #endif
 		parentalDrive(pChild);
 
-		if (!(pChild->mStatDrv & PsbDrvUndriven))
+		childCanBeRemoved = pChild->mStatDrv & PsbDrvUndriven and
+						pChild->mStatParent & PsbParUnused;
+
+		if (!childCanBeRemoved)
 		{
 #if CONFIG_PROC_USE_STD_LISTS
 			++iter;
