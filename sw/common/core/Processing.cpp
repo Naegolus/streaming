@@ -168,6 +168,7 @@ void Processing::treeTick()
 		{
 			procDbgLog(LOG_LVL, "set process as unused during state existent");
 			mProcState = PsFinishedPrepare;
+			break;
 		}
 
 #if CONFIG_PROC_DISABLE_TREE_DEFAULT
@@ -184,6 +185,7 @@ void Processing::treeTick()
 			procDbgLog(LOG_LVL, "set process as unused during initializing");
 			procDbgLog(LOG_LVL, "downShutting()");
 			mProcState = PsDownShutting;
+			break;
 		}
 
 		success = initialize(); // child list may be changed here
@@ -214,6 +216,7 @@ void Processing::treeTick()
 			procDbgLog(LOG_LVL, "set process as unused during processing");
 			procDbgLog(LOG_LVL, "downShutting()");
 			mProcState = PsDownShutting;
+			break;
 		}
 
 		success = process(); // child list may be changed here
