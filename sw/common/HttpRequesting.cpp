@@ -81,12 +81,14 @@ HttpRequesting::HttpRequesting(const string &url)
 
 HttpRequesting::~HttpRequesting()
 {
-	if (mpHeaderList) {
+	if (mpHeaderList)
+	{
 		curl_slist_free_all(mpHeaderList);
 		mpHeaderList = NULL;
 	}
 
-	if (mpCurl) {
+	if (mpCurl)
+	{
 		curl_easy_cleanup(mpCurl);
 		mpCurl = NULL;
 	}
@@ -154,7 +156,8 @@ Success HttpRequesting::initialize()
 	{
 		lock_guard<mutex> lock(mtxGlobalInit);
 
-		if (!globalInitDone) {
+		if (!globalInitDone)
+		{
 			curl_global_init(CURL_GLOBAL_ALL);
 			procDbgLog(LOG_LVL, "global curl init done");
 
@@ -242,7 +245,8 @@ Success HttpRequesting::createEasyHandle()
 	if (mAuthMethod == "digest")
 		curl_easy_setopt(mpCurl, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST); // default: CURLAUTH_BASIC
 
-	if (tlsVersion != "") {
+	if (tlsVersion != "")
+	{
 		curl_easy_setopt(mpCurl, CURLOPT_SSL_VERIFYPEER, 1L);
 		curl_easy_setopt(mpCurl, CURLOPT_SSL_VERIFYHOST, 0L);
 		curl_easy_setopt(mpCurl, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA | CURLSSLOPT_NO_REVOKE);
@@ -263,12 +267,14 @@ Success HttpRequesting::createEasyHandle()
 		curl_easy_setopt(mpCurl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
 	else if (tlsVersion == "TLSv1.3")
 		curl_easy_setopt(mpCurl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_3);
-	else if (tlsVersion != "") {
+	else if (tlsVersion != "")
+	{
 		success = procErrLog(-1, "unknown TLS version");
 		goto errCleanupCurl;
 	}
 
-	if (mHdr != "") {
+	if (mHdr != "")
+	{
 		stringstream ssHdr(mHdr);
 		string hdrToken;
 
@@ -298,7 +304,8 @@ Success HttpRequesting::createEasyHandle()
 	return Positive;
 
 errCleanupCurl:
-	if (mpHeaderList) {
+	if (mpHeaderList)
+	{
 		curl_slist_free_all(mpHeaderList);
 		mpHeaderList = NULL;
 	}
@@ -351,10 +358,12 @@ Success HttpRequesting::createSession(const std::string &address, const uint16_t
 	procDbgLog(LOG_LVL, "remote socket for session: %s:%d", address.c_str(), port);
 	procDbgLog(LOG_LVL, "current number of sessions: %d", sessions.size());
 
-	for (iter = sessions.begin(); iter != sessions.end(); ++iter) {
+	for (iter = sessions.begin(); iter != sessions.end(); ++iter)
+	{
 		procDbgLog(LOG_LVL, "%d %s %d", iter->numReferences, iter->address.c_str(), iter->port);
 
-		if (iter->address == address and iter->port == port) {
+		if (iter->address == address and iter->port == port)
+		{
 			mSession = iter;
 			sessionFound = true;
 			break;
@@ -365,7 +374,8 @@ Success HttpRequesting::createSession(const std::string &address, const uint16_t
 	// not recommendet
 	//sessionFound = false;
 
-	if (sessionFound) {
+	if (sessionFound)
+	{
 		procDbgLog(LOG_LVL, "reusing existing session");
 
 		++mSession->numReferences;
@@ -383,10 +393,12 @@ Success HttpRequesting::createSession(const std::string &address, const uint16_t
 
 		mSession->sharedDataMtxList.resize(numSharedDataTypes, NULL);
 
-		for (size_t i = 0; i < numSharedDataTypes; ++i) {
+		for (size_t i = 0; i < numSharedDataTypes; ++i)
+		{
 			mSession->sharedDataMtxList[i] = new (nothrow) mutex;
 
-			if (!mSession->sharedDataMtxList[i]) {
+			if (!mSession->sharedDataMtxList[i])
+			{
 				deleteSharedDataMtxList();
 				sessions.erase(mSession);
 
@@ -395,7 +407,8 @@ Success HttpRequesting::createSession(const std::string &address, const uint16_t
 		}
 
 		mSession->pCurlShare = curl_share_init();
-		if (!mSession->pCurlShare) {
+		if (!mSession->pCurlShare)
+		{
 			deleteSharedDataMtxList();
 			sessions.erase(mSession);
 
@@ -413,7 +426,8 @@ Success HttpRequesting::createSession(const std::string &address, const uint16_t
 		code += curl_share_setopt(mSession->pCurlShare, CURLSHOPT_LOCKFUNC, HttpRequesting::lockSharedData);
 		code += curl_share_setopt(mSession->pCurlShare, CURLSHOPT_UNLOCKFUNC, HttpRequesting::unlockSharedData);
 
-		if (code != CURLSHE_OK) {
+		if (code != CURLSHE_OK)
+		{
 			curl_share_cleanup(mSession->pCurlShare);
 			deleteSharedDataMtxList();
 			sessions.erase(mSession);
@@ -476,7 +490,8 @@ void HttpRequesting::multiProcess()
 
 	curl_multi_perform(pCurlMulti, &numRunningRequests);
 
-	while (curlMsg = curl_multi_info_read(pCurlMulti, &numMsgsLeft), curlMsg) {
+	while (curlMsg = curl_multi_info_read(pCurlMulti, &numMsgsLeft), curlMsg)
+	{
 
 		if (CURLMSG_DONE != curlMsg->msg)
 			continue;
@@ -490,7 +505,8 @@ void HttpRequesting::multiProcess()
 
 		curl_multi_remove_handle(pCurlMulti, pCurl);
 
-		if (pReq->mpHeaderList) {
+		if (pReq->mpHeaderList)
+		{
 			curl_slist_free_all(pReq->mpHeaderList);
 			pReq->mpHeaderList = NULL;
 		}
@@ -507,7 +523,8 @@ void HttpRequesting::multiProcess()
 
 #if 0
 	--mRetries;
-	if (mRetries) {
+	if (mRetries)
+	{
 		procDbgLog(LOG_LVL, "retries left %d", mRetries);
 		success = Pending;
 	} else
