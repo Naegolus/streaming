@@ -34,7 +34,8 @@
 
 #define numSharedDataTypes	4
 
-struct HttpSession {
+struct HttpSession
+{
 	size_t numReferences;
 	size_t maxReferences;
 	std::string address;
