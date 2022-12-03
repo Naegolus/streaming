@@ -1,0 +1,8 @@
+
+$ cat input.txt | grep A | wc -l
+567
+$ cat input.txt | grep B | wc -l
+678
+$ cat input.txt | grep C | wc -l
+1255
+
