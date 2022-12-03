@@ -40,7 +40,7 @@ public:
 
 protected:
 
-	AdventCoding();
+	AdventCoding()	: Processing("AdventCoding") {}
 	virtual ~AdventCoding() {}
 
 private:
@@ -55,7 +55,6 @@ private:
 
 	/* member functions */
 	Success process();
-	void processInfo(char *pBuf, char *pBufEnd);
 
 	/* member variables */
 

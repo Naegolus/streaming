@@ -4,12 +4,6 @@
 
 using namespace std;
 
-#define LOG_LVL	0
-
-AdventCoding::AdventCoding()
-	: Processing("AdventCoding")
-{}
-
 /* member functions */
 Success AdventCoding::process()
 {
@@ -55,12 +49,4 @@ Success AdventCoding::process()
 
 	return Positive;
 }
-
-void AdventCoding::processInfo(char *pBuf, char *pBufEnd)
-{
-	(void)pBuf;
-	(void)pBufEnd;
-}
-
-/* static functions */
 
