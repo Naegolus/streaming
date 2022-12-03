@@ -62,9 +62,11 @@ TcpTransfering::TcpTransfering(int fd)
 	, mSocketFd(fd)
 	, mErrno(0)
 	, mUsable(false)
+	, mInfoSet(false)
 	, mBytesReceived(0)
 	, mBytesSent(0)
 {
+	socketInfoSet();
 }
 
 TcpTransfering::TcpTransfering(const string &addr)
@@ -72,9 +74,11 @@ TcpTransfering::TcpTransfering(const string &addr)
 	, mSocketFd(-1)
 	, mErrno(0)
 	, mUsable(false)
+	, mInfoSet(false)
 	, mBytesReceived(0)
 	, mBytesSent(0)
 {
+	(void)addr;
 	// TODO: Implement "TcpConnecting()"
 }
 
@@ -87,6 +91,8 @@ Success TcpTransfering::initialize()
 	if (mSocketFd < 0)
 		return procErrLog(-1, "socket file descriptor not set");
 
+	socketInfoSet();
+
 	if (::setsockopt(mSocketFd, SOL_SOCKET, SO_KEEPALIVE, (const char *)&opt, sizeof(opt)))
 		return procErrLog(-2, "setsockopt(SO_KEEPALIVE) failed: %s", strerror(errno));
 
@@ -95,7 +101,7 @@ Success TcpTransfering::initialize()
 
 	opt = ioctlsocket(mSocketFd, FIONBIO, &nonBlockMode);
 	if (opt == SOCKET_ERROR)
-		return procErrLog(-3, "setsockopt(SO_KEEPALIVE) failed: %s", strerror(errno));
+		return procErrLog(-3, "ioctlsocket(FIONBIO) failed: %s", strerror(errno));
 #else
 	opt = fcntl(mSocketFd, F_GETFL, 0);
 	if (opt == -1)
@@ -114,6 +120,9 @@ Success TcpTransfering::initialize()
 Success TcpTransfering::process()
 {
 	ssize_t connCheck = read(NULL, 0);
+
+	if (mDone)
+		return Positive;
 
 	if (connCheck >= 0)
 		return Pending;
@@ -299,24 +308,36 @@ void TcpTransfering::disconnect(int err)
  *   The inet_ntoa() function converts the Internet host address in, given in network byte order, to a string in IPv4 dotted-decimal notation.
  *   The string is returned in a statically allocated buffer, which subsequent calls will overwrite.
  */
+void TcpTransfering::socketInfoSet()
+{
+	if (mInfoSet)
+		return;
+
+	if (mSocketFd < 0)
+		return;
+
+	struct sockaddr_in addr;
+	socklen_t addrLen;
+
+	memset(&addr, 0, sizeof(addr));
+
+	addrLen = sizeof(addr);
+	::getsockname(mSocketFd, (struct sockaddr*)&addr, &addrLen);
+	mAddrLocal = ::inet_ntoa(addr.sin_addr);
+	mPortLocal = ::ntohs(addr.sin_port);
+
+	addrLen = sizeof(addr);
+	::getpeername(mSocketFd, (struct sockaddr*)&addr, &addrLen);
+	mAddrRemote = ::inet_ntoa(addr.sin_addr);
+	mPortRemote = ::ntohs(addr.sin_port);
+
+	mInfoSet = true;
+}
+
 void TcpTransfering::processInfo(char *pBuf, char *pBufEnd)
 {
-	{
-		lock_guard<mutex> lock(mSocketFdMtx);
-
-		struct sockaddr_in addr;
-		socklen_t addrLen;
-
-		memset(&addr, 0, sizeof(addr));
-
-		addrLen = sizeof(addr);
-		::getsockname(mSocketFd, (struct sockaddr*)&addr, &addrLen);
-		dInfo("%s:%d <--> ", ::inet_ntoa(addr.sin_addr), ::ntohs(addr.sin_port));
-
-		addrLen = sizeof(addr);
-		::getpeername(mSocketFd, (struct sockaddr*)&addr, &addrLen);
-		dInfo("%s:%d\n", ::inet_ntoa(addr.sin_addr), ::ntohs(addr.sin_port));
-	}
+	dInfo("%s:%d <--> ", mAddrLocal.c_str(), mPortLocal);
+	dInfo("%s:%d\n", mAddrRemote.c_str(), mPortRemote);
 
 	dInfo("Bytes received\t\t%d\n", mBytesReceived);
 }

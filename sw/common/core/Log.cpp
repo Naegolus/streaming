@@ -51,9 +51,9 @@ static mutex mtxPrint;
 
 static system_clock::time_point tOld;
 
-const string red("\e[0;31m");
-const string yellow("\e[0;33m");
-const string reset("\e[0m");
+const string red("\033[0;31m");
+const string yellow("\033[0;33m");
+const string reset("\033[0m");
 
 Pipe<Value> ppGlobLogEntries;
 
@@ -62,6 +62,8 @@ int16_t logEntryCreate(const int severity, const char *filename, const char *fun
 #if CONFIG_PROC_HAVE_DRIVERS
 	lock_guard<mutex> lock(mtxPrint);
 #endif
+
+	(void)filename;
 
 	char *pBuf = new (nothrow) char[dLogEntryBufferSize];
 	if (!pBuf)

@@ -73,7 +73,9 @@ private:
 	Success initialize();
 	Success process();
 	Success shutdown();
+
 	void disconnect(int err = 0);
+	void socketInfoSet();
 
 	void processInfo(char *pBuf, char *pBufEnd);
 
@@ -81,6 +83,7 @@ private:
 	int mSocketFd;
 	int mErrno;
 	bool mUsable;
+	bool mInfoSet;
 
 	// statistics
 	uint32_t mBytesReceived;

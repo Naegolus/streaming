@@ -155,7 +155,7 @@ void Processing::treeTick()
 			char buf[32];
 			int res;
 
-			(void)snprintf(buf, sizeof(buf), "%p", this);
+			(void)snprintf(buf, sizeof(buf), "%p", (void *)this);
 
 			res = prctl(PR_SET_NAME, buf, 0, 0, 0);
 			if (res < 0)
@@ -280,15 +280,17 @@ void Processing::treeTick()
 	case PsFinished:
 
 		break;
+	default:
+		break;
 	}
 }
 
-const bool Processing::progress() const
+bool Processing::progress() const
 {
 	return mProcState < PsFinished or mNumChildren;
 }
 
-const Success Processing::success() const
+Success Processing::success() const
 {
 	return mSuccess;
 }
@@ -339,7 +341,7 @@ int Processing::processTreeStr(char *pBuf, char *pBufEnd, bool detailed, bool co
 	{
 #if CONFIG_PROC_USE_DRIVER_COLOR
 		if (colored)
-			dInfo("\e[0;95m");
+			dInfo("\033[0;95m");
 		else
 #endif
 			dInfo("### ");
@@ -347,14 +349,14 @@ int Processing::processTreeStr(char *pBuf, char *pBufEnd, bool detailed, bool co
 
 #if CONFIG_PROC_USE_DRIVER_COLOR
 	if (colored and !mDriverLevel)
-		dInfo("\e[0;32m");
+		dInfo("\033[0;32m");
 #endif
 
 	if (mDriver == DrivenByNewInternalDriver)
 	{
 #if CONFIG_PROC_USE_DRIVER_COLOR
 		if (colored)
-			dInfo("\e[0;36m");
+			dInfo("\033[0;36m");
 		else
 #endif
 			dInfo("*** ");
@@ -365,7 +367,7 @@ int Processing::processTreeStr(char *pBuf, char *pBufEnd, bool detailed, bool co
 
 #if CONFIG_PROC_USE_DRIVER_COLOR
 	if (colored)
-		dInfo("\e[0m");
+		dInfo("\033[0m");
 #endif
 
 	if (detailed and mProcState < PsFinished)
@@ -702,10 +704,14 @@ Success Processing::shutdown()
 
 void Processing::processInfo(char *pBuf, char *pBufEnd)
 {
+	(void)pBuf;
+	(void)pBufEnd;
 }
 
 size_t Processing::processTrace(char *pBuf, char *pBufEnd)
 {
+	(void)pBuf;
+	(void)pBufEnd;
 	return 0;
 }
 
@@ -965,3 +971,4 @@ void Processing::internalDrive(Processing *pChild)
 	}
 }
 #endif
+

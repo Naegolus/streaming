@@ -58,10 +58,13 @@ TcpListening::TcpListening()
 {
 }
 
-void TcpListening::portSet(size_t port)
+void TcpListening::portSet(size_t port, bool onlyLocal)
 {
 	mAddress.sin_family = AF_INET;
-	mAddress.sin_addr.s_addr = INADDR_ANY;
+	if (onlyLocal)
+		mAddress.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+	else
+		mAddress.sin_addr.s_addr = htonl(INADDR_ANY);
 	mAddress.sin_port = htons(port);
 
 	mPort = port;

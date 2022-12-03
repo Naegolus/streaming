@@ -74,6 +74,8 @@ public:
 		return new (std::nothrow) SystemDebugging(pTreeRoot);
 	}
 
+	void listenLocalSet();
+
 protected:
 
 	SystemDebugging() : Processing("SystemDebugging") {}
@@ -113,6 +115,7 @@ private:
 
 	/* member variables */
 	Processing *mpTreeRoot;
+	bool mListenLocal;
 	std::list<struct SystemDebuggingPeer> mPeerList;
 	uint32_t mUpdateMs;
 

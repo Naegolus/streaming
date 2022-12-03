@@ -26,7 +26,12 @@
 #ifndef TRANSFERING_H
 #define TRANSFERING_H
 
+#include <vector>
+
 #include "Processing.h"
+
+typedef std::vector<uint8_t> VecByte;
+typedef std::vector<uint8_t>::iterator VecByteIter;
 
 class Transfering : public Processing
 {
@@ -34,15 +39,60 @@ class Transfering : public Processing
 public:
 
 	virtual bool usable() { return false; }
-	virtual ssize_t read(void *pBuf, size_t len) = 0;
+
 	virtual void send(const void *pData, size_t len) = 0;
+	virtual void send(VecByte &pkt)
+	{
+		send(pkt.data(), pkt.size());
+	}
+
+	virtual ssize_t read(void *pBuf, size_t len) = 0;
+	Success exactRead(void *pBuf, size_t len)
+	{
+		if (!len)
+			return Positive;
+
+		if (!pBuf)
+			return procErrLog(-1, "buffer not set");
+
+		ssize_t lenRead = read(pBuf, len);
+
+		if (!lenRead)
+			return Pending;
+
+		if (lenRead < 0)
+			return -2;
+
+		if ((size_t)lenRead != len)
+			return procErrLog(-3, "read data len does not match");
+
+		return Positive;
+	}
+
+	void doneSet()
+	{
+		mDone = true;
+	}
+
+	std::string mAddrLocal;
+	uint16_t mPortLocal;
+
+	std::string mAddrRemote;
+	uint16_t mPortRemote;
 
 protected:
 
 	Transfering(const char *name)
 		: Processing(name)
+		, mAddrLocal("")
+		, mPortLocal(0)
+		, mAddrRemote("")
+		, mPortRemote(0)
+		, mDone(false)
 	{}
 	virtual ~Transfering() {}
+
+	bool mDone;
 
 private:
 

@@ -51,6 +51,7 @@ const size_t SystemDebugging::maxPeers = 100;
 SystemDebugging::SystemDebugging(Processing *pTreeRoot)
 	: Processing("SystemDebugging")
 	, mpTreeRoot(pTreeRoot)
+	, mListenLocal(false)
 	, mUpdateMs(500)
 	, mpLstProc(NULL)
 	, mpLstLog(NULL)
@@ -65,23 +66,28 @@ SystemDebugging::SystemDebugging(Processing *pTreeRoot)
 }
 
 /* member functions */
+void SystemDebugging::listenLocalSet()
+{
+	mListenLocal = true;
+}
+
 Success SystemDebugging::initialize()
 {
 	mPeerList.clear();
 
 	// proc tree
 	mpLstProc = TcpListening::create();
-	mpLstProc->portSet(3000);
+	mpLstProc->portSet(3000, mListenLocal);
 	start(mpLstProc);
 
 	// log
 	mpLstLog = TcpListening::create();
-	mpLstLog->portSet(3001);
+	mpLstLog->portSet(3001, mListenLocal);
 	start(mpLstLog);
 
 	// command
 	mpLstCmd = TcpListening::create();
-	mpLstCmd->portSet(3002);
+	mpLstCmd->portSet(3002, mListenLocal);
 	mpLstCmd->maxConnSet(4);
 	start(mpLstCmd);
 
@@ -234,7 +240,7 @@ void SystemDebugging::processTreeSend()
 	//procDbgLog(LOG_LVL, "process tree changed");
 	//procDbgLog(LOG_LVL, "\n%s", procTree.c_str());
 
-	string msg("\e[2J\e[H");
+	string msg("\033[2J\033[H");
 
 	msg += procTree;
 
@@ -317,7 +323,7 @@ void SystemDebugging::environmentSend()
 	if (environment == mEnvironment)
 		return;
 
-	string msg("\e[2J\e[H");
+	string msg("\033[2J\033[H");
 
 	msg += environment;
 
@@ -350,12 +356,16 @@ void SystemDebugging::processInfo(char *pBuf, char *pBufEnd)
 /* static functions */
 string SystemDebugging::procTreeDetailedToggle(const string &args)
 {
+	(void)args;
+
 	procTreeDetailed = not procTreeDetailed;
 	return "";
 }
 
 string SystemDebugging::procTreeColoredToggle(const string &args)
 {
+	(void)args;
+
 #ifdef CONFIG_USE_PROCESS_DRIVER_COLOR
 	procTreeColored = not procTreeColored;
 	return "";

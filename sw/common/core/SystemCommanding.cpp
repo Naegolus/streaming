@@ -143,6 +143,8 @@ void SystemCommanding::inputAdd(TcpTransfering *pTrans, const void *pData, size_
 
 	lock_guard<mutex> lock(mMtxInputs);
 
+	(void)pTrans;
+
 	string cmd((const char *)pData, len);
 	mInputs.push(cmd);
 
@@ -154,11 +156,12 @@ void SystemCommanding::transDisconnect(TcpTransfering *pTrans)
 {
 	/* just show TcpListening that the
 	 * TcpTransfering is still important to us */
+	(void)pTrans;
 }
 
 void SystemCommanding::processInfo(char *pBuf, char *pBufEnd)
 {
-	dInfo("Peer\t\t\t%p\n", mpTrans);
+	dInfo("Peer\t\t\t%p\n", (void *)mpTrans);
 }
 
 /* static functions */
@@ -229,6 +232,8 @@ void SystemCommanding::unreg(const string &id)
 	dbgLog(LOG_LVL, "");
 	lock_guard<mutex> lock(mtxCmds);
 
+	(void)id;
+
 	wrnLog("not implemented");
 
 	dbgLog(LOG_LVL, ": done");
@@ -280,6 +285,7 @@ string SystemCommanding::commandExecute(const string &line)
 
 string SystemCommanding::dummyExecute(const string &args)
 {
+	(void)args;
 	return "";
 }
 
@@ -288,6 +294,8 @@ string SystemCommanding::helpPrint(const string &args)
 	struct SystemCommand cmd;
 	string cls = "";
 	string resp = "\nAvailable commands\n";
+
+	(void)args;
 
 	for (list<struct SystemCommand>::iterator iter = cmds.begin(); iter != cmds.end(); ++iter) {
 		cmd = *iter;
@@ -317,11 +325,13 @@ string SystemCommanding::helpPrint(const string &args)
 
 string SystemCommanding::messageBroadcast(const std::string &args)
 {
+	(void)args;
 	return "error: not implemented\n";
 }
 
 string SystemCommanding::memoryWrite(const std::string &args)
 {
+	(void)args;
 	return "error: not implemented\n";
 }
 

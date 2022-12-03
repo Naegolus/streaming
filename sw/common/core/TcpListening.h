@@ -52,7 +52,7 @@ public:
 		return new (std::nothrow) TcpListening;
 	}
 
-	void portSet(size_t port);
+	void portSet(size_t port, bool onlyLocal = false);
 	void maxConnSet(size_t maxConn);
 
 	int nextPeerFd();

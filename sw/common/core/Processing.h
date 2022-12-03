@@ -118,8 +118,8 @@ public:
 	// This area is used by the client
 
 	void treeTick();
-	const bool progress() const;
-	const Success success() const;
+	bool progress() const;
+	Success success() const;
 	void unusedSet();
 	void procTreeDisplaySet(bool display);
 
@@ -236,7 +236,7 @@ inline int16_t logEntryCreate(const int severity, const char *filename, const ch
 #endif
 
 #define genericLog(l, c, m, ...)			(logEntryCreate(l, __FILENAME__, __FUNCTION__, __LINE__, c, m, ##__VA_ARGS__))
-#define errLog(c, m, ...)				(genericLog(1, c, m, ##__VA_ARGS__))
+#define errLog(c, m, ...)				(c < 0 ? genericLog(1, c, m, ##__VA_ARGS__) : c)
 #define wrnLog(m, ...)					(genericLog(2, 0, m, ##__VA_ARGS__))
 #define infLog(m, ...)					(genericLog(3, 0, m, ##__VA_ARGS__))
 #define dbgLog(l, m, ...)				(genericLog(4 + l, 0, m, ##__VA_ARGS__))
@@ -263,6 +263,18 @@ static const char *StateName ## String[] = \
 { \
 	dForEach_ ## StateName(dGen ## StateName ## String) \
 };
+
+template <typename T>
+T MIN(T a, T b)
+{
+	return a < b ? a : b;
+}
+
+template <typename T>
+T MAX(T a, T b)
+{
+	return a > b ? a : b;
+}
 
 #endif
 
