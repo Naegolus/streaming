@@ -89,6 +89,7 @@ Success AdventCoding::process()
 	}
 
 	fclose(pFile);
+	pFile = NULL;
 
 	procInfLog("");
 	procInfLog("Sum  : %d", scoreSum);

@@ -132,6 +132,7 @@ Success AdventCoding::process()
 	}
 
 	fclose(pFile);
+	pFile = NULL;
 
 	procInfLog("");
 	procInfLog("Total: %d", prioSumTotal);
