@@ -21,12 +21,9 @@ void listPrint(list<char> &lst)
 void cratesPrint()
 {
 	infLog("-------------------");
-	infLog("Printing crates");
 
 	for (size_t i = 0; i < crates.size(); ++i)
 		listPrint(crates[i]);
-
-	infLog("Printing crates: done");
 }
 
 void stateZeroGet(FILE *pFile)
@@ -56,7 +53,6 @@ void stateZeroGet(FILE *pFile)
 		{
 			lineLen = len - 3;
 			numElements = (lineLen >> 2) + 1;
-			infLog("numElements = %d", numElements);
 
 			crates.resize(numElements);
 		}
@@ -67,16 +63,11 @@ void stateZeroGet(FILE *pFile)
 		if (line[1] == '1')
 			continue;
 
-		//infLog("Line: %s", line);
-		//infLog("len : %d", len);
-
 		for (i = 0; i < numElements; ++i)
 		{
 			pos = 1 + i * 4;
 			if (line[pos] == ' ')
 				continue;
-
-			//infLog("char : %c", line[pos]);
 
 			crates[i].push_back(line[pos]);
 		}
@@ -120,28 +111,18 @@ Success AdventCoding::process()
 				break;
 
 			crate = crates[idxSrc].front();
-			//infLog("Got crate [%c] from %d", crate, idxSrc);
-			//infLog("Removing crate from %d", idxSrc);
 			crates[idxSrc].pop_front();
 
-			//infLog("Pushing crate to tmp");
-			//crates[idxDst].push_front(crate);
 			lstTmp.push_back(crate);
-
-			//infLog("Pushing done");
 		}
-
-		//listPrint(lstTmp);
 
 		while (lstTmp.size())
 		{
 			crate = lstTmp.back();
 			lstTmp.pop_back();
-			//infLog("Pushing crate [%c] to %d", crate, idxDst);
+
 			crates[idxDst].push_front(crate);
 		}
-
-		//cratesPrint();
 	}
 
 	cratesPrint();
@@ -152,8 +133,6 @@ Success AdventCoding::process()
 			continue;
 
 		crate = crates[i].front();
-		//infLog("Got crate [%c] from %d", crate, i);
-
 		frontCrates.push_back(crate);
 	}
 
