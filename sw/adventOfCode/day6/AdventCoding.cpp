@@ -16,11 +16,8 @@ bool prefixDifferent(const char *pCurrent, uint32_t cntDiff = 4)
 
 	for (pStart = pCurrent - cntDiff; pStart < pCurrent; ++pStart)
 	{
-		//infLog("Start: %c", *pStart);
 		for (pCmp = pStart + 1; pCmp < pCurrent; ++pCmp)
 		{
-			//infLog("  %c", *pCmp);
-
 			if (*pStart == *pCmp)
 				return false;
 		}
@@ -31,7 +28,7 @@ bool prefixDifferent(const char *pCurrent, uint32_t cntDiff = 4)
 
 Success AdventCoding::process()
 {
-	FILE *pFile = fopen("../input.txt", "r");
+	FILE *pFile = fopen("../input2.txt", "r");
 	uint32_t u;
 
 	if (!pFile)
@@ -46,14 +43,8 @@ Success AdventCoding::process()
 
 		for (u = 4; u < strlen(line) + 1; ++u)
 		{
-			if (!prefixDifferent(&line[u], 14))
-				continue;
-
-			line[u] = '_';
-
-			procInfLog("Line: %-40s > %u", line, u);
-
-			break;
+			if (prefixDifferent(&line[u], 14))
+				break;
 		}
 	}
 
