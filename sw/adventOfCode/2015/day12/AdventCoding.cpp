@@ -14,11 +14,10 @@ char line[10000];
 
 Value val;
 
-bool redFilter = false;
-
-int32_t numSum(const Value &v, bool inArray = true, int32_t sum = 0)
+int32_t numSum(const Value &v, bool redFilter = false, bool inArray = true)
 {
 	Value::const_iterator iter;
+	int32_t sum = 0;
 
 	for (iter = v.begin(); iter != v.end(); ++iter)
 	{
@@ -27,14 +26,14 @@ int32_t numSum(const Value &v, bool inArray = true, int32_t sum = 0)
 		if (iter->isObject())
 		{
 			//infLog("Object");
-			sum += numSum(*iter, false);
+			sum += numSum(*iter, redFilter, false);
 			continue;
 		}
 
 		if (iter->isArray())
 		{
 			//infLog("Array");
-			sum += numSum(*iter, true);
+			sum += numSum(*iter, redFilter, true);
 			continue;
 		}
 
@@ -92,8 +91,7 @@ Success AdventCoding::process()
 	sum = numSum(val);
 	procInfLog("Result1: %d", sum);
 
-	redFilter = true;
-	sum = numSum(val, val.isArray());
+	sum = numSum(val, true, val.isArray());
 	procInfLog("Result2: %d", sum);
 
 	return Positive;
