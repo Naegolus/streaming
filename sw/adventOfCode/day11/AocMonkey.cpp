@@ -160,17 +160,20 @@ void monkeyTurnExec(uint32_t id, bool noWorry = true)
 	}
 
 	string strValR, strOp, idMonkeyTarget;
-	uint32_t worry;
-	uint32_t valR, mod;
+	uint64_t worry;
+	uint64_t valR, mod;
 
 	//infLog("Monkey %s:", strId.c_str());
 
 	while (numItem)
 	{
-		worry = monkey["starting"][0].asUInt();
+		worry = monkey["starting"][0].asUInt64();
 		monkey["starting"].removeIndex(0, NULL);
 
-		//infLog("  Inspecting item with a worry level of %u", worry);
+		//infLog("  Inspecting item with a worry level of %lu", worry);
+
+		if (!noWorry)
+			worry %= superMod;
 
 		strValR = monkey["op"]["valR"].asString();
 		if (strValR == "old")
@@ -182,13 +185,13 @@ void monkeyTurnExec(uint32_t id, bool noWorry = true)
 		if (strOp == "+")
 		{
 			worry += valR;
-			//infLog("    Worry level increases by %u to %u.", valR, worry);
+			//infLog("    Worry level is increases by %lu to %lu.", valR, worry);
 		}
 		else
 		if (strOp == "*")
 		{
 			worry *= valR;
-			//infLog("    Worry level is multiplied by %u to %u.", valR, worry);
+			//infLog("    Worry level is multiplied by %lu to %lu.", valR, worry);
 		}
 		else
 		{
@@ -205,9 +208,6 @@ void monkeyTurnExec(uint32_t id, bool noWorry = true)
 #endif
 		}
 
-		if (!noWorry)
-			worry %= superMod;
-
 		valR = monkey["test"]["val"].asUInt();
 		mod = worry % valR;
 
@@ -218,7 +218,7 @@ void monkeyTurnExec(uint32_t id, bool noWorry = true)
 
 		//infLog("    Current worry level is %sdivisible by %u.", mod ? "not " : "", valR);
 #if 0
-		infLog("    Item with worry level %u is thrown to monkey %s.",
+		infLog("    Item with worry level %lu is thrown to monkey %s.",
 						worry,
 						idMonkeyTarget.c_str());
 #endif
@@ -273,7 +273,7 @@ void monkeyItemsPrint()
 	}
 }
 
-uint32_t monkeyCntThrownPrint()
+uint64_t monkeyCntThrownPrint()
 {
 	uint32_t idMonkey, numMonkeys = notes.size();
 	string strId;
@@ -287,7 +287,7 @@ uint32_t monkeyCntThrownPrint()
 		cout << " times." << endl;
 	}
 
-	return notes["0"]["cntThrown"].asUInt() *
-		notes[to_string(numMonkeys - 1)]["cntThrown"].asUInt();
+	return notes["0"]["cntThrown"].asUInt64() *
+		notes[to_string(numMonkeys - 1)]["cntThrown"].asUInt64();
 }
 

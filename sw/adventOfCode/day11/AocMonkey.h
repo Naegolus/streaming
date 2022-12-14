@@ -10,7 +10,7 @@ void lineParse(char *pLine);
 void superModCalc();
 void numRoundsExec(uint32_t numRounds, bool noWorry = true);
 void monkeyItemsPrint();
-uint32_t monkeyCntThrownPrint();
+uint64_t monkeyCntThrownPrint();
 
 #endif
 

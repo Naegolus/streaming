@@ -14,7 +14,7 @@ char line[10000];
 
 Success AdventCoding::process()
 {
-	FILE *pFile = fopen("../input.txt", "r");
+	FILE *pFile = fopen("../input2.txt", "r");
 
 	if (!pFile)
 		return procErrLog(-1, "Could not open file");
@@ -38,21 +38,21 @@ Success AdventCoding::process()
 	pFile = NULL;
 
 	StyledWriter writer;
-	cout << writer.write(notes);
+	//cout << writer.write(notes);
 
 	//monkeyItemsPrint();
 	//cout << "-------" << endl;
 
 	superModCalc();
 
-	numRoundsExec(20, false);
+	numRoundsExec(10000, false);
 	//cout << writer.write(notes);
 
 	//monkeyItemsPrint();
 	//cout << "-------" << endl;
-	uint32_t res1 = monkeyCntThrownPrint();
+	uint64_t res1 = monkeyCntThrownPrint();
 
-	procInfLog("Result1: %u", res1);
+	procInfLog("Result1: %lu", res1);
 
 	return Positive;
 }
