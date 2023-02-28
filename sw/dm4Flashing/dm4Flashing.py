@@ -76,7 +76,13 @@ class Dm4Flashing(Processing):
 
 		# This acts as a function: y = f(x)
 		# We can wait for the result
-		out, err = p.communicate()
+		try:
+			out, err = p.communicate(timeout = 1)
+		except TimeoutExpired:
+			p.kill()
+			out, err = p.communicate()
+
+		self.programmerOkCheck()
 
 		if not "G030/G031/G041" in out.decode("utf-8"):
 			return
@@ -116,7 +122,10 @@ class Dm4Flashing(Processing):
 		if res is None:
 			return
 
-		if res:
+		try:
+			out, err = self.p.communicate(timeout = 1)
+		except TimeoutExpired:
+			p.kill()
 			out, err = self.p.communicate()
 
 		self.p.terminate()
@@ -149,7 +158,11 @@ class Dm4Flashing(Processing):
 				stderr = subprocess.PIPE
 			)
 
-		out, err = p.communicate()
+		try:
+			out, err = p.communicate(timeout = 1)
+		except TimeoutExpired:
+			p.kill()
+			out, err = p.communicate()
 
 		if "G030/G031/G041" in out.decode("utf-8"):
 			return
@@ -158,10 +171,33 @@ class Dm4Flashing(Processing):
 
 		self.state = self.BoardAttachedWait
 
+	def programmerOkCheck(self):
+
+		p = subprocess.Popen(
+				["st-info", "--probe"],
+				stdin = subprocess.PIPE,
+				stdout = subprocess.PIPE,
+				stderr = subprocess.PIPE
+			)
+
+		try:
+			out, err = p.communicate(timeout = 1)
+		except TimeoutExpired:
+			p.kill()
+			out, err = p.communicate()
+
+		if not "Found 0" in out.decode("utf-8"):
+			#self.procDbgLog("Everything is awesome")
+			return
+
+		self.procDbgLog("could not find the ST-Link programmer")
+
+		pass
+
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description = 'Flashing Discman 4')
-	parser.add_argument('-h', '--fileHex', type = str, help = 'HEX file to download to uC', required = False, default = '/home/pi/production.hex')
+	parser.add_argument('-f', '--fileHex', type = str, help = 'HEX file to download to uC', required = False, default = '/home/pi/production.hex')
 	#parser.add_argument('-p', '--port', type = int, help = 'Port', required = False, default = 2000)
 	args = parser.parse_args()
 
