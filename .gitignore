@@ -38,3 +38,4 @@ do-not-upload/
 
 *.hex
 __pycache__/
+*.py.swp
