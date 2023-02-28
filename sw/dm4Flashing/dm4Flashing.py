@@ -192,6 +192,28 @@ class Dm4Flashing(Processing):
 
 		self.procDbgLog("could not find the ST-Link programmer")
 
+		self.procDbgLog("trying to reset USB device")
+
+		p = subprocess.Popen(
+				[
+				"usb_modeswitch",
+				"-v", "0x0483",
+				"-p", "0x3748",
+				"--reset-usb",
+				],
+				stdin = subprocess.PIPE,
+				stdout = subprocess.PIPE,
+				stderr = subprocess.PIPE
+			)
+
+		try:
+			out, err = p.communicate(timeout = 4)
+		except TimeoutExpired:
+			p.kill()
+			out, err = p.communicate()
+
+		self.procDbgLog("trying to reset USB device: done")
+
 		pass
 
 if __name__ == "__main__":
