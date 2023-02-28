@@ -1,0 +1,19 @@
+
+280223 22:42:41.429 +  0.000  170   4  BoardDetachedWait       0x00000000B6522148 911352137 Dm4Flashing                     Board detached
+280223 22:42:52.114 +  0.000   90   4  BoardAttachedWait       0x00000000B6522148 911352137 Dm4Flashing                     Board attached
+280223 22:42:52.148 +  0.000  109   4  BoardAttachedWait       0x00000000B6522148 911352137 Dm4Flashing                     Flashing
+280223 22:42:52.398 +  0.000  133   4  FlashingDoneWait        0x00000000B6522148 911352137 Dm4Flashing                     Flashing done
+280223 22:42:52.417 +  0.000  139   4  FlashingDoneWait        0x00000000B6522148 911352137 Dm4Flashing                     Failed
+2023-02-28T22:42:52 INFO common.c: G030/G031/G041: 8 KiB SRAM, 32 KiB flash in at least 2 KiB pages.
+2023-02-28T22:42:52 INFO common.c: Attempting to write 29284 (0x7264) bytes to stm32 address: 134217728 (0x8000000)
+2023-02-28T22:42:52 INFO common.c: Flash page at addr: 0x08000000 erased
+2023-02-28T22:42:52 INFO common.c: Flash page at addr: 0x08000800 erased
+2023-02-28T22:42:52 INFO common.c: Flash page at addr: 0x08001000 erased
+2023-02-28T22:42:52 ERROR common.c: Flash memory is write protected
+2023-02-28T22:42:52 ERROR common.c: Flash programming error: 0x00000248
+2023-02-28T22:42:52 ERROR common.c: Failed to erase_flash_page(0x8001800) == -1
+
+280223 22:42:52.652 +  0.000  170   4  BoardDetachedWait       0x00000000B6522148 911352137 Dm4Flashing                     Board detached
+280223 22:43:09.830 +  0.000  193   4  programmerOkCheck       0x00000000B6522148 911352137 Dm4Flashing                     could not find the ST-Link programmer
+280223 22:43:09.853 +  0.000  195   4  programmerOkCheck       0x00000000B6522148 911352137 Dm4Flashing                     trying to reset USB device
+280223 22:43:10.710 +  0.000  215   4  programmerOkCheck       0x00000000B6522148 911352137 Dm4Flashing                     trying to reset USB device: done
