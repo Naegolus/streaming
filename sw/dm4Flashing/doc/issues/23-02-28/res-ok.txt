@@ -1,0 +1,114 @@
+
+--------------------------
+
+$ ./dm4Flashing.py 
+280223 20:53:47.566 +  0.000   53   4  __init__          0xB67ABB98 914013081 Dm4Flashing         Processing()
+280223 20:53:47.721 +  0.000  169   4  treeTick          0xB67ABB98 914013081 Dm4Flashing         initializing
+280223 20:53:47.734 +  0.000   40   4  initialize        0xB67ABB98 914013081 Dm4Flashing         Initialized
+280223 20:53:47.751 +  0.000  171   4  treeTick          0xB67ABB98 914013081 Dm4Flashing         initializing: done
+
+--------------------------
+
+$ st-info --probe
+Found 1 stlink programmers
+  version:    V2J21S4
+  serial:     360067063059373533122243
+  flash:      0 (pagesize: 0)
+  sram:       0
+  chipid:     0x0000
+  descr:      unknown device
+
+--------------------------
+
+$ st-info --probe
+Found 1 stlink programmers
+  version:    V2J21S4
+  serial:     360067063059373533122243
+  flash:      32768 (pagesize: 2048)
+  sram:       8192
+  chipid:     0x0466
+  descr:      G030/G031/G041
+
+--------------------------
+
+$ lsusb
+Bus 001 Device 004: ID 0bda:8152 Realtek Semiconductor Corp. RTL8152 Fast Ethernet Adapter
+Bus 001 Device 003: ID 0483:3748 STMicroelectronics ST-LINK/V2
+Bus 001 Device 002: ID 1a40:0101 Terminus Technology Inc. Hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+--------------------------
+
+$ lsusb -v -d 0483:3748
+
+Bus 001 Device 003: ID 0483:3748 STMicroelectronics ST-LINK/V2
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass            0 
+  bDeviceSubClass         0 
+  bDeviceProtocol         0 
+  bMaxPacketSize0        64
+  idVendor           0x0483 STMicroelectronics
+  idProduct          0x3748 ST-LINK/V2
+  bcdDevice            1.00
+  iManufacturer           1 STMicroelectronics
+  iProduct                2 STM32 STLink
+  iSerial                 3 6
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength       0x0027
+    bNumInterfaces          1
+    bConfigurationValue     1
+    iConfiguration          0 
+    bmAttributes         0x80
+      (Bus Powered)
+    MaxPower              100mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           3
+      bInterfaceClass       255 Vendor Specific Class
+      bInterfaceSubClass    255 Vendor Specific Subclass
+      bInterfaceProtocol    255 Vendor Specific Protocol
+      iInterface              4 ST-Link Debug
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x02  EP 2 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+can't get device qualifier: Resource temporarily unavailable
+can't get debug descriptor: Resource temporarily unavailable
+Device Status:     0x0000
+  (Bus Powered)
+

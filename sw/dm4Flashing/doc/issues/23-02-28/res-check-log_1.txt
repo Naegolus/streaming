@@ -1,0 +1,12 @@
+
+280223 21:52:11.905 +  0.000  190   4  programmerOkCheck       0x00000000B6527100 911372545 Dm4Flashing                     Everything is awesome
+280223 21:52:12.405 +  0.000  190   4  programmerOkCheck       0x00000000B6527100 911372545 Dm4Flashing                     Everything is awesome
+280223 21:52:12.936 +  0.000  190   4  programmerOkCheck       0x00000000B6527100 911372545 Dm4Flashing                     Everything is awesome
+280223 21:52:13.424 +  0.000  190   4  programmerOkCheck       0x00000000B6527100 911372545 Dm4Flashing                     Everything is awesome
+280223 21:52:13.957 +  0.000  190   4  programmerOkCheck       0x00000000B6527100 911372545 Dm4Flashing                     Everything is awesome
+280223 21:52:14.411 +  0.000  193   4  programmerOkCheck       0x00000000B6527100 911372545 Dm4Flashing                     Foobar
+280223 21:52:14.874 +  0.000  193   4  programmerOkCheck       0x00000000B6527100 911372545 Dm4Flashing                     Foobar
+280223 21:52:15.352 +  0.000  193   4  programmerOkCheck       0x00000000B6527100 911372545 Dm4Flashing                     Foobar
+280223 21:52:15.887 +  0.000  193   4  programmerOkCheck       0x00000000B6527100 911372545 Dm4Flashing                     Foobar
+280223 21:52:16.364 +  0.000  193   4  programmerOkCheck       0x00000000B6527100 911372545 Dm4Flashing                     Foobar
+

@@ -1,0 +1,120 @@
+
+--------------------------
+
+$ systemctl status dm4Flashing.service 
+● dm4Flashing.service - Joe-ing
+     Loaded: loaded (/home/pi/streaming/sw/dm4Flashing/dm4Flashing.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2022-12-12 22:17:20 CET; 2 months 17 days ago
+   Main PID: 242 (python)
+      Tasks: 3 (limit: 415)
+        CPU: 2min 56.139s
+     CGroup: /system.slice/dm4Flashing.service
+             ├─ 242 python /home/pi/streaming/sw/dm4Flashing/dm4Flashing.py
+             └─6253 [st-info]
+
+Feb 28 20:19:29 rpizero python[242]: 280223 20:19:29.939 +  0.000   82   4  BoardAttachedWait 0xB64CA5E0 910992865 Dm4Flashing         Board attached
+Feb 28 20:19:30 rpizero python[242]: 280223 20:19:29.982 +  0.000  101   4  BoardAttachedWait 0xB64CA5E0 910992865 Dm4Flashing         Flashing
+Feb 28 20:19:30 rpizero python[242]: 280223 20:19:30.129 +  0.000  122   4  FlashingDoneWait  0xB64CA5E0 910992865 Dm4Flashing         Flashing done
+Feb 28 20:19:30 rpizero python[242]: 280223 20:19:30.148 +  0.000  128   4  FlashingDoneWait  0xB64CA5E0 910992865 Dm4Flashing         Failed
+Warning: journal has been rotated since unit was started, output may be incomplete.
+
+--------------------------
+
+$ ./dm4Flashing.py 
+280223 20:46:59.594 +  0.000   53   4  __init__          0xB66F8B98 913279897 Dm4Flashing         Processing()
+280223 20:46:59.723 +  0.000  169   4  treeTick          0xB66F8B98 913279897 Dm4Flashing         initializing
+280223 20:46:59.737 +  0.000   40   4  initialize        0xB66F8B98 913279897 Dm4Flashing         Initialized
+280223 20:46:59.753 +  0.000  171   4  treeTick          0xB66F8B98 913279897 Dm4Flashing         initializing: done
+280223 20:46:59.937 +  0.000   82   4  BoardAttachedWait 0xB66F8B98 913279897 Dm4Flashing         Board attached
+280223 20:46:59.970 +  0.000  101   4  BoardAttachedWait 0xB66F8B98 913279897 Dm4Flashing         Flashing
+280223 20:47:00.116 +  0.000  122   4  FlashingDoneWait  0xB66F8B98 913279897 Dm4Flashing         Flashing done
+280223 20:47:00.135 +  0.000  128   4  FlashingDoneWait  0xB66F8B98 913279897 Dm4Flashing         Failed
+2023-02-28T20:47:00 WARN usb.c: Couldn't find any ST-Link devices
+
+--------------------------
+
+$ st-info --probe
+Found 0 stlink programmers
+
+--------------------------
+
+$ lsusb
+Bus 001 Device 004: ID 0bda:8152 Realtek Semiconductor Corp. RTL8152 Fast Ethernet Adapter
+Bus 001 Device 003: ID 0483:3748 STMicroelectronics ST-LINK/V2
+Bus 001 Device 002: ID 1a40:0101 Terminus Technology Inc. Hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+--------------------------
+
+$ lsusb -v -d 0483:3748
+
+Bus 001 Device 003: ID 0483:3748 STMicroelectronics ST-LINK/V2
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass            0 
+  bDeviceSubClass         0 
+  bDeviceProtocol         0 
+  bMaxPacketSize0        64
+  idVendor           0x0483 STMicroelectronics
+  idProduct          0x3748 ST-LINK/V2
+  bcdDevice            1.00
+  iManufacturer           1 STMicroelectronics
+  iProduct                2 STM32 STLink
+  iSerial                 3 6
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength       0x0027
+    bNumInterfaces          1
+    bConfigurationValue     1
+    iConfiguration          0 
+    bmAttributes         0x80
+      (Bus Powered)
+    MaxPower              100mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           3
+      bInterfaceClass       255 Vendor Specific Class
+      bInterfaceSubClass    255 Vendor Specific Subclass
+      bInterfaceProtocol    255 Vendor Specific Protocol
+      iInterface              4 (error)
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x02  EP 2 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+can't get device qualifier: Resource temporarily unavailable
+can't get debug descriptor: Resource temporarily unavailable
+cannot read device status, Resource temporarily unavailable (11)
+

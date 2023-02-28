@@ -1,0 +1,21 @@
+
+{{{
+# usb_modeswitch -v 0x0483 -p 0x3748 --reset-usb
+Look for default devices ...
+ Found devices in default mode (1)
+Access device 003 on bus 001
+Get the current device configuration ...
+Current configuration number is 1
+Use interface number 0
+ with class 255
+Warning: no switching method given. See documentation
+Reset USB device .
+ Device was reset
+-> Run lsusb to note any changes. Bye!
+}}}
+
+Literature
+- https://stackoverflow.com/questions/18765725/turning-off-a-single-usb-device-again
+- https://askubuntu.com/questions/645/how-do-you-reset-a-usb-device-from-the-command-line
+- https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-bus-usb
+
