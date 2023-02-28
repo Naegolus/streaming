@@ -78,7 +78,7 @@ class Dm4Flashing(Processing):
 		# We can wait for the result
 		out, err = p.communicate()
 
-		if "unknown device" in out.decode("utf-8"):
+		if not "G030/G031/G041" in out.decode("utf-8"):
 			return
 
 		self.procDbgLog("Board attached")
@@ -151,7 +151,7 @@ class Dm4Flashing(Processing):
 
 		out, err = p.communicate()
 
-		if not "unknown device" in out.decode("utf-8"):
+		if "G030/G031/G041" in out.decode("utf-8"):
 			return
 
 		self.procDbgLog("Board detached")
