@@ -132,13 +132,35 @@ class Dm4Flashing(Processing):
 
 		self.procDbgLog("Flashing done")
 
-		if not res:
-			self.procDbgLog("Success")
-			green()
-		else:
+		if res:
+			red()
 			self.procDbgLog("Failed")
 			print(err.decode("utf-8"))
-			red()
+
+			self.mStart = millis()
+			self.state = self.BoardDetachedWait
+
+			return
+
+		green()
+		self.procDbgLog("Success")
+
+		p = subprocess.Popen(
+				[
+				"st-flash",
+				"--area=option",
+				"write", "0xdfffe1ab",
+				],
+				stdin = subprocess.PIPE,
+				stdout = subprocess.PIPE,
+				stderr = subprocess.PIPE
+			)
+
+		try:
+			out, err = p.communicate(timeout = 1)
+		except TimeoutExpired:
+			p.kill()
+			out, err = p.communicate()
 
 		self.mStart = millis()
 		self.state = self.BoardDetachedWait
