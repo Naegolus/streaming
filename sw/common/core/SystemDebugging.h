@@ -75,6 +75,7 @@ public:
 	}
 
 	void listenLocalSet();
+	void portStartSet(uint16_t port);
 
 protected:
 
@@ -131,6 +132,7 @@ private:
 
 	std::string mEnvironment;
 	bool mEnvironmentChanged;
+	uint16_t mPortStart;
 	clock_t mEnvironmentChangedTime;
 #if CONFIG_PROC_HAVE_LOG
 	Pipe<Json::Value> ppLogEntries;

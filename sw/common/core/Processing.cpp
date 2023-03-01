@@ -529,6 +529,54 @@ void Processing::applicationClose()
 	dbgLog(LOG_LVL, "closing application: done");
 }
 
+void Processing::globalDestructorRegister(GlobDestructorFunc globDestr)
+{
+#if CONFIG_PROC_HAVE_GLOBAL_DESTRUCTORS
+	dbgLog(LOG_LVL, "");
+#if CONFIG_PROC_USE_STD_LISTS
+	globalDestructors.push_front(globDestr);
+	globalDestructors.unique();
+	dbgLog(LOG_LVL, ": done");
+#else
+	GlobDestructorFunc *pGlobDestrListElem = NULL;
+
+	if (!pGlobalDestructors)
+	{
+		size_t numDestrElements = CONFIG_PROC_NUM_MAX_GLOBAL_DESTRUCTORS + 1;
+
+		pGlobalDestructors = new (std::nothrow) GlobDestructorFunc[numDestrElements];
+
+		if (!pGlobalDestructors)
+		{
+			errLog(-1, "could not allocate global destructor list");
+			return;
+		}
+
+		pGlobDestrListElem = pGlobalDestructors;
+		for (size_t i = 0; i < numDestrElements; ++i)
+			*pGlobDestrListElem++ = NULL;
+	}
+
+	pGlobDestrListElem = pGlobalDestructors;
+	for (size_t i = 0; i < CONFIG_PROC_NUM_MAX_GLOBAL_DESTRUCTORS; ++i)
+	{
+		if (!*pGlobDestrListElem)
+		{
+			*pGlobDestrListElem = globDestr;
+			dbgLog(LOG_LVL, ": done");
+			return;
+		}
+
+		++pGlobDestrListElem;
+	}
+
+	errLog(-2, "could not register global destructor. no free slot available");
+#endif
+#else
+	errLog(-1, "can't register global destructor. function disabled");
+#endif
+}
+
 // This area is used by the concrete processes
 
 Processing::Processing(const char *name)
@@ -783,54 +831,6 @@ void Processing::maxChildrenSet(size_t cnt)
 bool Processing::initDone() const
 {
 	return mStatDrv & PsbDrvInitDone;
-}
-
-void Processing::globalDestructorRegister(GlobDestructorFunc globDestr)
-{
-#if CONFIG_PROC_HAVE_GLOBAL_DESTRUCTORS
-	dbgLog(LOG_LVL, "");
-#if CONFIG_PROC_USE_STD_LISTS
-	globalDestructors.push_front(globDestr);
-	globalDestructors.unique();
-	dbgLog(LOG_LVL, ": done");
-#else
-	GlobDestructorFunc *pGlobDestrListElem = NULL;
-
-	if (!pGlobalDestructors)
-	{
-		size_t numDestrElements = CONFIG_PROC_NUM_MAX_GLOBAL_DESTRUCTORS + 1;
-
-		pGlobalDestructors = new (std::nothrow) GlobDestructorFunc[numDestrElements];
-
-		if (!pGlobalDestructors)
-		{
-			errLog(-1, "could not allocate global destructor list");
-			return;
-		}
-
-		pGlobDestrListElem = pGlobalDestructors;
-		for (size_t i = 0; i < numDestrElements; ++i)
-			*pGlobDestrListElem++ = NULL;
-	}
-
-	pGlobDestrListElem = pGlobalDestructors;
-	for (size_t i = 0; i < CONFIG_PROC_NUM_MAX_GLOBAL_DESTRUCTORS; ++i)
-	{
-		if (!*pGlobDestrListElem)
-		{
-			*pGlobDestrListElem = globDestr;
-			dbgLog(LOG_LVL, ": done");
-			return;
-		}
-
-		++pGlobDestrListElem;
-	}
-
-	errLog(-2, "could not register global destructor. no free slot available");
-#endif
-#else
-	errLog(-1, "can't register global destructor. function disabled");
-#endif
 }
 
 int Processing::procId(char *pBuf, char *pBufEnd, const Processing *pProc)

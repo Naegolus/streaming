@@ -35,8 +35,6 @@
 
 using namespace std;
 
-mutex HttpRequesting::mtxGlobalInit;
-bool HttpRequesting::globalInitDone = false;
 mutex HttpRequesting::mtxCurlMulti;
 CURLM *HttpRequesting::pCurlMulti = NULL;
 
@@ -47,6 +45,7 @@ HttpRequesting::HttpRequesting()
 	: Processing("HttpRequesting")
 	, mUrl("")
 	, mType("get")
+	, mUserPw("")
 	, mData("")
 	, mAuthMethod("basic")
 	, mTlsVersion("")
@@ -65,6 +64,7 @@ HttpRequesting::HttpRequesting(const string &url)
 	: Processing("HttpRequesting")
 	, mUrl(url)
 	, mType("get")
+	, mUserPw("")
 	, mData("")
 	, mAuthMethod("basic")
 	, mTlsVersion("")
@@ -79,6 +79,10 @@ HttpRequesting::HttpRequesting(const string &url)
 {
 }
 
+/*
+ * Literature
+ * - https://curl.se/libcurl/c/curl_multi_remove_handle.html
+ */
 HttpRequesting::~HttpRequesting()
 {
 	if (mpHeaderList)
@@ -89,12 +93,19 @@ HttpRequesting::~HttpRequesting()
 
 	if (mpCurl)
 	{
+		Guard lock(mtxCurlMulti);
+		CURLMcode code;
+
+		code = curl_multi_remove_handle(pCurlMulti, mpCurl);
+		if (code != CURLM_OK)
+			procWrnLog("could not unbind curl easy handle");
+
 		curl_easy_cleanup(mpCurl);
 		mpCurl = NULL;
 	}
 }
 
-void HttpRequesting::setUrl(const string &url)
+void HttpRequesting::urlSet(const string &url)
 {
 	if (!url.size())
 		return;
@@ -102,7 +113,7 @@ void HttpRequesting::setUrl(const string &url)
 	mUrl = url;
 }
 
-void HttpRequesting::setType(const string &type)
+void HttpRequesting::typeSet(const string &type)
 {
 	if (!type.size())
 		return;
@@ -110,17 +121,25 @@ void HttpRequesting::setType(const string &type)
 	mType = type;
 }
 
-void HttpRequesting::addHdr(const string &hdr)
+void HttpRequesting::userPwSet(const string &userPw)
+{
+	if (!userPw.size())
+		return;
+
+	mUserPw = userPw;
+}
+
+void HttpRequesting::hdrAdd(const string &hdr)
 {
 	mHdr = hdr;
 }
 
-void HttpRequesting::setData(const string &data)
+void HttpRequesting::dataSet(const string &data)
 {
 	mData = data;
 }
 
-void HttpRequesting::setAuthMethod(const string &authMethod)
+void HttpRequesting::authMethodSet(const string &authMethod)
 {
 	if (!authMethod.size())
 		return;
@@ -128,7 +147,7 @@ void HttpRequesting::setAuthMethod(const string &authMethod)
 	mAuthMethod = authMethod;
 }
 
-void HttpRequesting::setTlsVersion(const string &tlsVersion)
+void HttpRequesting::tlsVersionSet(const string &tlsVersion)
 {
 	if (!tlsVersion.size())
 		return;
@@ -153,33 +172,44 @@ const string &HttpRequesting::respData() const
 
 Success HttpRequesting::initialize()
 {
-	{
-		lock_guard<mutex> lock(mtxGlobalInit);
+	Success success;
 
-		if (!globalInitDone)
-		{
-			curl_global_init(CURL_GLOBAL_ALL);
-			procDbgLog(LOG_LVL, "global curl init done");
+	curlGlobalInit();
 
-			pCurlMulti = curl_multi_init();
-			if (!pCurlMulti)
-				return procErrLog(-1, "could not create curl multi handle");
+	success = easyHandleCreate();
+	if (success != Positive)
+		return procErrLog(-1, "could not create curl easy handle");
 
-			Processing::globalDestructorRegister(HttpRequesting::globalCurlDestructor);
-
-			globalInitDone = true;
-		}
-	}
-
-	if (createEasyHandle() != Positive)
-		return procErrLog(-2, "could not create curl easy handle");
-
-	{
-		lock_guard<mutex> lock(mtxCurlMulti);
-		curl_multi_add_handle(pCurlMulti, mpCurl);
-	}
+	success = curlEasyHandleBind();
+	if (success != Positive)
+		return procErrLog(-1, "could not bind curl easy handle");
 
 	multiProcess();
+
+	return Positive;
+}
+
+/*
+Literature
+- https://curl.haxx.se/libcurl/c/
+- https://curl.se/libcurl/c/curl_multi_add_handle.html
+- https://curl.se/libcurl/c/libcurl-errors.html
+*/
+Success HttpRequesting::curlEasyHandleBind()
+{
+	Guard lock(mtxCurlMulti);
+
+	if (!pCurlMulti)
+		pCurlMulti = curl_multi_init();
+
+	if (!pCurlMulti)
+		return procErrLog(-1, "curl multi handle not set");
+
+	CURLMcode code;
+
+	code = curl_multi_add_handle(pCurlMulti, mpCurl);
+	if (code != CURLM_OK)
+		return procErrLog(-1, "could not bind curl easy handle");
 
 	return Positive;
 }
@@ -213,7 +243,7 @@ Literature
   - https://curl.haxx.se/libcurl/c/multi-app.html
 - https://curl.haxx.se/mail/lib-2018-12/0011.html
 */
-Success HttpRequesting::createEasyHandle()
+Success HttpRequesting::easyHandleCreate()
 {
 	string tlsVersion;
 	Success success = Positive;
@@ -223,16 +253,16 @@ Success HttpRequesting::createEasyHandle()
 
 	if (mTlsVersion.size())
 		tlsVersion = mTlsVersion;
-
-	//procDbgLog(LOG_LVL, "url        = %s", mUrl.c_str());
+#if 0
+	procDbgLog(LOG_LVL, "url        = %s", mUrl.c_str());
 	procDbgLog(LOG_LVL, "type       = %s", mType.c_str());
 	procDbgLog(LOG_LVL, "hdr        = %s", mHdr.c_str());
 	procDbgLog(LOG_LVL, "data       = %s", mData.c_str());
 	procDbgLog(LOG_LVL, "authMethod = %s", mAuthMethod.c_str());
 	procDbgLog(LOG_LVL, "tlsVersion = %s", tlsVersion.c_str());
-
+#endif
 #ifdef ENABLE_CURL_SHARE
-	if (createSession(address, port) != Positive)
+	if (sessionCreate(address, port) != Positive)
 		return procErrLog(-1, "could not create session");
 #endif
 
@@ -287,10 +317,13 @@ Success HttpRequesting::createEasyHandle()
 	if (mType == "post" or mType == "put")
 		curl_easy_setopt(mpCurl, CURLOPT_POSTFIELDS, mData.c_str());
 
-	curl_easy_setopt(mpCurl, CURLOPT_HEADERFUNCTION, HttpRequesting::writeCurlDataToString);
+	if (mUserPw.size())
+		curl_easy_setopt(mpCurl, CURLOPT_USERPWD, mUserPw.c_str());
+
+	curl_easy_setopt(mpCurl, CURLOPT_HEADERFUNCTION, HttpRequesting::curlDataToStringWrite);
 	curl_easy_setopt(mpCurl, CURLOPT_HEADERDATA, &mRespHdr);
 
-	curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, HttpRequesting::writeCurlDataToString);
+	curl_easy_setopt(mpCurl, CURLOPT_WRITEFUNCTION, HttpRequesting::curlDataToStringWrite);
 	curl_easy_setopt(mpCurl, CURLOPT_WRITEDATA, &mRespData);
 
 	curl_easy_setopt(mpCurl, CURLOPT_PRIVATE, this);
@@ -313,7 +346,7 @@ errCleanupCurl:
 	curl_easy_cleanup(mpCurl);
 
 #ifdef ENABLE_CURL_SHARE
-	terminateSession();
+	sessionTerminate();
 #endif
 
 	return success;
@@ -348,9 +381,9 @@ Literature libcurl
 - https://curl.haxx.se/libcurl/c/threaded-shared-conn.html
 - https://curl.haxx.se/libcurl/c/threaded-ssl.html
 */
-Success HttpRequesting::createSession(const std::string &address, const uint16_t port)
+Success HttpRequesting::sessionCreate(const std::string &address, const uint16_t port)
 {
-	lock_guard<mutex> lock(sessionMtx);
+	Guard lock(sessionMtx);
 
 	list<HttpSession>::iterator iter;
 	bool sessionFound = false;
@@ -399,7 +432,7 @@ Success HttpRequesting::createSession(const std::string &address, const uint16_t
 
 			if (!mSession->sharedDataMtxList[i])
 			{
-				deleteSharedDataMtxList();
+				sharedDataMtxListDelete();
 				sessions.erase(mSession);
 
 				return procErrLog(-1, "could not allocate shared data mutexes for session");
@@ -409,7 +442,7 @@ Success HttpRequesting::createSession(const std::string &address, const uint16_t
 		mSession->pCurlShare = curl_share_init();
 		if (!mSession->pCurlShare)
 		{
-			deleteSharedDataMtxList();
+			sharedDataMtxListDelete();
 			sessions.erase(mSession);
 
 			return procErrLog(-1, "curl_share_init() returned 0");
@@ -423,13 +456,13 @@ Success HttpRequesting::createSession(const std::string &address, const uint16_t
 		code += curl_share_setopt(mSession->pCurlShare, CURLSHOPT_SHARE, CURL_LOCK_DATA_CONNECT);
 
 		code += curl_share_setopt(mSession->pCurlShare, CURLSHOPT_USERDATA, &mSession->sharedDataMtxList);
-		code += curl_share_setopt(mSession->pCurlShare, CURLSHOPT_LOCKFUNC, HttpRequesting::lockSharedData);
-		code += curl_share_setopt(mSession->pCurlShare, CURLSHOPT_UNLOCKFUNC, HttpRequesting::unlockSharedData);
+		code += curl_share_setopt(mSession->pCurlShare, CURLSHOPT_LOCKFUNC, HttpRequesting::sharedDataLock);
+		code += curl_share_setopt(mSession->pCurlShare, CURLSHOPT_UNLOCKFUNC, HttpRequesting::sharedDataUnLock);
 
 		if (code != CURLSHE_OK)
 		{
 			curl_share_cleanup(mSession->pCurlShare);
-			deleteSharedDataMtxList();
+			sharedDataMtxListDelete();
 			sessions.erase(mSession);
 
 			return procErrLog(-1, "curl_share_setopt() failed");
@@ -444,9 +477,9 @@ Success HttpRequesting::createSession(const std::string &address, const uint16_t
 	return Positive;
 }
 
-void HttpRequesting::terminateSession()
+void HttpRequesting::sessionTerminate()
 {
-	lock_guard<mutex> lock(sessionMtx);
+	Guard lock(sessionMtx);
 
 	procDbgLog(LOG_LVL, "dereferencing session: %s:%d", mSession->address.c_str(), mSession->port);
 
@@ -459,11 +492,11 @@ void HttpRequesting::terminateSession()
 	procDbgLog(LOG_LVL, "terminating session. max number of session references were %d", mSession->maxReferences);
 
 	curl_share_cleanup(mSession->pCurlShare);
-	deleteSharedDataMtxList();
+	sharedDataMtxListDelete();
 	sessions.erase(mSession);
 }
 
-void HttpRequesting::deleteSharedDataMtxList()
+void HttpRequesting::sharedDataMtxListDelete()
 {
 	size_t i = 0;
 	while (i < numSharedDataTypes and mSession->sharedDataMtxList[i])
@@ -480,8 +513,7 @@ Literature
 */
 void HttpRequesting::multiProcess()
 {
-
-	lock_guard<mutex> lock(mtxCurlMulti);
+	Guard lock(mtxCurlMulti);
 
 	int numRunningRequests, numMsgsLeft;
 	CURLMsg *curlMsg;
@@ -515,7 +547,7 @@ void HttpRequesting::multiProcess()
 		curl_easy_cleanup(pCurl);
 
 #ifdef ENABLE_CURL_SHARE
-		pReq->terminateSession();
+		pReq->sessionTerminate();
 #endif
 
 		pReq->mDone = Positive;
@@ -540,42 +572,48 @@ Literature
 - Wichtig
   - https://rachelbythebay.com/w/2012/12/14/quiet/
 */
-void HttpRequesting::globalCurlDestructor()
+void HttpRequesting::curlMultiDeInit()
 {
-	/* SSL leaks will be ignored in valgrind */
+	Guard lock(mtxCurlMulti);
 
-	if (pCurlMulti)
-		curl_multi_cleanup(pCurlMulti);
+	if (!pCurlMulti)
+		return;
 
-	curl_global_cleanup();
-	dbgLog(0, "global curl cleanup done");
+	curl_multi_cleanup(pCurlMulti);
+	pCurlMulti = NULL;
+
+	dbgLog(0, "HttpRequesting(): multi curl cleanup done");
 }
 
-extern "C" void HttpRequesting::lockSharedData(CURL *handle, curl_lock_data data, curl_lock_access access, void *userptr)
+extern "C" void HttpRequesting::sharedDataLock(CURL *handle, curl_lock_data data, curl_lock_access access, void *userptr)
 {
 	int dataIdx = data - 1;
+
+	(void)handle;
+	(void)access;
+
 	if (dataIdx < numSharedDataTypes)
 		(*((vector<mutex *> *)userptr))[dataIdx]->lock();
 	else
 		cerr << "curl shared data lock: dataIdx(" << dataIdx << ") >= numSharedDataTypes(4)" << endl;
 }
 
-extern "C" void HttpRequesting::unlockSharedData(CURL *handle, curl_lock_data data, void *userptr)
+extern "C" void HttpRequesting::sharedDataUnLock(CURL *handle, curl_lock_data data, void *userptr)
 {
 	int dataIdx = data - 1;
+
+	(void)handle;
+
 	if (dataIdx < numSharedDataTypes)
 		(*((vector<mutex *> *)userptr))[dataIdx]->unlock();
 	else
 		cerr << "curl shared data unlock: dataIdx(" << dataIdx << ") >= numSharedDataTypes(4)" << endl;
 }
 
-extern "C" size_t HttpRequesting::writeCurlDataToString(void *ptr, size_t size, size_t nmemb, string *pData)
+extern "C" size_t HttpRequesting::curlDataToStringWrite(void *ptr, size_t size, size_t nmemb, string *pData)
 {
 	pData->append((char *)ptr, size * nmemb);
+
 	return size * nmemb;
 }
 
-void HttpRequesting::printVersion()
-{
-	cout << setw(20) << left << "Version:" << curl_version() << endl;
-}

@@ -28,22 +28,27 @@
   SOFTWARE.
 */
 
-#ifdef _WIN32
-/* See http://stackoverflow.com/questions/12765743/getaddrinfo-on-win32 */
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0501  /* Windows XP. */
-#endif
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <fcntl.h>
-#endif
 #include <unistd.h>
 
 #include "TcpTransfering.h"
+#include "LibTime.h"
+
+#define dForEach_ProcState(gen) \
+		gen(StSrvStart) \
+		gen(StSrvArgCheck) \
+		gen(StCltStart) \
+		gen(StCltArgCheck) \
+		gen(StCltConnDoneWait) \
+		gen(StConnMain) \
+		gen(StTmp) \
+
+#define dGenProcStateEnum(s) s,
+dProcessStateEnum(ProcState);
+
+#if 1
+#define dGenProcStateString(s) #s,
+dProcessStateStr(ProcState);
+#endif
 
 using namespace std;
 
@@ -53,84 +58,158 @@ using namespace std;
 
 #define LOG_LVL	0
 
+#define dTmoDefaultConnDoneMs			2000
+
 /*
  * Literature
  * - https://stackoverflow.com/questions/28027937/cross-platform-sockets
  */
 TcpTransfering::TcpTransfering(int fd)
 	: Transfering("TcpTransfering")
+	, mState(StSrvStart)
+	, mStartMs(0)
 	, mSocketFd(fd)
+	, mHostAddrStr("")
 	, mErrno(0)
-	, mUsable(false)
 	, mInfoSet(false)
 	, mBytesReceived(0)
 	, mBytesSent(0)
 {
-	socketInfoSet();
+	addrInfoSet();
+	mSendReady = true;
 }
 
-TcpTransfering::TcpTransfering(const string &addr)
+// strAddrHost can be
+// - IPv4
+// - IPv6 (TODO)
+// - Domain (TODO)
+TcpTransfering::TcpTransfering(const string &hostAddr, uint16_t hostPort)
 	: Transfering("TcpTransfering")
+	, mState(StCltStart)
+	, mStartMs(0)
 	, mSocketFd(-1)
+	, mHostAddrStr(hostAddr)
+	, mHostPort(hostPort)
 	, mErrno(0)
-	, mUsable(false)
 	, mInfoSet(false)
 	, mBytesReceived(0)
 	, mBytesSent(0)
 {
-	(void)addr;
-	// TODO: Implement "TcpConnecting()"
+	mSendReady = false;
 }
 
-Success TcpTransfering::initialize()
-{
-	lock_guard<mutex> lock(mSocketFdMtx);
-
-	int opt = 1;
-
-	if (mSocketFd < 0)
-		return procErrLog(-1, "socket file descriptor not set");
-
-	socketInfoSet();
-
-	if (::setsockopt(mSocketFd, SOL_SOCKET, SO_KEEPALIVE, (const char *)&opt, sizeof(opt)))
-		return procErrLog(-2, "setsockopt(SO_KEEPALIVE) failed: %s", strerror(errno));
-
-#ifdef _WIN32
-	unsigned long nonBlockMode = 1;
-
-	opt = ioctlsocket(mSocketFd, FIONBIO, &nonBlockMode);
-	if (opt == SOCKET_ERROR)
-		return procErrLog(-3, "ioctlsocket(FIONBIO) failed: %s", strerror(errno));
-#else
-	opt = fcntl(mSocketFd, F_GETFL, 0);
-	if (opt == -1)
-		return procErrLog(-3, "fcntl(F_GETFL) failed: %s", strerror(errno));
-
-	opt |= O_NONBLOCK;
-
-	opt = fcntl(mSocketFd, F_SETFL, opt);
-	if (opt == -1)
-		return procErrLog(-4, "fcntl(F_SETFL, 0x%08X) failed: %s", opt, strerror(errno));
-#endif
-
-	return Positive;
-}
-
+/*
+ * Literature
+ * - https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
+ * - https://man7.org/linux/man-pages/man3/inet_pton.3.html
+ * - https://man7.org/linux/man-pages/man2/socket.2.html
+ * - https://man7.org/linux/man-pages/man2/connect.2.html
+ */
 Success TcpTransfering::process()
 {
-	ssize_t connCheck = read(NULL, 0);
+	uint32_t curTimeMs = millis();
+	uint32_t diffMs = curTimeMs - mStartMs;
+	Success success;
+	int res;
+	ssize_t connCheck;
+#if 0
+	procWrnLog("mState = %s", ProcStateString[mState]);
+#endif
+	switch (mState)
+	{
+	case StSrvStart:
 
-	if (mDone)
+		mState = StSrvArgCheck;
+
+		break;
+	case StSrvArgCheck:
+
+		if (mSocketFd < 0)
+			return procErrLog(-1, "socket file descriptor not set");
+
+		success = socketOptionsSet();
+		if (success != Positive)
+			return procErrLog(-1, "could not set socket options");
+
+		mState = StConnMain;
+
+		break;
+	case StCltStart:
+
+		mState = StCltArgCheck;
+
+		break;
+	case StCltArgCheck:
+
+		if (mHostAddrStr == "localhost")
+			mHostAddrStr = "127.0.0.1";
+
+		memset(&mHostAddr, 0, sizeof(mHostAddr));
+
+		res = inet_pton(AF_INET, mHostAddrStr.c_str(), &mHostAddr.sin_addr);
+		if (res < 1)
+			return procErrLog(-1, "invalid argument. Only IPv4 address supported by now. Given: '%s'",
+					mHostAddrStr.c_str());
+
+		mSocketFd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+		if (mSocketFd < 0)
+			return procErrLog(-1, "could not create socket: %s (%d)", strerror(errno), errno);
+
+		mHostAddr.sin_family = AF_INET;
+		mHostAddr.sin_port = htons(mHostPort);
+
+		mStartMs = curTimeMs;
+		mState = StCltConnDoneWait;
+
+		break;
+	case StCltConnDoneWait:
+
+		if (diffMs > dTmoDefaultConnDoneMs)
+			return procErrLog(-1, "timeout connecting to host");
+
+		res = connect(mSocketFd, (struct sockaddr *)&mHostAddr, sizeof(mHostAddr));
+		if (res < 0 and errno == EINPROGRESS)
+			break;
+
+		if (res < 0 and errno == EAGAIN)
+			break;
+
+		if (res < 0)
+			return procErrLog(-1, "could not connect to host: %s (%d)", strerror(errno), errno);
+
+		success = socketOptionsSet();
+		if (success != Positive)
+			return procErrLog(-1, "could not set socket options");
+
+		mSendReady = true;
+
+		mState = StConnMain;
+
+		break;
+	case StConnMain:
+
+		connCheck = read(NULL, 0);
+
+		if (mDone)
+			return Positive;
+
+		if (connCheck >= 0)
+			break;
+
+		if (mErrno)
+			return procErrLog(-1, "connection error occured: %s (%d)", strerror(mErrno), mErrno);
+
 		return Positive;
 
-	if (connCheck >= 0)
-		return Pending;
+		break;
+	case StTmp:
 
-	if (mErrno)
-		return procErrLog(-1, "connection error occured: %s (%d)", strerror(mErrno), mErrno);
+		break;
+	default:
+		break;
+	}
 
-	return Positive;
+	return Pending;
 }
 
 Success TcpTransfering::shutdown()
@@ -141,11 +220,6 @@ Success TcpTransfering::shutdown()
 	disconnect();
 
 	return Positive;
-}
-
-bool TcpTransfering::usable()
-{
-	return false;
 }
 
 /*
@@ -177,7 +251,7 @@ ssize_t TcpTransfering::read(void *pBuf, size_t len)
 {
 	lock_guard<mutex> lock(mSocketFdMtx);
 
-	if (!initDone())
+	if (!mReadReady)
 		return 0;
 
 	if (mSocketFd < 0)
@@ -238,12 +312,15 @@ ssize_t TcpTransfering::readFlush()
 	return bytesSum;
 }
 
-void TcpTransfering::send(const void *pData, size_t len)
+ssize_t TcpTransfering::send(const void *pData, size_t len)
 {
+	if (!mSendReady)
+		return procErrLog(-1, "unable to send data. Not ready");
+
 	lock_guard<mutex> lock(mSocketFdMtx);
 
 	if (mSocketFd < 0)
-		return;
+		return procErrLog(-1, "socket not set");
 
 	ssize_t res;
 	size_t lenBkup = len;
@@ -258,12 +335,10 @@ void TcpTransfering::send(const void *pData, size_t len)
 		  * application in this case.
 		  */
 		res = ::send(mSocketFd, (const char *)pData, len, MSG_NOSIGNAL);
-
 		if (res < 0)
 		{
-			procDbgLog(LOG_LVL, "connection down: %s", strerror(errno));
 			disconnect(errno);
-			return;
+			return procErrLog(-1, "connection down: %s", strerror(errno));
 		}
 
 		if (!res)
@@ -279,6 +354,8 @@ void TcpTransfering::send(const void *pData, size_t len)
 		procWrnLog("not all data has been sent");
 
 	mBytesSent += bytesSent;
+
+	return bytesSent;
 }
 
 void TcpTransfering::disconnect(int err)
@@ -298,6 +375,39 @@ void TcpTransfering::disconnect(int err)
 	procDbgLog(LOG_LVL, "closing socket: %d: done", mSocketFd);
 }
 
+Success TcpTransfering::socketOptionsSet()
+{
+	lock_guard<mutex> lock(mSocketFdMtx);
+
+	int opt = 1;
+
+	addrInfoSet();
+
+	if (::setsockopt(mSocketFd, SOL_SOCKET, SO_KEEPALIVE, (const char *)&opt, sizeof(opt)))
+		return procErrLog(-2, "setsockopt(SO_KEEPALIVE) failed: %s", strerror(errno));
+
+#ifdef _WIN32
+	unsigned long nonBlockMode = 1;
+
+	opt = ioctlsocket(mSocketFd, FIONBIO, &nonBlockMode);
+	if (opt == SOCKET_ERROR)
+		return procErrLog(-3, "ioctlsocket(FIONBIO) failed: %s", strerror(errno));
+#else
+	opt = fcntl(mSocketFd, F_GETFL, 0);
+	if (opt == -1)
+		return procErrLog(-3, "fcntl(F_GETFL) failed: %s", strerror(errno));
+
+	opt |= O_NONBLOCK;
+
+	opt = fcntl(mSocketFd, F_SETFL, opt);
+	if (opt == -1)
+		return procErrLog(-4, "fcntl(F_SETFL, 0x%08X) failed: %s", opt, strerror(errno));
+#endif
+	mReadReady = true;
+
+	return Positive;
+}
+
 /* Literature
  * - http://man7.org/linux/man-pages/man2/getsockname.2.html
  * - http://man7.org/linux/man-pages/man2/getpeername.2.html
@@ -308,7 +418,7 @@ void TcpTransfering::disconnect(int err)
  *   The inet_ntoa() function converts the Internet host address in, given in network byte order, to a string in IPv4 dotted-decimal notation.
  *   The string is returned in a statically allocated buffer, which subsequent calls will overwrite.
  */
-void TcpTransfering::socketInfoSet()
+void TcpTransfering::addrInfoSet()
 {
 	if (mInfoSet)
 		return;
@@ -336,8 +446,13 @@ void TcpTransfering::socketInfoSet()
 
 void TcpTransfering::processInfo(char *pBuf, char *pBufEnd)
 {
+	dInfo("State\t\t\t%s\n", ProcStateString[mState]);
+	dInfo("Bytes received\t\t%d\n", mBytesReceived);
+
+	if (!mInfoSet)
+		return;
+
 	dInfo("%s:%d <--> ", mAddrLocal.c_str(), mPortLocal);
 	dInfo("%s:%d\n", mAddrRemote.c_str(), mPortRemote);
-
-	dInfo("Bytes received\t\t%d\n", mBytesReceived);
 }
+

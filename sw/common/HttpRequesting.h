@@ -29,10 +29,14 @@
 #include <string>
 #include <list>
 #include <vector>
-#include <curl/curl.h>
-#include "Processing.h"
 
-#define numSharedDataTypes	4
+#include "Processing.h"
+#include "LibDspc.h"
+
+#define numSharedDataTypes		4
+#define dHttpDefaultTimeoutMs		2700
+
+#define dHttpResponseCodeOk		200
 
 struct HttpSession
 {
@@ -59,18 +63,17 @@ public:
 		return new (std::nothrow) HttpRequesting(url);
 	}
 
-	void setUrl(const std::string &url);
-	void setType(const std::string &type);
-	void addHdr(const std::string &hdr);
-	void setData(const std::string &data);
-	void setAuthMethod(const std::string &authMethod);
-	void setTlsVersion(const std::string &tlsVersion);
+	void urlSet(const std::string &url);
+	void typeSet(const std::string &type);
+	void userPwSet(const std::string &userPw);
+	void hdrAdd(const std::string &hdr);
+	void dataSet(const std::string &data);
+	void authMethodSet(const std::string &authMethod);
+	void tlsVersionSet(const std::string &tlsVersion);
 
 	uint16_t respCode() const;
 	const std::string &respHdr() const;
 	const std::string &respData() const;
-
-	static void printVersion();
 
 protected:
 
@@ -88,13 +91,15 @@ private:
 
 	Success initialize();
 	Success process();
-	Success createEasyHandle();
-	Success createSession(const std::string &address, const uint16_t port);
-	void terminateSession();
-	void deleteSharedDataMtxList();
+	Success easyHandleCreate();
+	Success curlEasyHandleBind();
+	Success sessionCreate(const std::string &address, const uint16_t port);
+	void sessionTerminate();
+	void sharedDataMtxListDelete();
 
 	std::string mUrl;
 	std::string mType;
+	std::string mUserPw;
 	std::string mHdr;
 	std::string mData;
 	std::string mAuthMethod;
@@ -112,8 +117,6 @@ private:
 	uint8_t mRetries;
 	Success mDone;
 
-	static std::mutex mtxGlobalInit;
-	static bool globalInitDone;
 	static std::mutex mtxCurlMulti;
 	static CURLM *pCurlMulti;
 
@@ -121,10 +124,11 @@ private:
 	static std::list<HttpSession> sessions;
 
 	static void multiProcess();
-	static void globalCurlDestructor();
-	static void lockSharedData(CURL *handle, curl_lock_data data, curl_lock_access access, void *userptr);
-	static void unlockSharedData(CURL *handle, curl_lock_data data, void *userptr);
-	static size_t writeCurlDataToString(void *ptr, size_t size, size_t nmemb, std::string *pData);
+	static void curlMultiDeInit();
+	static void sharedDataLock(CURL *handle, curl_lock_data data, curl_lock_access access, void *userptr);
+	static void sharedDataUnLock(CURL *handle, curl_lock_data data, void *userptr);
+	static size_t curlDataToStringWrite(void *ptr, size_t size, size_t nmemb, std::string *pData);
+
 };
 
 #endif

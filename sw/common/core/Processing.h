@@ -128,6 +128,9 @@ public:
 	static void undrivenSet(Processing *pChild);
 	static void destroy(Processing *pChild);
 	static void applicationClose();
+#if CONFIG_PROC_HAVE_GLOBAL_DESTRUCTORS
+	static void globalDestructorRegister(GlobDestructorFunc globDestr);
+#endif
 
 protected:
 	// This area is used by the concrete processes
@@ -151,12 +154,7 @@ protected:
 #if !CONFIG_PROC_USE_STD_LISTS
 	void maxChildrenSet(size_t cnt);
 #endif
-
 	bool initDone() const;
-
-#if CONFIG_PROC_HAVE_GLOBAL_DESTRUCTORS
-	static void globalDestructorRegister(GlobDestructorFunc globDestr);
-#endif
 
 	static int procId(char *pBuf, char *pBufEnd, const Processing *pProc);
 	static int progressStr(char *pBuf, char *pBufEnd, const int val, const int maxVal);

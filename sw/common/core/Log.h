@@ -34,6 +34,8 @@
 #include <jsoncpp/json/json.h>
 #include "Pipe.h"
 
+#define dLogEntryBufferSize		1024
+
 extern Pipe<Json::Value> ppGlobLogEntries;
 
 #endif

@@ -38,12 +38,10 @@ class Transfering : public Processing
 
 public:
 
-	virtual bool usable() { return false; }
-
-	virtual void send(const void *pData, size_t len) = 0;
-	virtual void send(VecByte &pkt)
+	virtual ssize_t send(const void *pData, size_t len) = 0;
+	virtual ssize_t send(VecByte &pkt)
 	{
-		send(pkt.data(), pkt.size());
+		return send(pkt.data(), pkt.size());
 	}
 
 	virtual ssize_t read(void *pBuf, size_t len) = 0;
@@ -64,7 +62,7 @@ public:
 			return -2;
 
 		if ((size_t)lenRead != len)
-			return procErrLog(-3, "read data len does not match");
+			return procErrLog(-3, "read data len does not match. Requested %d, got %d", len, lenRead);
 
 		return Positive;
 	}
@@ -73,6 +71,9 @@ public:
 	{
 		mDone = true;
 	}
+
+	bool mReadReady;
+	bool mSendReady;
 
 	std::string mAddrLocal;
 	uint16_t mPortLocal;
@@ -84,6 +85,8 @@ protected:
 
 	Transfering(const char *name)
 		: Processing(name)
+		, mReadReady(false)
+		, mSendReady(false)
 		, mAddrLocal("")
 		, mPortLocal(0)
 		, mAddrRemote("")

@@ -62,6 +62,7 @@ SystemDebugging::SystemDebugging(Processing *pTreeRoot)
 	, mProcTreePeerAdded(false)
 	, mEnvironment("")
 	, mEnvironmentChanged(false)
+	, mPortStart(3000)
 {
 }
 
@@ -71,23 +72,28 @@ void SystemDebugging::listenLocalSet()
 	mListenLocal = true;
 }
 
+void SystemDebugging::portStartSet(uint16_t port)
+{
+	mPortStart = port;
+}
+
 Success SystemDebugging::initialize()
 {
 	mPeerList.clear();
 
 	// proc tree
 	mpLstProc = TcpListening::create();
-	mpLstProc->portSet(3000, mListenLocal);
+	mpLstProc->portSet(mPortStart, mListenLocal);
 	start(mpLstProc);
 
 	// log
 	mpLstLog = TcpListening::create();
-	mpLstLog->portSet(3001, mListenLocal);
+	mpLstLog->portSet(mPortStart + 1, mListenLocal);
 	start(mpLstLog);
 
 	// command
 	mpLstCmd = TcpListening::create();
-	mpLstCmd->portSet(3002, mListenLocal);
+	mpLstCmd->portSet(mPortStart + 2, mListenLocal);
 	mpLstCmd->maxConnSet(4);
 	start(mpLstCmd);
 
@@ -96,7 +102,7 @@ Success SystemDebugging::initialize()
 
 #if CONFIG_DBG_HAVE_ENVIRONMENT
 	mpLstEnv = TcpListening::create();
-	mpLstEnv->portSet(3003);
+	mpLstEnv->portSet(mPortStart + 3);
 	start(mpLstEnv);
 #endif
 

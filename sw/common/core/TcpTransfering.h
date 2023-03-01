@@ -33,6 +33,20 @@
 
 #include <string>
 
+#ifdef _WIN32
+/* See http://stackoverflow.com/questions/12765743/getaddrinfo-on-win32 */
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0501  /* Windows XP. */
+#endif
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#endif
+
 #include "Transfering.h"
 
 class TcpTransfering : public Transfering
@@ -45,20 +59,19 @@ public:
 		return new (std::nothrow) TcpTransfering(fd);
 	}
 
-	static TcpTransfering *create(const std::string &addr)
+	static TcpTransfering *create(const std::string &hostAddr, uint16_t hostPort)
 	{
-		return new (std::nothrow) TcpTransfering(addr);
+		return new (std::nothrow) TcpTransfering(hostAddr, hostPort);
 	}
 
-	bool usable();
 	ssize_t read(void *pBuf, size_t len);
 	ssize_t readFlush();
-	void send(const void *pData, size_t len);
+	ssize_t send(const void *pData, size_t len);
 
 protected:
 
 	TcpTransfering(int fd);
-	TcpTransfering(const std::string &addr);
+	TcpTransfering(const std::string &hostAddr, uint16_t hostPort);
 	virtual ~TcpTransfering() {}
 
 private:
@@ -70,17 +83,29 @@ private:
 		return *this;
 	}
 
-	Success initialize();
+	/*
+	 * Naming of functions:  objectVerb()
+	 * Example:              peerAdd()
+	 */
+
+	/* member functions */
 	Success process();
 	Success shutdown();
 
 	void disconnect(int err = 0);
-	void socketInfoSet();
+	Success socketOptionsSet();
+	void addrInfoSet();
 
 	void processInfo(char *pBuf, char *pBufEnd);
 
+	/* member variables */
+	uint32_t mState;
+	uint32_t mStartMs;
 	std::mutex mSocketFdMtx;
 	int mSocketFd;
+	std::string mHostAddrStr;
+	struct sockaddr_in mHostAddr;
+	uint16_t mHostPort;
 	int mErrno;
 	bool mUsable;
 	bool mInfoSet;
@@ -88,6 +113,12 @@ private:
 	// statistics
 	uint32_t mBytesReceived;
 	uint32_t mBytesSent;
+
+	/* static functions */
+
+	/* static variables */
+
+	/* constants */
 
 };
 

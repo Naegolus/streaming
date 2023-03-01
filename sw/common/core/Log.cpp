@@ -35,14 +35,13 @@
 #include <mutex>
 #endif
 
+#include "Log.h"
 #include "Pipe.h"
 
 #include "env.h"
 
-#define dLogEntryBufferSize		1024
-
 using namespace std;
-using namespace std::chrono;
+using namespace chrono;
 using namespace Json;
 
 #if CONFIG_PROC_HAVE_DRIVERS
@@ -83,7 +82,7 @@ int16_t logEntryCreate(const int severity, const char *filename, const char *fun
 
 	tOld = t;
 
-	strftime(timeBuf, sizeof(timeBuf), "%d%m%y %H:%M:%S", tm_t);
+	strftime(timeBuf, sizeof(timeBuf), "%d.%m.%y %H:%M:%S", tm_t);
 
 	// "%03d"
 	pStart += snprintf(pStart, pEnd - pStart, "%s.000 +%3.3f %4d %3d  %-24s ", timeBuf, tDiffSec, line, severity, function);

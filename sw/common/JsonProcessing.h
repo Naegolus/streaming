@@ -47,15 +47,15 @@ public:
 	Pipe<Json::Value> ppJsonIn;
 	Pipe<Json::Value> ppJsonOut;
 
+	Json::Value mArgs;
+	Json::Value mResult;
+
 protected:
 
 	JsonProcessing(const char *name)
 		: Processing(name)
 	{}
 	virtual ~JsonProcessing() {}
-
-	Json::Value mArgs;
-	Json::Value mResult;
 
 private:
 
