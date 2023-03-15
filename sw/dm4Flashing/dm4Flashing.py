@@ -39,7 +39,7 @@ class Dm4Flashing(Processing):
 
 	def initialize(self):
 
-		self.procDbgLog("Initialized")
+		self.procDbgLog("initialized")
 
 		self.state = self.SystemInit
 		self.mStart = 0
@@ -65,31 +65,27 @@ class Dm4Flashing(Processing):
 			return
 		self.mStart = millis()
 
-		#self.procDbgLog("Checking board attached")
-
-		p = subprocess.Popen(
-				["st-info", "--probe"],
-				stdin = subprocess.PIPE,
-				stdout = subprocess.PIPE,
-				stderr = subprocess.PIPE
-			)
-
-		# This acts as a function: y = f(x)
-		# We can wait for the result
-		try:
-			out, err = p.communicate(timeout = 1)
-		except TimeoutExpired:
-			p.kill()
-			out, err = p.communicate()
+		#self.procDbgLog("checking board attached")
 
 		self.programmerOkCheck()
 
+		out = self.syncExec(["st-info", "--probe"])
 		if not "G030/G031/G041" in out.decode("utf-8"):
 			return
 
-		self.procDbgLog("Board attached")
+		self.procDbgLog("board attached")
+
+		self.procDbgLog("setting options to default")
+		out = self.syncExec([
+				"st-flash",
+				"--area=option",
+				"write", "0xdfffe1aa",
+		])
+		self.procDbgLog("setting options to default: done")
 
 		# Start flashing
+
+		self.syncExec(["st-info", "--probe"])
 
 		# This acts as a process: y = p(x, t)
 		# We can't wait for the result
@@ -104,9 +100,9 @@ class Dm4Flashing(Processing):
 				stdin = subprocess.PIPE,
 				stdout = subprocess.PIPE,
 				stderr = subprocess.PIPE
-			)
+		)
 
-		self.procDbgLog("Flashing")
+		self.procDbgLog("flashing")
 		yellow()
 
 		self.mStart = millis()
@@ -130,7 +126,7 @@ class Dm4Flashing(Processing):
 
 		self.p.terminate()
 
-		self.procDbgLog("Flashing done")
+		self.procDbgLog("flashing: done")
 
 		if res:
 			red()
@@ -145,22 +141,13 @@ class Dm4Flashing(Processing):
 		green()
 		self.procDbgLog("Success")
 
-		p = subprocess.Popen(
-				[
+		self.procDbgLog("setting options to production")
+		out = self.syncExec([
 				"st-flash",
 				"--area=option",
 				"write", "0xdfffe1ab",
-				],
-				stdin = subprocess.PIPE,
-				stdout = subprocess.PIPE,
-				stderr = subprocess.PIPE
-			)
-
-		try:
-			out, err = p.communicate(timeout = 1)
-		except TimeoutExpired:
-			p.kill()
-			out, err = p.communicate()
+		])
+		self.procDbgLog("setting options to production: done")
 
 		self.mStart = millis()
 		self.state = self.BoardDetachedWait
@@ -171,72 +158,56 @@ class Dm4Flashing(Processing):
 			return
 		self.mStart = millis()
 
-		#self.procDbgLog("Checking board detached")
+		#self.procDbgLog("checking board detached")
 
-		p = subprocess.Popen(
-				["st-info", "--probe"],
-				stdin = subprocess.PIPE,
-				stdout = subprocess.PIPE,
-				stderr = subprocess.PIPE
-			)
-
-		try:
-			out, err = p.communicate(timeout = 1)
-		except TimeoutExpired:
-			p.kill()
-			out, err = p.communicate()
-
+		out = self.syncExec(["st-info", "--probe"])
 		if "G030/G031/G041" in out.decode("utf-8"):
 			return
 
-		self.procDbgLog("Board detached")
+		self.procDbgLog("board detached")
 
 		self.state = self.BoardAttachedWait
 
 	def programmerOkCheck(self):
 
-		p = subprocess.Popen(
-				["st-info", "--probe"],
-				stdin = subprocess.PIPE,
-				stdout = subprocess.PIPE,
-				stderr = subprocess.PIPE
-			)
-
-		try:
-			out, err = p.communicate(timeout = 1)
-		except TimeoutExpired:
-			p.kill()
-			out, err = p.communicate()
-
+		out = self.syncExec(["st-info", "--probe"])
 		if not "Found 0" in out.decode("utf-8"):
-			#self.procDbgLog("Everything is awesome")
+			#self.procDbgLog("everything is awesome")
 			return
 
 		self.procDbgLog("could not find the ST-Link programmer")
 
 		self.procDbgLog("trying to reset USB device")
 
-		p = subprocess.Popen(
-				[
+		self.syncExec([
 				"usb_modeswitch",
 				"-v", "0x0483",
 				"-p", "0x3748",
 				"--reset-usb",
-				],
+		], 4)
+
+		self.procDbgLog("trying to reset USB device: done")
+
+	def syncExec(self, lstArgs, tmo = 1):
+
+		p = subprocess.Popen(
+				lstArgs,
 				stdin = subprocess.PIPE,
 				stdout = subprocess.PIPE,
 				stderr = subprocess.PIPE
-			)
+		)
 
+		# This acts as a function: y = f(x)
+		# We can wait for the result
 		try:
-			out, err = p.communicate(timeout = 4)
+			out, err = p.communicate(timeout = tmo)
 		except TimeoutExpired:
 			p.kill()
 			out, err = p.communicate()
 
-		self.procDbgLog("trying to reset USB device: done")
+		return out
 
-		pass
+# ------------------- main -------------------
 
 if __name__ == "__main__":
 
