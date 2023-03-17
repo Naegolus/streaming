@@ -171,9 +171,6 @@ void Processing::treeTick()
 			break;
 		}
 
-#if CONFIG_PROC_DISABLE_TREE_DEFAULT
-		mStatDrv |= PsbDrvPrTreeDisable;
-#endif
 		procDbgLog(LOG_LVL, "initializing()");
 		mProcState = PsInitializing;
 
@@ -302,12 +299,10 @@ void Processing::unusedSet()
 
 void Processing::procTreeDisplaySet(bool display)
 {
-	mStatDrv |= PsbDrvPrTreeDisable;
-
-	if (!display)
-		return;
-
-	mStatDrv &= ~PsbDrvPrTreeDisable;
+	if (display)
+		mStatDrv &= ~PsbDrvPrTreeDisable;
+	else
+		mStatDrv |= PsbDrvPrTreeDisable;
 }
 
 int Processing::processTreeStr(char *pBuf, char *pBufEnd, bool detailed, bool colored)
@@ -595,7 +590,11 @@ Processing::Processing(const char *name)
 	, mProcState(PsExistent)
 	, mDriver(DrivenByExternalDriver)
 	, mStatParent(0)
+#if CONFIG_PROC_DISABLE_TREE_DEFAULT
+	, mStatDrv(PsbDrvPrTreeDisable)
+#else
 	, mStatDrv(0)
+#endif
 	, mLevel(0)
 	, mDriverLevel(0)
 {

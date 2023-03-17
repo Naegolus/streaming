@@ -75,11 +75,10 @@ public:
 	bool mReadReady;
 	bool mSendReady;
 
-	std::string mAddrLocal;
-	uint16_t mPortLocal;
-
-	std::string mAddrRemote;
-	uint16_t mPortRemote;
+	virtual const std::string &addrRemote() const
+	{
+		return mAddrRemote;
+	}
 
 protected:
 
@@ -94,6 +93,11 @@ protected:
 		, mDone(false)
 	{}
 	virtual ~Transfering() {}
+
+	std::string mAddrLocal;
+	uint16_t mPortLocal;
+	std::string mAddrRemote;
+	uint16_t mPortRemote;
 
 	bool mDone;
 

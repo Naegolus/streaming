@@ -232,6 +232,9 @@ void SystemDebugging::processTreeSend()
 	}
 
 	char buffProcTree[1024];
+
+	*buffProcTree = 0;
+
 	mpTreeRoot->processTreeStr(buffProcTree, buffProcTree + sizeof(buffProcTree), procTreeDetailed, procTreeColored);
 
 	string procTree(buffProcTree);
