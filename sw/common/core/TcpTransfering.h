@@ -64,9 +64,9 @@ public:
 		return new (std::nothrow) TcpTransfering(hostAddr, hostPort);
 	}
 
-	ssize_t read(void *pBuf, size_t len);
+	ssize_t read(void *pBuf, size_t lenReq);
 	ssize_t readFlush();
-	ssize_t send(const void *pData, size_t len);
+	ssize_t send(const void *pData, size_t lenReq);
 
 protected:
 

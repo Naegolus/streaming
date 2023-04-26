@@ -832,6 +832,11 @@ bool Processing::initDone() const
 	return mStatDrv & PsbDrvInitDone;
 }
 
+DriverMode Processing::driver() const
+{
+	return mDriver;
+}
+
 int Processing::procId(char *pBuf, char *pBufEnd, const Processing *pProc)
 {
 	char *pBufStart = pBuf;

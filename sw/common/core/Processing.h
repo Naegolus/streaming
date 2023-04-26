@@ -155,6 +155,7 @@ protected:
 	void maxChildrenSet(size_t cnt);
 #endif
 	bool initDone() const;
+	DriverMode driver() const;
 
 	static int procId(char *pBuf, char *pBufEnd, const Processing *pProc);
 	static int progressStr(char *pBuf, char *pBufEnd, const int val, const int maxVal);
@@ -190,7 +191,7 @@ private:
 	uint16_t mNumChildrenMax;
 #endif
 	uint8_t mProcState;
-	uint8_t mDriver;
+	DriverMode mDriver;
 	uint8_t mStatParent;
 	uint8_t mStatDrv;
 	uint8_t mLevel;

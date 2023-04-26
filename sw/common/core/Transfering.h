@@ -26,6 +26,7 @@
 #ifndef TRANSFERING_H
 #define TRANSFERING_H
 
+#include <string>
 #include <vector>
 
 #include "Processing.h"
@@ -38,22 +39,30 @@ class Transfering : public Processing
 
 public:
 
-	virtual ssize_t send(const void *pData, size_t len) = 0;
-	virtual ssize_t send(VecByte &pkt)
-	{
-		return send(pkt.data(), pkt.size());
-	}
+	virtual ssize_t send(const void *pData, size_t lenReq) = 0;
 
-	virtual ssize_t read(void *pBuf, size_t len) = 0;
-	Success exactRead(void *pBuf, size_t len)
+	virtual ssize_t send(const std::string &str)
+	{ return send(str.c_str(), str.size()); }
+
+	virtual ssize_t send(VecByte &pkt)
+	{ return send(pkt.data(), pkt.size()); }
+
+	/*
+	 * Return value
+	 *   > 0 number of bytes read
+	 *   = 0 no data at the moment, but data can be expected in the future
+	 *   < 0 no data can be expected in the future
+	 */
+	virtual ssize_t read(void *pBuf, size_t lenReq) = 0;
+	Success exactRead(void *pBuf, size_t lenReq)
 	{
-		if (!len)
+		if (!lenReq)
 			return Positive;
 
 		if (!pBuf)
 			return procErrLog(-1, "buffer not set");
 
-		ssize_t lenRead = read(pBuf, len);
+		ssize_t lenRead = read(pBuf, lenReq);
 
 		if (!lenRead)
 			return Pending;
@@ -61,8 +70,8 @@ public:
 		if (lenRead < 0)
 			return -2;
 
-		if ((size_t)lenRead != len)
-			return procErrLog(-3, "read data len does not match. Requested %d, got %d", len, lenRead);
+		if ((size_t)lenRead != lenReq)
+			return procErrLog(-3, "read data len does not match. Requested %d, got %d", lenReq, lenRead);
 
 		return Positive;
 	}

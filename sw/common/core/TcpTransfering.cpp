@@ -32,6 +32,7 @@
 
 #include "TcpTransfering.h"
 #include "LibTime.h"
+#include "LibFilesys.h"
 
 #define dForEach_ProcState(gen) \
 		gen(StSrvStart) \
@@ -216,7 +217,7 @@ Success TcpTransfering::shutdown()
 {
 	procDbgLog(LOG_LVL, "shutdown");
 
-	lock_guard<mutex> lock(mSocketFdMtx);
+	Guard lock(mSocketFdMtx);
 	disconnect();
 
 	return Positive;
@@ -241,15 +242,9 @@ Literature socket programming:
 - https://github.com/torvalds/linux/blob/master/include/uapi/asm-generic/poll.h
 - https://stackoverflow.com/questions/24791625/how-to-handle-the-linux-socket-revents-pollerr-pollhup-and-pollnval
 */
-/*
- * Return value
- *   > 0 number of bytes read
- *   = 0 no data at the moment, but data can be expected in the future
- *   < 0 no data can be expected in the future
- */
-ssize_t TcpTransfering::read(void *pBuf, size_t len)
+ssize_t TcpTransfering::read(void *pBuf, size_t lenReq)
 {
-	lock_guard<mutex> lock(mSocketFdMtx);
+	Guard lock(mSocketFdMtx);
 
 	if (!mReadReady)
 		return 0;
@@ -261,14 +256,14 @@ ssize_t TcpTransfering::read(void *pBuf, size_t len)
 	bool peek = false;
 	char buf[1];
 
-	if (!pBuf or !len)
+	if (!pBuf or !lenReq)
 	{
 		pBuf = buf;
-		len = sizeof(buf);
+		lenReq = sizeof(buf);
 		peek = true;
 	}
 
-	numBytes = ::recv(mSocketFd, (char *)pBuf, len, MSG_PEEK);
+	numBytes = ::recv(mSocketFd, (char *)pBuf, lenReq, MSG_PEEK);
 
 	if (numBytes < 0)
 	{
@@ -312,21 +307,21 @@ ssize_t TcpTransfering::readFlush()
 	return bytesSum;
 }
 
-ssize_t TcpTransfering::send(const void *pData, size_t len)
+ssize_t TcpTransfering::send(const void *pData, size_t lenReq)
 {
 	if (!mSendReady)
 		return procErrLog(-1, "unable to send data. Not ready");
 
-	lock_guard<mutex> lock(mSocketFdMtx);
+	Guard lock(mSocketFdMtx);
 
 	if (mSocketFd < 0)
 		return procErrLog(-1, "socket not set");
 
 	ssize_t res;
-	size_t lenBkup = len;
+	size_t lenBkup = lenReq;
 	size_t bytesSent = 0;
 
-	while (len)
+	while (lenReq)
 	{
 		/* IMPORTANT:
 		  * Connection may be reset by remote peer already.
@@ -334,7 +329,7 @@ ssize_t TcpTransfering::send(const void *pData, size_t len)
 		  * emit signal SIGPIPE and therefore kill the entire
 		  * application in this case.
 		  */
-		res = ::send(mSocketFd, (const char *)pData, len, MSG_NOSIGNAL);
+		res = ::send(mSocketFd, (const char *)pData, lenReq, MSG_NOSIGNAL);
 		if (res < 0)
 		{
 			disconnect(errno);
@@ -345,7 +340,7 @@ ssize_t TcpTransfering::send(const void *pData, size_t len)
 			break;
 
 		pData = ((const uint8_t *)pData) + res;
-		len -= res;
+		lenReq -= res;
 
 		bytesSent += res;
 	}
@@ -360,7 +355,7 @@ ssize_t TcpTransfering::send(const void *pData, size_t len)
 
 void TcpTransfering::disconnect(int err)
 {
-	//lock_guard<mutex> lock(mSocketFdMtx); // every caller must lock in advance!
+	//Guard lock(mSocketFdMtx); // every caller must lock in advance!
 
 	if (mSocketFd < 0)
 	{
@@ -377,32 +372,20 @@ void TcpTransfering::disconnect(int err)
 
 Success TcpTransfering::socketOptionsSet()
 {
-	lock_guard<mutex> lock(mSocketFdMtx);
+	Guard lock(mSocketFdMtx);
 
 	int opt = 1;
+	bool ok;
 
 	addrInfoSet();
 
 	if (::setsockopt(mSocketFd, SOL_SOCKET, SO_KEEPALIVE, (const char *)&opt, sizeof(opt)))
 		return procErrLog(-2, "setsockopt(SO_KEEPALIVE) failed: %s", strerror(errno));
 
-#ifdef _WIN32
-	unsigned long nonBlockMode = 1;
+	ok = fileNonBlockingSet(mSocketFd);
+	if (!ok)
+		return procErrLog(-3, "could not set non blocking mode: %s", strerror(errno));
 
-	opt = ioctlsocket(mSocketFd, FIONBIO, &nonBlockMode);
-	if (opt == SOCKET_ERROR)
-		return procErrLog(-3, "ioctlsocket(FIONBIO) failed: %s", strerror(errno));
-#else
-	opt = fcntl(mSocketFd, F_GETFL, 0);
-	if (opt == -1)
-		return procErrLog(-3, "fcntl(F_GETFL) failed: %s", strerror(errno));
-
-	opt |= O_NONBLOCK;
-
-	opt = fcntl(mSocketFd, F_SETFL, opt);
-	if (opt == -1)
-		return procErrLog(-4, "fcntl(F_SETFL, 0x%08X) failed: %s", opt, strerror(errno));
-#endif
 	mReadReady = true;
 
 	return Positive;
