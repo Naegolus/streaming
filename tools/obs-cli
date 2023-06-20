@@ -1,0 +1,91 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+import os
+import sys
+
+import obsws_python as obs
+
+cntArgs = len(sys.argv)
+
+# obs-cli scene current "Software"
+# obs-cli sceneitem toggle "Software" "HW Ovl"
+# obs-cli stream toggle
+
+if cntArgs < 3:
+	print(f"Usage: {sys.argv[0]}")
+	exit(1)
+
+cmdMain = sys.argv[1]
+cmdSub = sys.argv[2]
+
+def obsConnect():
+	return obs.ReqClient(host = 'localhost', port = 4455, timeout = 1)
+
+def sceneSwitch():
+
+	if cntArgs < 4:
+		print(f"No scene given")
+		exit(1)
+
+	cl = obsConnect()
+	cl.set_current_program_scene(sys.argv[3])
+
+def sceneItemToggle():
+
+	if cntArgs < 5:
+		print(f"No scene given")
+		exit(1)
+
+	cl = obsConnect()
+	cl.set_current_program_scene(sys.argv[3])
+
+	#nameSceneCurrent = cl.get_current_program_scene().current_program_scene_name
+	#nameScene = nameSceneCurrent
+
+	nameScene = sys.argv[3]
+	nameItem = sys.argv[4]
+
+	#print(f"nameScene: {nameScene}")
+	#print(f"nameItem: {nameItem}")
+
+	listItems = cl.get_scene_item_list(nameScene).scene_items
+	#print(f"listItems: {listItems}")
+
+	idItem = -1
+	enItem = False
+
+	for item in listItems:
+
+		if not nameItem == item["sourceName"]:
+			continue
+
+		#print(f"item: {item}")
+		idItem = item["sceneItemId"]
+		enItem = item["sceneItemEnabled"]
+
+	if idItem < 0:
+		print(f"Could not find item: {nameItem}")
+		exit(1)
+
+	#print(f"idItem: {idItem}")
+	#print(f"enItem: {enItem}")
+
+	cl.set_scene_item_enabled(nameScene, idItem, not enItem)
+
+def streamToggle():
+
+	cl = obsConnect()
+	cl.toggle_stream()
+
+if cmdMain == "scene":
+	sceneSwitch()
+elif cmdMain == "sceneitem":
+	sceneItemToggle()
+elif cmdMain == "stream":
+	streamToggle()
+else:
+	print(f"Unknown command: {cmdMain}")
+
+exit(0)
+
