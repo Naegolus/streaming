@@ -52,6 +52,9 @@ def sceneItemToggle():
 	listItems = cl.get_scene_item_list(nameScene).scene_items
 	#print(f"listItems: {listItems}")
 
+	#idItem = cl.get_scene_item_id(nameScene, nameItem).scene_item_id
+	#print(f"idItem: {idItem}")
+
 	idItem = -1
 	enItem = False
 
