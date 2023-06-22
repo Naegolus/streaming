@@ -38,7 +38,6 @@ def sceneItemToggle():
 		exit(1)
 
 	cl = obsConnect()
-	cl.set_current_program_scene(sys.argv[3])
 
 	#nameSceneCurrent = cl.get_current_program_scene().current_program_scene_name
 	#nameScene = nameSceneCurrent
