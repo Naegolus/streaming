@@ -8,9 +8,15 @@ import obsws_python as obs
 
 cntArgs = len(sys.argv)
 
-# obs-cli scene current "Software"
-# obs-cli sceneitem toggle "Software" "HW Ovl"
-# obs-cli stream toggle
+# Requirements
+# apt install obs-studio
+# apt install obs-websocket
+# pip install obsws-python
+
+# Examples / Supported functions
+# 1: obs-cli scene current "Software"
+# 2: obs-cli sceneitem toggle "Software" "HW Ovl"
+# 3: obs-cli stream toggle
 
 if cntArgs < 3:
 	print(f"Usage: {sys.argv[0]}")
