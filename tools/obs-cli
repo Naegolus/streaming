@@ -17,6 +17,7 @@ cntArgs = len(sys.argv)
 # 1: obs-cli scene current "Software"
 # 2: obs-cli sceneitem toggle "Software" "HW Ovl"
 # 3: obs-cli stream toggle
+# 4: obs-cli label text "<name>" "<value>"
 
 if cntArgs < 3:
 	print(f"Usage: {sys.argv[0]}")
@@ -86,12 +87,22 @@ def streamToggle():
 	cl = obsConnect()
 	cl.toggle_stream()
 
+def labelSet():
+
+	if cntArgs < 5:
+		print(f"No label given")
+		exit(1)
+
+	cl = obsConnect()
+
 if cmdMain == "scene":
 	sceneSwitch()
 elif cmdMain == "sceneitem":
 	sceneItemToggle()
 elif cmdMain == "stream":
 	streamToggle()
+elif cmdMain == "label":
+	labelSet()
 else:
 	print(f"Unknown command: {cmdMain}")
 
