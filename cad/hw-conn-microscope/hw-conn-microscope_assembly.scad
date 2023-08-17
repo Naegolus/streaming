@@ -7,10 +7,10 @@ use <hw-conn-microscope.scad>
 use <microscope.scad>
 use <wall.scad>
 
-hwConnCamShow = false;
+hwConnCamShow = true;
 hwConnMicroscopeShow = true;
-wallShow = false;
-microscopeShow = false;
+wallShow = true;
+microscopeShow = true;
 
 if (hwConnMicroscopeShow)
 {
