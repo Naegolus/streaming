@@ -16,8 +16,48 @@ use <../../lib/lib.scad>
 function bridgeHeight() = 48;
 function shoulderHeight() = bridgeHeight() - 5;
 
+function microscopePosX() = 10;
+function microscopePosY() = -60;
+function microscopePosZ() = 15;
+
+module holderMicro()
+{
+	difference()
+	//union()
+	{
+		union()
+		{
+			translate
+			([
+				microscopePosX(),
+				microscopePosY(),
+				0,
+			])
+				cylinder(h = microscopePosZ(), d = 50 + 10);
+
+			translate([-13, -30, 5])
+			rotate([0, 0, -70])
+				cube([60, 35, 10], center = true);
+
+			translate([-14, -19, 14.5])
+			rotate([0, 0, -70])
+			rotate([0, 23, 0])
+			cube([40, 5, 14], center = true);
+		}
+
+		translate
+		([
+			microscopePosX(),
+			microscopePosY(),
+			-1,
+		])
+		cylinder(h = microscopePosZ() + 2, d = 50);
+	}
+}
+
 module connBase()
 {
+	rotate([0, 0, 180])
 	difference()
 	//union()
 	{
@@ -48,6 +88,9 @@ module connBase()
 				[3, 4.5, 3],
 				aY = 2
 			);
+
+			rotate([0, 0, 180])
+				holderMicro();
 		}
 
 		translate([-10, 0, 91])
@@ -76,7 +119,6 @@ module connBase()
 		translate([-10, 0, 62.5])
 			rotate([0, 90, 0])
 				cylinder(h = 20, d = 5.5);
-
 	}
 }
 
