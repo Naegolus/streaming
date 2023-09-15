@@ -39,3 +39,7 @@ do-not-upload/
 *.hex
 __pycache__/
 *.py.swp
+
+*.FCStd1
+*.mtl
+
