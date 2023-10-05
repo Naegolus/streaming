@@ -14,9 +14,9 @@ class DiracAnimating(PhyAnimating):
 
 		self.slTime = self.uiSliderAdd(4.5, 0.0, True, 'Time offset\t', 's')
 
-		self.axTime1 = self.fig.add_subplot(3, 1, 1, projection = '3d')
-		self.axTime2 = self.fig.add_subplot(3, 1, 2, projection = '3d')
-		self.axTime3 = self.fig.add_subplot(3, 1, 3, projection = '3d')
+		self.axTime1 = self.fig.add_subplot(2, 2, 1, projection = '3d')
+		self.axTime2 = self.fig.add_subplot(2, 2, 3, projection = '3d')
+		self.axTime3 = self.fig.add_subplot(1, 2, 2, projection = '3d')
 
 	def rect(self, t):
 
