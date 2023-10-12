@@ -41,10 +41,10 @@ class DiracAnimating(PhyAnimating):
 		self.ch2 = np.array(df["CH2(V)"])
 		self.ch2 = self.ch2 - self.ch2[0]
 
-		self.axTime  = self.fig.add_subplot(4, 1, 1)
-		self.axFreq1 = self.fig.add_subplot(4, 1, 2)
-		self.axFreq2 = self.fig.add_subplot(4, 1, 3)
-		self.axFreq3 = self.fig.add_subplot(4, 1, 4)
+		self.axTime  = self.fig.add_subplot(3, 1, 1)
+		self.axFreq1 = self.fig.add_subplot(3, 1, 2)
+		self.axFreq2 = self.fig.add_subplot(3, 1, 3)
+		self.axFreq2twin = self.axFreq2.twiny()
 
 		z = 10
 		n = 15
@@ -84,6 +84,9 @@ class DiracAnimating(PhyAnimating):
 
 		self.axFreq1.plot(self.f1, label = "Freq Ch. 1", color = 'y')
 
+		self.axFreq1.set_xlabel('Frequency [?]');
+		self.axFreq1.set_ylabel('Amplitude [?]');
+
 		# ----------------------
 
 		limF = 400
@@ -91,18 +94,15 @@ class DiracAnimating(PhyAnimating):
 		self.axFreq2.clear()
 
 		self.axFreq2.stem(self.f1z, label = "Freq Ch. 1")
-		#self.axFreq2.plot(self.f1pz, label = "Freq Ch. 1")
+		self.axFreq2.set_xlim(0, self.f1z.size)
+
+		self.axFreq2twin.plot(self.f1pz, label = "Freq Ch. 1")
+		self.axFreq2twin.set_xlim(0, self.f1pz.size)
 
 		self.axFreq2.set_ylim(-limF, limF)
 
-		# ----------------------
-
-		self.axFreq3.clear()
-
-		#self.axFreq3.stem(self.f1pz, label = "Freq Ch. 1")
-		self.axFreq3.plot(self.f1pz, label = "Freq Ch. 1")
-
-		self.axFreq3.set_ylim(-limF, limF)
+		self.axFreq2.set_xlabel('Frequency [?]');
+		self.axFreq2.set_ylabel('Amplitude [?]');
 
 		# ----------------------
 
