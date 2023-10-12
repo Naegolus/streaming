@@ -38,8 +38,8 @@ class DiracAnimating(PhyAnimating):
 		self.slFreq = self.uiSliderAdd(5, 0.0, True, 'Frequency\t', 'Hz')
 		self.slPhi = self.uiSliderAdd(2 * math.pi, 0.0, False, 'Phi\t\t', 'Rad')
 
-		self.axTime = self.fig.add_subplot(2, 1, 1, projection = '3d')
-		self.axFreq = self.fig.add_subplot(2, 1, 2, projection = '3d')
+		self.axTime = self.fig.add_subplot(1, 2, 1, projection = '3d')
+		self.axFreq = self.fig.add_subplot(1, 2, 2, projection = '3d')
 
 	def process(self):
 
