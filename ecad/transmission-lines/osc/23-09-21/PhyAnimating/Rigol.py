@@ -41,8 +41,22 @@ class DiracAnimating(PhyAnimating):
 		self.ch2 = np.array(df["CH2(V)"])
 		self.ch2 = self.ch2 - self.ch2[0]
 
-		self.axTime = self.fig.add_subplot(2, 1, 1)
-		self.axFreq = self.fig.add_subplot(2, 1, 2)
+		self.axTime  = self.fig.add_subplot(4, 1, 1)
+		self.axFreq1 = self.fig.add_subplot(4, 1, 2)
+		self.axFreq2 = self.fig.add_subplot(4, 1, 3)
+		self.axFreq3 = self.fig.add_subplot(4, 1, 4)
+
+		z = 10
+		n = 15
+
+		pads = np.zeros([1, n * self.ch1.size])
+		self.ch1p = np.append(self.ch1, pads)
+
+		self.f1 = np.fft.fft(self.ch1)
+		self.f1z = self.f1[0 : z]
+
+		self.f1p = np.fft.fft(self.ch1p)
+		self.f1pz = self.f1p[0 : (1 + n) * z]
 
 	def process(self):
 
@@ -63,6 +77,32 @@ class DiracAnimating(PhyAnimating):
 		self.axTime.set_ylabel('Voltage [V]');
 
 		self.axTime.grid()
+
+		# ----------------------
+
+		self.axFreq1.clear()
+
+		self.axFreq1.plot(self.f1, label = "Freq Ch. 1", color = 'y')
+
+		# ----------------------
+
+		limF = 400
+
+		self.axFreq2.clear()
+
+		self.axFreq2.stem(self.f1z, label = "Freq Ch. 1")
+		#self.axFreq2.plot(self.f1pz, label = "Freq Ch. 1")
+
+		self.axFreq2.set_ylim(-limF, limF)
+
+		# ----------------------
+
+		self.axFreq3.clear()
+
+		#self.axFreq3.stem(self.f1pz, label = "Freq Ch. 1")
+		self.axFreq3.plot(self.f1pz, label = "Freq Ch. 1")
+
+		self.axFreq3.set_ylim(-limF, limF)
 
 		# ----------------------
 
