@@ -34,16 +34,17 @@ class DiracAnimating(PhyAnimating):
 
 		self.setWindowTitle("Stromi")
 
-		df = pd.read_csv(os.getcwd() + '/../RigolDS0.csv')
+		df = pd.read_csv(os.getcwd() + '/RigolDS0.csv')
 
 		self.t = np.array(df["Time(s)"])
 		self.ch1 = np.array(df["CH1(V)"]) * 0.5
 		self.ch2 = np.array(df["CH2(V)"])
 		self.ch2 = self.ch2 - self.ch2[0]
 
-		self.axTime  = self.fig.add_subplot(2, 1, 1)
-		self.axFreq1 = self.fig.add_subplot(2, 1, 2)
+		self.axTime  = self.fig.add_subplot(3, 1, 1)
+		self.axFreq1 = self.fig.add_subplot(3, 1, 2)
 		self.axFreq1twin = self.axFreq1.twiny()
+		self.axAttenuation = self.fig.add_subplot(3, 1, 3)
 
 		z = 30
 		n = 15
@@ -64,6 +65,11 @@ class DiracAnimating(PhyAnimating):
 
 		self.f2p = np.abs(np.fft.fft(self.ch2p))
 		self.f2pz = self.f2p[0 : (1 + n) * z]
+		self.f2pzf = np.linspace(0, self.f2pz.size - 1, self.f2pz.size) / self.ch2p.size * 1000
+
+		self.fMax = np.amax(self.f2pzf)
+
+		self.a = 20 * np.log10(self.f1pz / self.f2pz)
 
 	def process(self):
 
@@ -91,17 +97,29 @@ class DiracAnimating(PhyAnimating):
 
 		self.axFreq1.clear()
 
-		self.axFreq1.stem(self.f1z, label = "Freq Ch. 1")
-		self.axFreq1.set_xlim(0, self.f2z.size)
+		self.axFreq1.plot(self.f2pzf, self.f1pz, label = "Freq Ch. 1", color = 'y')
+		self.axFreq1.plot(self.f2pzf, self.f2pz, label = "Freq Ch. 2", color = 'c')
+		self.axFreq1.set_xlim(0, self.fMax)
 
-		self.axFreq1twin.plot(self.f1pz, label = "Freq Ch. 1", color = 'y')
-		self.axFreq1twin.plot(self.f2pz, label = "Freq Ch. 2", color = 'c')
-		self.axFreq1twin.set_xlim(0, self.f1pz.size)
+		#self.axFreq1.set_xlabel('Normalized Frequency @ 2 GSa/s');
+		self.axFreq1.set_xlabel('Frequency [MHz]');
+		self.axFreq1.set_ylabel('Amplitude [?]');
 
 		self.axFreq1.set_ylim(-limA/10, limA)
 
-		self.axFreq1.set_xlabel('Frequency [?]');
-		self.axFreq1.set_ylabel('Amplitude [?]');
+		self.axFreq1twin.stem(self.f1z, label = "Freq Ch. 1")
+		self.axFreq1twin.set_xlim(0, self.f2z.size)
+		self.axFreq1twin.get_xaxis().set_visible(False)
+
+		# ----------------------
+
+		self.axAttenuation.plot(self.f2pzf, self.a, label = "Attenuation", color = 'b')
+		self.axAttenuation.set_xlim(0, self.fMax)
+
+		self.axAttenuation.grid()
+
+		self.axAttenuation.set_xlabel('Frequency [MHz]');
+		self.axAttenuation.set_ylabel('Attenuation [dB]');
 
 		# ----------------------
 
