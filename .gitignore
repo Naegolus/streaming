@@ -44,3 +44,7 @@ __pycache__/
 *.FCStd1
 *.mtl
 
+# KiCad
+*-backups/
+fp-info-cache
+
