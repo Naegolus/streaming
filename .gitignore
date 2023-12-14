@@ -6,6 +6,8 @@
 
 # 3D print
 *.obj
+*.pdf
+*.step
 *.stl
 *.gcode
 
